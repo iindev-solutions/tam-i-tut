@@ -1,39 +1,114 @@
-# Project Vision — TamITut
+# Project Vision — TAMITUT
 
-## Product Name
+## 1) Product Identity
 
-TamITut
+| Parameter | Value |
+|---|---|
+| Name | TAMITUT ("там и тут") |
+| Slogan | **Arrived — Opened — Know** |
+| What it is | Curated companion guide for Russian-speaking expats and digital nomads in Da Nang |
+| What it is not | Marketplace, classifieds aggregator, social network, support chat |
+| Philosophy | Reputation before profit. Fully verified entries are trusted. Partial evidence appears only as under-review warning state. |
 
-## Target Users
+## 2) Target Audience
 
-1. Expats living in Da Nang who need trusted housing, transport, jobs, and services.
-2. Local service providers who want verified exposure to expat audience.
-3. Moderators/admins who enforce quality and anti-scam safeguards.
+| Segment | Priority | Why |
+|---|---|---|
+| Russian-speaking expats (long-stay) | Core | high retention, strong referrals, high trust sensitivity |
+| Digital nomads | Core | relocation pain, high need for fast trusted orientation |
+| Newly arrived relocants | Core | highest initial pain, fastest trust-value recognition |
+| Tourists (1–30 days) | Secondary | lower retention, still useful for viral spread |
+| English-speaking expats | Secondary | parallel growth layer after RU-first maturity |
 
-## Core Problem
+**Language model:** Russian is primary. English is parallel content layer.
 
-Current discovery channels (Facebook groups, Telegram chats, ad-hoc referrals) are fragmented and low-trust.
-Users waste time and face scam risk because listings and providers are not reliably verified.
+## 3) MVP Categories (All Included)
 
-## Product Promise
+| Category | Included Content | Why in MVP |
+|---|---|---|
+| 🏠 Housing | rent/subrent/coliving, district benchmark prices, inspection checklist, scam patterns, verified contacts | highest pain + highest scam exposure |
+| 🛵 Transport | bike rental/buying, mechanics, benchmark prices, purchase checks, hidden practical spots | major daily need with fragmented trust |
+| 💱 Money | exchange points (real rates/fees), safe options, visa/insurance/notary basics | direct financial risk area |
+| 🍜 Food & Cafes | trusted places, average check, hidden spots, home-style options | improves repeat usage and loyalty |
+| 🎉 Events | today/weekly events, guides, activities | keeps product useful after initial landing |
+| ⚠️ Safety | blacklist, scam schemes, prevention playbooks, complaint channels | key differentiation and trust moat |
 
-Provide one trust-first entry point for expat needs:
+**Content rule:** every entry needs evidence.
 
-- curated, verified listings
-- transparent reputation signals
-- community reporting and blacklist workflows
+## 4) Differentiators
 
-## Primary Workflow
+- benchmark prices to reduce newcomer overpaying
+- hidden useful places beyond obvious rankings
+- verified contacts instead of open ad-board noise
+- practical checklists for high-risk decisions
+- trust and safety prioritized over monetization
 
-1. User opens Telegram Mini App (or web fallback).
-2. User authenticates (Telegram identity or web email flow).
-3. User searches listings with filters and trust metadata.
-4. User contacts provider and optionally leaves moderated review.
-5. User reports suspicious behavior; moderators review evidence.
+## 5) MVP Boundaries (Non-Goals)
 
-## Out of Scope (Early MVP)
+- no in-bot transactions
+- no open user classifieds/listings
+- no in-bot booking workflows
+- no complex conversational AI assistant
+- no monetization in MVP
+- no native app before clear PMF signal
 
-- full payment processing marketplace
-- multi-city expansion beyond Da Nang
-- deep ML recommendations
-- complex multi-language localization at launch
+## 6) UX Logic
+
+Main bot surface:
+
+- 🔍 Find
+- ⭐ Verified
+- ➕ Suggest place
+- ⚠️ Blacklist
+- 📍 Map (web surface)
+
+Principles:
+
+- search-first, not deep menus
+- max **2 taps** from intent to useful answer
+- practical response > decorative navigation
+
+## 7) Trust Model (Chosen)
+
+| Level | Badge | Criteria |
+|---|---|---|
+| Verified by team | ✅ Green | team-verified with proof, contact, and verification date |
+| Recommended by expats | ⭐ Yellow | minimum 3 confirmations from trusted sources |
+| Under review | 🆕 Gray | structured entry visible with clear warning; evidence threshold not yet complete |
+
+Blacklist evidence policy:
+
+- no proof -> no publication
+- every blacklist item must include source and date
+- moderation must avoid unverified accusations
+
+## 8) 90-Day Success Metrics
+
+| Metric | Target | Why |
+|---|---|---|
+| Core value stories | 50+ | trust-value proof beyond vanity metrics |
+| Verified entries | 200+ | enough depth for common newcomer needs |
+| Weekly active users | 500+ | evidence of repeat practical utility |
+| User suggestions | 30+ | signal of engagement and ecosystem pull |
+| Organic mentions | continuous growth | referral loop validates relevance |
+
+## 9) Risks and Mitigations
+
+| Risk | Probability | Mitigation |
+|---|---|---|
+| low initial content liquidity | high | launch with 200+ seeded entries |
+| trust deficit | high | badges + timestamps + strict evidence gate |
+| category over-expansion | medium | keep strict 6-category MVP boundary |
+| support overload | medium | checklist-first UX + FAQ + structured flows |
+| competitors copy UX | low | defend with trust network + ops discipline |
+| team burnout | medium | fixed 90-day scope and explicit post-MVP decision gate |
+
+## 10) Guiding Principle
+
+> TAMITUT is not only data. It is reputation encoded into product behavior.
+
+Every decision should pass one test:
+
+**Does this increase trust or reduce it?**
+
+If it reduces trust, do not ship it.

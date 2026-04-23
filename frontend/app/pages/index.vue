@@ -1,18 +1,18 @@
 <script setup lang="ts">
 const { t } = useI18n()
 
-const mvpCards = [
+const guideCards = [
 	{
-		title: 'verified listings',
-		description: 'Housing, transport, jobs, and local services with moderator vetting and trust signals.'
+		title: '2 taps to answer',
+		description: 'User should reach useful guidance in at most two taps from main screen or search.'
 	},
 	{
-		title: 'community safety',
-		description: 'Scam reports with evidence, public blacklist visibility, and moderation queue workflows.'
+		title: '3-level trust badges',
+		description: 'Verified by team, Recommended by expats (3+ trusted confirmations), or Under review.'
 	},
 	{
-		title: 'telegram + web access',
-		description: 'Telegram Mini App first, with responsive web fallback for SEO and desktop discovery.'
+		title: 'curated, not classifieds',
+		description: 'No open user listings. Team-controlled guide entries with evidence and moderation.'
 	}
 ]
 </script>
@@ -31,15 +31,15 @@ const mvpCards = [
 			</template>
 
 			<ol class="list-decimal space-y-2 pl-5 text-sm text-gray-200">
-				<li>Define Supabase schema for listings, reviews, blacklist, reports.</li>
-				<li>Implement Telegram initData auth verification pipeline.</li>
-				<li>Build listing search + moderation-ready submission flow.</li>
-				<li>Document implementation details in <code>vault/</code>.</li>
+				<li>Model six MVP categories with contacts, checklists, and benchmark prices.</li>
+				<li>Implement trust workflow with badges, evidence rules, and review timestamps.</li>
+				<li>Ship blacklist + scam-pattern content with strict evidence moderation.</li>
+				<li>Build Russian-primary Telegram flow with parallel English content layer.</li>
 			</ol>
 		</UCard>
 
 		<div class="grid gap-4 md:grid-cols-3">
-			<UCard v-for="card in mvpCards" :key="card.title" variant="outline">
+			<UCard v-for="card in guideCards" :key="card.title" variant="outline">
 				<h3 class="mb-2 text-base font-medium text-white">{{ card.title }}</h3>
 				<p class="text-sm text-gray-300">{{ card.description }}</p>
 			</UCard>

@@ -1,37 +1,44 @@
-# Roadmap — TamITut
+# Roadmap — TAMITUT
 
-## Phase 0 — Direction Lock (completed)
+## Phase 0 — Vision Consolidation (completed)
 
-- capture product brief from `test-text.md`
-- align repository identity to TamITut
-- document architecture baseline in `vault/`
+- remove obsolete temporary brief file
+- align documentation to curated bot-guide model
+- lock trust model to 3 badge levels (verified / recommended / under review)
 
-## Phase 1 — Foundation
+## Phase 1 — Data + Trust Foundation
 
-- model Supabase schema (users/providers/listings/reviews/reports/blacklist)
-- define RLS policies and role model (user/mod/admin)
-- establish auth contract for Telegram Mini App and web
+- define schema for 6 MVP categories
+- define benchmark price snapshot structure
+- define verification evidence model and trusted-source registry
+- define trust badge transition rules and publication gates
 
-## Phase 2 — First User Flow
+## Phase 2 — Content Seeding (Pre-launch)
 
-- create listing browse/search experience
-- create listing submission flow with moderation state
-- enable basic provider profile and verification badge state
+- seed at least 200 entries before public launch
+- attach verification date and source metadata for each publishable entry
+- create first blacklist and scam-pattern knowledge base with evidence discipline
 
-## Phase 3 — Safety Layer
+## Phase 3 — Telegram-First UX Delivery
 
-- implement report submission + evidence attachment flow
-- implement blacklist publication and moderation controls
-- add audit logging for moderator actions
+- build RU-primary bot flow with EN parallel layer
+- implement search-first intent routing
+- enforce max 2 taps from intent to useful answer in main scenarios
 
-## Phase 4 — Reputation + Admin Tooling
+## Phase 4 — Safety + Moderation Operations
 
-- ratings/reviews with moderation rules
-- admin dashboard for approvals, suspensions, and dispute handling
-- operational metrics and alerting baseline
+- implement moderation panel for verification and badge transitions
+- implement blacklist publication workflow with strict evidence checks
+- add audit logs for every trust/safety action
 
-## Phase 5 — Expansion
+## Phase 5 — 90-Day Validation
 
-- improve SEO web surface and discovery pages
-- evaluate additional cities/categories
-- optimize onboarding and trust conversion funnel
+- measure qualitative trust stories, WAU, verified-entry depth, user suggestions
+- evaluate whether trust + retention thresholds are met
+- decide scale path: continue, expand, or pause
+
+## Phase 6 — Post-MVP Expansion (conditional)
+
+- add categories like medicine/education/sport after proof of demand
+- evaluate monetization only after trust baseline stabilizes
+- expand to next city only after Da Nang model is repeatable

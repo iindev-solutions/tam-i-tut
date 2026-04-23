@@ -1,38 +1,48 @@
-# Auth Flow — TamITut (Target)
+# Auth Flow — TAMITUT (Target)
 
-## Modes
+## Auth Modes
 
-1. **Telegram Mini App (primary):** authenticate using Telegram `initData`.
-2. **Web fallback:** authenticate using email-based Supabase auth.
+1. **End users:** Telegram identity session for guide consumption and suggestions.
+2. **Ops users:** staff login for curation/moderation/admin workflows.
+3. **Trusted source registry:** controlled accounts used for recommendation confirmations.
 
-## Telegram Flow
+## End-User Flow (Telegram)
 
-1. Client opens TMA and receives `initData` from Telegram runtime.
-2. Backend verification function validates signature + freshness window.
-3. On success, user profile is created/updated and session token is issued.
-4. Session maps to role model (`user`, `moderator`, `admin`).
+1. User opens TAMITUT in Telegram.
+2. Telegram identity/session payload is validated.
+3. Internal profile is mapped or created with `user` role.
+4. User can browse published entries and submit suggestions.
 
-## Web Flow
+## Ops Flow (Internal)
 
-1. User starts email auth (magic link or OTP).
-2. Supabase validates token and returns session.
-3. Profile record is linked to same domain model as Telegram users.
+1. Staff signs in via internal auth path.
+2. Role grants scoped access (`curator`, `moderator`, `admin`).
+3. Staff actions require role checks and are audit-logged.
 
-## Session Model
+## Trusted Source Confirmation Flow
 
-- Short-lived access token + refresh strategy managed by Supabase.
-- Client stores session securely per platform constraints.
-- Role claims checked in RLS and function guards.
+1. Moderator marks account/contact as trusted source.
+2. Trusted source confirmations can be attached to entries.
+3. Rule engine counts confirmations for `recommended_expats` threshold (>=3).
+4. Moderator can revoke invalid confirmations.
 
-## Verification Rules
+## Role Matrix
 
-- Reject expired Telegram `initData` payloads.
-- Reject invalid signatures.
-- Normalize identity mapping to avoid duplicate accounts.
-- Require moderation privileges for trust/safety actions.
+- `user`: consume published data, submit suggestions.
+- `curator`: draft/edit entries, attach evidence.
+- `moderator`: approve entries, assign badges, publish blacklist/safety updates.
+- `admin`: manage roles, policy settings, and audits.
+- `trusted_source`: provide confirmations only (no publish rights).
+
+## Security Constraints
+
+- No public role can publish or change trust badge states.
+- Trust badge transitions require evidence checks.
+- Blacklist actions require moderator+ privilege and mandatory evidence fields.
+- Every sensitive action is written to immutable audit log.
 
 ## Open Decisions
 
-- account linking rules for Telegram + email identities
-- exact token lifetime and refresh policy
-- fallback behavior when Telegram verification service degrades
+- exact technical stack for staff auth hardening
+- session TTL and renewal policy by role
+- trusted-source lifecycle process (activation/revocation cadence)

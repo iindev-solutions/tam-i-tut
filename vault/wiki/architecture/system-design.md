@@ -1,36 +1,68 @@
-# System Design — TamITut
+# System Design — TAMITUT
 
-## High-Level Structure
+## System Goal
 
-- **Frontend:** Nuxt 4 app serving Telegram Mini App shell and responsive web fallback.
-- **Backend platform:** Supabase (Postgres, Auth, Storage, Realtime, Edge Functions).
-- **Moderation tooling:** Admin-facing flows for approvals, reports, and blacklist updates.
-- **Knowledge base:** `vault/` as operational memory and planning source of truth.
+Serve trusted, curated newcomer guidance for Da Nang with evidence-based publication and safety moderation.
 
-## Core Domains
+## Product Surfaces
 
-1. Listings (housing, transport, jobs, services)
-2. Providers (identity, verification status, reputation)
-3. Reviews (ratings + moderated text)
-4. Reports (evidence-backed abuse/scam submissions)
-5. Blacklist entries (public safety visibility)
+- **User surface:** Telegram-first bot/mini-app flow (plus web support where needed).
+- **Ops surface:** internal tools for curators/moderators/admins.
+- **Knowledge base:** `vault/` for product and engineering memory.
 
-## Data Flow (Target)
+## Core Data Domains
 
-1. Client authenticates (Telegram initData or web email flow).
-2. Client requests listings/search via Supabase APIs/Edge Functions.
-3. User actions (create listing, review, report) write to Postgres with RLS enforcement.
-4. Moderator actions update status and publish trust signals.
-5. Public views consume approved listings + blacklist metadata.
+1. `GuideEntry` — unit of curated content.
+2. `Category` — one of six MVP areas.
+3. `TrustedContact` — validated contact linked to entry.
+4. `PriceSnapshot` — benchmark price with location/time context.
+5. `ChecklistItem` — actionable checks for risky tasks.
+6. `VerificationEvidence` — proof attached to entries.
+7. `TrustBadge` — `verified_team`, `recommended_expats`, `under_review`.
+8. `SafetyCase` — blacklist item with scheme/source/date/evidence.
+9. `ScamPattern` — reusable prevention guidance.
+10. `UserSuggestion` — inbound suggestion queue (not direct publication).
+11. `AuditLog` — immutable moderation and publication history.
 
-## Security Boundaries
+## Trust Enforcement Rules
 
-- Strict RLS by role and ownership.
-- Moderation actions restricted to staff roles.
-- Evidence assets in controlled storage buckets.
-- Telegram initData signature verification before session minting.
+- Content never bypasses evidence workflow.
+- Badge assignment is rule-driven:
+  - `verified_team`: direct team verification evidence required.
+  - `recommended_expats`: >=3 confirmations from trusted sources.
+  - `under_review`: structured and visible with warning, missing full threshold.
+- Blacklist publication requires evidence, source, and moderation approval.
+- All trust/safety state transitions are audit-logged.
+
+## Data Flow
+
+1. Curator creates or updates draft entry.
+2. Evidence is attached (team proof and/or trusted confirmations).
+3. Moderator reviews evidence and assigns trust badge.
+4. Published entry becomes visible in user-facing flows.
+5. Under-review entries are visible only with explicit warning state.
+6. Safety updates (blacklist/scam patterns) are reviewed and published with evidence.
+
+## UX Performance Constraints
+
+- Search-first routing for core intents.
+- Max 2 taps from intent to useful output in primary newcomer scenarios.
+- Every visible item shows trust badge + last verification date.
+
+## Access Boundaries
+
+- `user`: read published guide/safety data and submit suggestions.
+- `curator`: manage drafts and evidence attachments.
+- `moderator`: approve, assign badges, publish safety cases.
+- `admin`: role management, policy control, audit oversight.
+
+## Operational Controls
+
+- stale-entry detection for re-verification cycles
+- moderation queue SLA for new suggestions/evidence updates
+- incident process for disputed blacklist entries
 
 ## Transitional Note
 
-Repository still includes Laravel template artifacts under `backend/`.
-These are non-authoritative for final architecture and should be replaced/adapted during Phase 1.
+Repository still includes starter backend artifacts.
+Implementation should follow this trust-first curated-guide design boundary.

@@ -1,22 +1,25 @@
-# Sprint — TamITut Direction Lock
+# Sprint — TAMITUT Trust-Model Foundation
 
 ## Goal
 
-Turn starter template into a clear TamITut MVP foundation using `test-text.md` as source brief.
+Translate full vision audit into implementation-ready product docs and start schema design for trust-first operations.
 
 ## Current Tasks
 
 | # | Task | Status |
-|---|------|--------|
-| 1.1 | Extract product direction from `test-text.md` | DONE |
-| 1.2 | Document project vision and architecture baseline in `vault/wiki/architecture/` | DONE |
-| 1.3 | Align repo naming from starter placeholders to TamITut | DONE |
-| 1.4 | Define first implementation slice (listings + auth + moderation primitives) | TODO |
-| 1.5 | Plan transition from Laravel template artifacts to Supabase-first backend | TODO |
+|---|---|---|
+| 3.1 | Enrich vision with full audit content and boundaries | DONE |
+| 3.2 | Lock trust model variant (`verified/recommended/under-review`) | DONE |
+| 3.3 | Align README, frontend copy, and architecture docs | DONE |
+| 3.4 | Define schema for categories, entries, contacts, checklists, prices | TODO |
+| 3.5 | Define verification evidence entities and badge transition rules | TODO |
+| 3.6 | Define blacklist/scam pattern publication workflow | TODO |
+| 3.7 | Define Telegram RU-first interaction map with 2-tap constraint | TODO |
+| 3.8 | Plan initial 200+ entry seeding operation | TODO |
 
 ## Current Priority
 
-1. design Supabase schema + RLS rules
-2. define Telegram initData auth verification flow
-3. build first listing browse/create flow
-4. specify moderation and blacklist workflow
+1. schema draft for core content + trust domains
+2. moderation and evidence policy as executable rules
+3. safety case model and dispute process
+4. Telegram intent map for landing-day scenarios

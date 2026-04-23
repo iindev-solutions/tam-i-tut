@@ -40,3 +40,49 @@
 - design Supabase schema + RLS matrix
 - define Telegram initData verification contract
 - implement first listings flow slice
+
+## 2026-04-23 18:20 — Vision Reframed to Curated Bot Guide
+
+### Done
+
+- Removed `test-text.md` from repository
+- Reframed project vision from marketplace/listings model to curated bot-companion model
+- Updated `README.md` with new philosophy, categories, trust rule, non-goals, and 90-day metric
+- Updated frontend copy (`app/pages/index.vue`, `i18n/locales/en.json`, branding defaults)
+- Rewrote architecture docs (`project-vision`, `roadmap`, `system-design`, `auth-flow`)
+- Updated `vault/sprint.md`, `vault/resume-plan.md`, and `vault/CODE_MAP.md`
+
+### Verified
+
+- No active planning docs depend on `test-text.md`
+- Product framing now explicitly states: not marketplace, no user-generated listings
+- Sprint and resume plan now point to category/verification modeling work
+
+### Next
+
+- finalize category schema and price snapshot model
+- define verification evidence model and moderation publish gates
+- draft Telegram navigation tree for Russian-first onboarding
+
+## 2026-04-23 19:05 — Vision Expanded with Full Audit
+
+### Done
+
+- Loaded external full vision document (`tamitut.md`) and merged core product framing
+- Adopted trust model option 2: `verified_team`, `recommended_expats`, `under_review`
+- Expanded `README.md` with audience matrix, MVP category rationale, UX principles, trust badges, KPIs, and risk table
+- Updated frontend messaging to reflect 2-tap UX and 3-level trust badges
+- Expanded architecture docs with operational trust rules and trusted-source flow
+- Updated sprint/resume to focus on schema + evidence + moderation execution
+
+### Verified
+
+- Vision now explicitly encodes both strict evidence policy and visible under-review state
+- Product boundaries still enforce: no marketplace, no open user listings
+- Planning docs consistently reference 3-level trust model
+
+### Next
+
+- model trust badge transitions in database schema
+- define evidence object contract and trusted-source registry logic
+- design moderation SLA and stale-entry re-verification cycle

@@ -1,18 +1,17 @@
-# CODE_MAP — TamITut Foundation
+# CODE_MAP — TAMITUT Foundation
 
 ## Root
 
 - `AGENTS.md` — vault-first project rules
-- `README.md` — TamITut overview and MVP scope
-- `test-text.md` — mini product brief source
-- `.env.example` — local env placeholders aligned to TamITut
+- `README.md` — TAMITUT vision, MVP boundaries, success metric
+- `.env.example` — local env placeholders
 
 ## Frontend (`frontend/`)
 
 - `package.json` — Nuxt 4 toolchain, lint/test scripts
-- `nuxt.config.ts` — runtime config defaults (`appName`, `apiBase`)
+- `nuxt.config.ts` — runtime defaults (`appName`, `apiBase`)
 - `app/components/AppHeader.vue` — global header shell
-- `app/pages/index.vue` — MVP direction landing page
+- `app/pages/index.vue` — curated-guide MVP direction landing page
 - `i18n/locales/en.json` — primary copy strings
 - `app/composables/useAPI.ts` — simple typed fetch helper
 - `app/types/api.ts` — API response/error interfaces
@@ -20,7 +19,7 @@
 
 ## Backend (`backend/`)
 
-- `README.md` — transitional backend note (Supabase target)
+- `README.md` — transitional backend note
 - `composer.json` — legacy Laravel-oriented dependency baseline
 - `routes/api.php` — health/login route templates
 - `app/Http/Controllers/HealthController.php` — sample health response

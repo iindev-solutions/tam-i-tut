@@ -1,0 +1,37 @@
+{
+	"name": "tamitut-frontend",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --check .",
+		"format:fix": "prettier --write .",
+		"typecheck": "nuxt typecheck"
+	},
+	"dependencies": {
+		"@nuxt/ui": "^4.3.0",
+		"@nuxtjs/i18n": "^10.2.1",
+		"nuxt": "^4.2.2",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@nuxt/eslint": "^1.12.1",
+		"@types/node": "^25.0.9",
+		"eslint": "^9.39.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.5",
+		"prettier": "^3.8.0",
+		"typescript": "^5.9.3",
+		"vitest": "^4.1.5",
+		"vue-tsc": "^3.2.1"
+	}
+}

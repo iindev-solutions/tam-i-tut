@@ -5,6 +5,7 @@
 - `AGENTS.md` — vault-first project rules
 - `README.md` — TAMITUT vision, MVP boundaries, success metric
 - `.env.example` — local env placeholders
+- `skills-lock.json` — reproducible project skill set lock
 
 ## Frontend (`frontend/`)
 
@@ -34,5 +35,22 @@
 - `resume-plan.md` — stop point and next steps
 - `logs/changelog.md` — chronological change log
 - `SESSION_LEDGER.md` — session summaries
-- `wiki/architecture/` — vision, roadmap, system design, auth flow
-- `wiki/services/` — service documentation templates
+
+### Architecture Docs
+
+- `wiki/architecture/project-vision.md` — full product vision
+- `wiki/architecture/roadmap.md` — phased delivery roadmap
+- `wiki/architecture/system-design.md` — domain model and enforcement boundaries
+- `wiki/architecture/auth-flow.md` — role/session auth flow
+- `wiki/architecture/startup-critical-path.md` — mandatory startup sequence
+- `wiki/architecture/supabase-schema-rls-plan.md` — schema and RLS plan
+- `wiki/architecture/trust-state-machine.md` — trust badge transition rules
+- `wiki/architecture/telegram-auth-contract.md` — Telegram auth validation contract
+
+### Service Docs
+
+- `wiki/services/README.md` — service docs index
+- `wiki/services/agent-skills-stack.md` — installed skill stack and restore/update flow
+- `wiki/services/content-seeding-protocol.md` — launch seeding process
+- `wiki/services/quality-gates-ci.md` — CI and quality gates baseline
+- `wiki/services/service-template.md` — template for new service docs

@@ -12,18 +12,21 @@
 - define benchmark price snapshot structure
 - define verification evidence model and trusted-source registry
 - define trust badge transition rules and publication gates
+- lock startup critical path docs (`startup-critical-path`, schema/RLS, trust machine, auth contract)
 
 ## Phase 2 — Content Seeding (Pre-launch)
 
 - seed at least 200 entries before public launch
 - attach verification date and source metadata for each publishable entry
 - create first blacklist and scam-pattern knowledge base with evidence discipline
+- run seeding QA checklist per batch
 
 ## Phase 3 — Telegram-First UX Delivery
 
 - build RU-primary bot flow with EN parallel layer
 - implement search-first intent routing
 - enforce max 2 taps from intent to useful answer in main scenarios
+- implement Telegram auth contract and replay protection
 
 ## Phase 4 — Safety + Moderation Operations
 

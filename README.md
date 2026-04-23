@@ -93,6 +93,25 @@ Examples:
 | support overload | FAQ + checklists + structured bot responses for common issues |
 | easy product copying | defend with trust network and verification operations, not code |
 
+## Engineering Startup Baseline
+
+Project skill baseline is locked in `skills-lock.json`.
+
+Restore skills locally:
+
+```bash
+npx skills experimental_install -y
+```
+
+Startup-critical implementation order is documented in:
+
+- `vault/wiki/architecture/startup-critical-path.md`
+- `vault/wiki/architecture/supabase-schema-rls-plan.md`
+- `vault/wiki/architecture/trust-state-machine.md`
+- `vault/wiki/architecture/telegram-auth-contract.md`
+- `vault/wiki/services/content-seeding-protocol.md`
+- `vault/wiki/services/quality-gates-ci.md`
+
 ## Repository Notes
 
 - `frontend/` contains Nuxt baseline for Telegram-facing product UI.

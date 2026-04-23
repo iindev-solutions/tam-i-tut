@@ -46,3 +46,7 @@
 - exact technical stack for staff auth hardening
 - session TTL and renewal policy by role
 - trusted-source lifecycle process (activation/revocation cadence)
+
+## Companion Spec
+
+See `telegram-auth-contract.md` for validation/error/replay details.

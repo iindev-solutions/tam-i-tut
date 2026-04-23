@@ -31,3 +31,11 @@
 - Verified: docs consistently use 3-level trust model and preserve curated non-marketplace boundary
 - Blockers: schema design and moderation workflow still conceptual, not implemented
 - Next: translate trust/evidence rules into DB schema and moderation logic
+
+## 2026-04-23 19:35 — Skills and Startup Baseline Added
+
+- Scope: install recommended skills and lock startup-critical planning docs before implementation
+- Changes: installed project skill stack, generated `skills-lock.json`, and added schema/RLS, trust-state, Telegram auth, seeding, CI, and skills-stack docs
+- Verified: `npx skills ls --json` includes all target skills; sprint/resume/codemap/changelog aligned
+- Blockers: no SQL migrations or policy tests implemented yet
+- Next: start Phase 1 implementation with first Supabase migration and RLS matrix

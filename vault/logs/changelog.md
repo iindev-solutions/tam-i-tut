@@ -86,3 +86,30 @@
 - model trust badge transitions in database schema
 - define evidence object contract and trusted-source registry logic
 - design moderation SLA and stale-entry re-verification cycle
+
+## 2026-04-23 19:35 — Skill Stack + Startup Critical Path Locked
+
+### Done
+
+- Installed project-level skills: `nuxt`, `nuxt-ui`, `supabase`, `supabase-postgres-best-practices`, `vitest`, `vue-testing-best-practices`, `telegram-bot-builder`
+- Added `skills-lock.json` for reproducible skill bootstrap
+- Added startup architecture/service docs for:
+  - schema + RLS plan
+  - trust-state machine
+  - Telegram auth contract
+  - content seeding protocol
+  - CI quality gates
+  - agent skills stack
+- Updated `README.md`, `vault/sprint.md`, `vault/resume-plan.md`, and `vault/CODE_MAP.md` to reflect startup baseline
+
+### Verified
+
+- `npx skills ls --json` shows all required project skills installed
+- New startup docs are linked from system design and roadmap
+- Sprint/resume now point to first implementation milestone (schema + RLS)
+
+### Next
+
+- implement first Supabase migration + RLS matrix
+- implement trust badge transition enforcement
+- implement Telegram auth endpoint contract

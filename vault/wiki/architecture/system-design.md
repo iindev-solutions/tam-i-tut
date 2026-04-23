@@ -61,6 +61,16 @@ Serve trusted, curated newcomer guidance for Da Nang with evidence-based publica
 - stale-entry detection for re-verification cycles
 - moderation queue SLA for new suggestions/evidence updates
 - incident process for disputed blacklist entries
+- CI quality gates for lint/type/test and future DB policy checks
+
+## Companion Specs
+
+- `startup-critical-path.md`
+- `supabase-schema-rls-plan.md`
+- `trust-state-machine.md`
+- `telegram-auth-contract.md`
+- `../services/content-seeding-protocol.md`
+- `../services/quality-gates-ci.md`
 
 ## Transitional Note
 

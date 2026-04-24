@@ -166,3 +166,19 @@
   - full Laravel runtime execution for feature tests is still not wired in this minimal backend skeleton
   - final production session strategy remains pending (current token is transitional)
 - Next: enable runtime test execution and choose final production session strategy
+
+## 2026-04-24 06:30 — Telegram Session Strategy Hardened (Opaque Cache Tokens)
+
+- Scope: harden transitional Telegram session issuance after Supabase profile wiring
+- Changes:
+  - replaced signed internal token with opaque random bearer token
+  - session payload now stored server-side in cache (`tg_session:<sha256(token)>`) with TTL
+  - added session metadata (`session_id`, device fingerprint, expiry)
+  - expanded Telegram auth tests with missing-supabase-config case
+  - updated auth contract and vault planning docs to reflect current strategy
+- Verified:
+  - PHP syntax lint (`php -l`) passed for updated controller/tests
+  - no changes to RLS/DB layer required
+- Blockers:
+  - backend runtime is still minimal; feature tests are not yet executed in full Laravel harness
+- Next: run Telegram auth feature tests in full runtime and lock production session architecture

@@ -13,12 +13,12 @@ Use this folder only as temporary reference for:
 Current transitional API endpoints:
 
 - `GET /api/health`
-- `POST /api/auth/telegram` (Telegram initData validation + Supabase profile upsert + typed error codes)
+- `POST /api/auth/telegram` (Telegram initData validation + Supabase profile upsert + opaque cache-backed session + typed error codes)
 - `POST /api/auth/login` (deprecated placeholder)
 
 Next backend milestone:
 
 1. move Telegram auth implementation to Supabase Edge Functions or dedicated service layer
-2. replace transitional signed token issuance with final production session strategy
+2. replace transitional cache-backed opaque token issuance with final production session strategy
 3. execute full Laravel runtime tests (or deprecate this layer after edge migration)
 4. document final architecture in `vault/wiki/architecture/`

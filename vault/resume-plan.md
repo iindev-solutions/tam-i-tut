@@ -26,14 +26,14 @@
   - replay detection via cache
   - typed error codes per contract
   - Supabase profile upsert by `telegram_user_id`
-  - signed internal session token issuance
-  - contract tests in `backend/tests/Feature/TelegramAuthApiTest.php`
+  - opaque cache-backed bearer session token issuance (`3600s` TTL)
+  - contract tests in `backend/tests/Feature/TelegramAuthApiTest.php` (including config-failure path)
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
 1. validate Telegram auth contract tests in a full Laravel runtime environment
-2. replace transitional signed session token with final production session strategy
+2. decide whether to keep opaque cache-backed session tokens in production or migrate to Supabase-native/session service
 3. create content seeding backlog execution plan and ownership
 4. start first end-to-end backend API slice on top of verified schema/policies
 5. monitor CI runtime and optimize Supabase job exclusions if needed
@@ -42,5 +42,5 @@
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-CI baseline is wired and RLS/guard tests pass on VPS (`80` tests). Telegram auth now performs Supabase profile upsert in transitional backend; continue with runtime validation and final session strategy hardening.
+CI baseline is wired and RLS/guard tests pass on VPS (`80` tests). Telegram auth now performs Supabase profile upsert and issues opaque cache-backed sessions; next focus is full runtime test execution and production session strategy decision.
 ```

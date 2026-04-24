@@ -31,7 +31,7 @@ On failure:
 
 - return typed error code (no ambiguous generic failures)
 
-## Error Codes (Draft)
+## Error Codes
 
 - `TG_AUTH_INVALID_SIGNATURE`
 - `TG_AUTH_EXPIRED_PAYLOAD`
@@ -54,8 +54,16 @@ On failure:
 4. same payload replay rejected
 5. malformed payload rejected with correct error code
 
+## Current Implementation Snapshot (Transitional Backend)
+
+- endpoint: `POST /api/auth/telegram`
+- replay guard: payload-hash cache key with 5-minute TTL
+- profile persistence: Supabase profile lookup/upsert by `telegram_user_id`
+- role assignment: forced `user`
+- session token mode: opaque random bearer token, cache-backed lookup (`3600s` TTL)
+
 ## Open Decisions
 
-- final session TTL and refresh policy
-- exact replay cache backend and retention
+- final production session strategy (keep opaque cache-backed token vs migrate to Supabase-auth-native/session service)
+- exact replay/session cache backend policy in production (Redis retention/eviction controls)
 - fail-open vs fail-closed behavior during Telegram outage (recommended: fail-closed)

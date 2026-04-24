@@ -25,9 +25,9 @@
 - `composer.json` — legacy Laravel-oriented dependency baseline
 - `routes/api.php` — health + Telegram auth route definitions
 - `app/Http/Controllers/HealthController.php` — health response
-- `app/Http/Controllers/AuthController.php` — Telegram initData auth validation + Supabase profile upsert + signed session token + typed error responses
+- `app/Http/Controllers/AuthController.php` — Telegram initData auth validation + Supabase profile upsert + opaque cache-backed session token + typed error responses
 - `tests/Feature/HealthApiTest.php` — health endpoint contract test
-- `tests/Feature/TelegramAuthApiTest.php` — Telegram auth contract tests (signature/expiry/replay/malformed)
+- `tests/Feature/TelegramAuthApiTest.php` — Telegram auth contract tests (signature/expiry/replay/malformed/config)
 
 ## Supabase (`supabase/`)
 

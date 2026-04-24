@@ -48,6 +48,10 @@ class TelegramAuthApiTest extends TestCase
 			'device_fingerprint' => 'device-abc',
 		])
 			->assertOk()
+			->assertJsonStructure([
+				'auth' => ['token', 'token_type', 'expires_in', 'session_id'],
+				'profile' => ['id', 'telegram_user_id', 'display_name', 'role', 'locale'],
+			])
 			->assertJsonPath('success', true)
 			->assertJsonPath('profile.id', $profileId)
 			->assertJsonPath('profile.telegram_user_id', 123456789)
@@ -55,7 +59,8 @@ class TelegramAuthApiTest extends TestCase
 			->assertJsonPath('profile.locale', 'ru')
 			->assertJsonPath('auth.token_type', 'Bearer')
 			->assertJsonPath('auth.expires_in', 3600)
-			->assertJsonPath('meta.upsert_mode', 'supabase_profile_upsert');
+			->assertJsonPath('meta.upsert_mode', 'supabase_profile_upsert')
+			->assertJsonPath('meta.session_mode', 'opaque_cache_token');
 
 		Http::assertSentCount(3);
 	}
@@ -131,6 +136,27 @@ class TelegramAuthApiTest extends TestCase
 		])
 			->assertStatus(422)
 			->assertJsonPath('error.code', 'TG_AUTH_MALFORMED_PAYLOAD');
+
+		Http::assertNothingSent();
+	}
+
+	public function test_missing_supabase_credentials_returns_internal_error(): void
+	{
+		config([
+			'services.supabase.url' => null,
+			'services.supabase.service_role_key' => null,
+		]);
+		putenv('SUPABASE_URL');
+		putenv('SUPABASE_SERVICE_ROLE_KEY');
+
+		Http::fake();
+		$initData = $this->buildSignedInitData();
+
+		$this->postJson('/api/auth/telegram', [
+			'initData' => $initData,
+		])
+			->assertStatus(500)
+			->assertJsonPath('error.code', 'TG_AUTH_INTERNAL_ERROR');
 
 		Http::assertNothingSent();
 	}

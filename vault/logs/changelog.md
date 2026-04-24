@@ -437,3 +437,33 @@
 - run Telegram auth feature tests in full runtime environment
 - decide and implement final production session strategy
 - proceed with first API slice and content seeding execution
+
+## 2026-04-24 06:30 — Telegram Session Strategy Hardened (Transitional)
+
+### Done
+
+- Updated Telegram auth session issuance in `AuthController`:
+  - replaced signed JWT-like token output with opaque random bearer token
+  - stores session server-side in cache using hashed token key
+  - returns `session_id` + `expires_in` in auth payload
+- Kept Supabase profile upsert integration and role-forcing behavior intact
+- Expanded `TelegramAuthApiTest` with missing Supabase credentials failure case
+- Updated docs/state to reflect current session strategy:
+  - `backend/README.md`
+  - `vault/wiki/architecture/telegram-auth-contract.md`
+  - sprint/resume/ledger/code-map
+
+### Verified
+
+- PHP syntax lint passed on VPS for updated backend files
+- Telegram auth error-code contract remains unchanged
+
+### Blockers
+
+- Full Laravel runtime execution for feature tests still not available in current minimal backend skeleton
+
+### Next
+
+- run Telegram auth feature tests in full runtime environment
+- choose long-term production session architecture
+- continue with first API slice and seeding execution

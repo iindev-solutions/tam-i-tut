@@ -24,7 +24,7 @@ Finalize startup foundation so implementation work on Nuxt + Supabase + Telegram
 
 ## Current Priority
 
-1. harden Telegram auth session strategy and execute full runtime tests
+1. execute Telegram auth feature tests in a full Laravel runtime environment
 2. create 200+ content seeding backlog and ownership
 3. start first backend API slice on verified schema/RLS foundation
 4. keep VPS runtime runbook as fallback for DB validation and CI parity

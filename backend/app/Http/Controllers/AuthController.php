@@ -126,19 +126,20 @@ class AuthController extends Controller
 				$localeHint
 			);
 
-			$sessionToken = $this->issueSignedSessionToken([
+			$session = $this->issueOpaqueSessionToken([
 				'sub' => (string) $profile['id'],
 				'telegram_user_id' => (int) $profile['telegram_user_id'],
 				'role' => (string) $profile['role'],
 				'locale' => (string) $profile['locale'],
-			]);
+			], $payload['device_fingerprint'] ?? null);
 
 			return response()->json([
 				'success' => true,
 				'auth' => [
-					'token' => $sessionToken,
+					'token' => $session['token'],
 					'token_type' => 'Bearer',
-					'expires_in' => self::TG_SESSION_TTL_SECONDS,
+					'expires_in' => $session['expires_in'],
+					'session_id' => $session['session_id'],
 				],
 				'profile' => [
 					'id' => $profile['id'],
@@ -149,7 +150,7 @@ class AuthController extends Controller
 				],
 				'meta' => [
 					'upsert_mode' => 'supabase_profile_upsert',
-					'session_mode' => 'signed_internal_token',
+					'session_mode' => 'opaque_cache_token',
 				],
 			]);
 		} catch (Throwable $e) {
@@ -450,51 +451,34 @@ class AuthController extends Controller
 		return 'tg_' . $telegramUserId . '@telegram.tamitut.local';
 	}
 
-	private function issueSignedSessionToken(array $claims): string
+	private function issueOpaqueSessionToken(array $claims, ?string $deviceFingerprint): array
 	{
-		$header = [
-			'alg' => 'HS256',
-			'typ' => 'JWT',
+		$sessionId = (string) Str::uuid();
+		$token = Str::random(96);
+		$tokenHash = hash('sha256', $token);
+		$expiresIn = self::TG_SESSION_TTL_SECONDS;
+		$expiresAt = now()->addSeconds($expiresIn);
+
+		$stored = Cache::put('tg_session:' . $tokenHash, [
+			'session_id' => $sessionId,
+			'sub' => $claims['sub'] ?? null,
+			'telegram_user_id' => $claims['telegram_user_id'] ?? null,
+			'role' => $claims['role'] ?? 'user',
+			'locale' => $claims['locale'] ?? 'ru',
+			'device_fingerprint' => $deviceFingerprint,
+			'created_at' => now()->toIso8601String(),
+			'expires_at' => $expiresAt->toIso8601String(),
+		], $expiresAt);
+
+		if (!$stored) {
+			throw new RuntimeException('Failed to persist Telegram session token in cache.');
+		}
+
+		return [
+			'token' => $token,
+			'session_id' => $sessionId,
+			'expires_in' => $expiresIn,
 		];
-
-		$payload = array_merge($claims, [
-			'iat' => now()->timestamp,
-			'exp' => now()->addSeconds(self::TG_SESSION_TTL_SECONDS)->timestamp,
-			'jti' => (string) Str::uuid(),
-		]);
-
-		$encodedHeader = $this->base64UrlEncode(json_encode($header, JSON_UNESCAPED_SLASHES));
-		$encodedPayload = $this->base64UrlEncode(json_encode($payload, JSON_UNESCAPED_SLASHES));
-		$signature = hash_hmac(
-			'sha256',
-			$encodedHeader . '.' . $encodedPayload,
-			$this->resolveAppSigningKey(),
-			true
-		);
-
-		return $encodedHeader . '.' . $encodedPayload . '.' . $this->base64UrlEncode($signature);
-	}
-
-	private function resolveAppSigningKey(): string
-	{
-		$key = (string) config('app.key', '');
-		if (str_starts_with($key, 'base64:')) {
-			$decoded = base64_decode(substr($key, 7), true);
-			if ($decoded !== false) {
-				return $decoded;
-			}
-		}
-
-		if ($key !== '') {
-			return $key;
-		}
-
-		return 'tamitut-dev-fallback-signing-key';
-	}
-
-	private function base64UrlEncode(string $value): string
-	{
-		return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
 	}
 
 	private function telegramError(string $code, string $message, int $status): JsonResponse

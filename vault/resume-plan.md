@@ -20,19 +20,25 @@
   - `npx supabase test db supabase/tests/rls --local` → PASS (80 tests)
 - `supabase/tests/rls/001..009_*.sql` now contain concrete pgTAP assertions for RLS and guard behaviors.
 - CI baseline is wired in `.github/workflows/ci.yml` for frontend and Supabase DB quality gates.
+- Transitional Telegram auth endpoint implemented in backend (`POST /api/auth/telegram`) with:
+  - Telegram signature validation
+  - payload age check
+  - replay detection via cache
+  - typed error codes per contract
+  - contract tests in `backend/tests/Feature/TelegramAuthApiTest.php`
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. implement Telegram auth contract endpoint logic
-2. create content seeding backlog execution plan and ownership
-3. start first end-to-end backend API slice on top of verified schema/policies
-4. define operational cadence for VPS DB validation in release flow
+1. connect Telegram auth endpoint to final Supabase profile upsert and session persistence layer
+2. validate Telegram auth contract tests in a full Laravel runtime environment
+3. create content seeding backlog execution plan and ownership
+4. start first end-to-end backend API slice on top of verified schema/policies
 5. monitor CI runtime and optimize Supabase job exclusions if needed
 
 ## Session Restart Prompt
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-CI baseline is now wired and RLS/guard tests pass on VPS (`80` tests). Continue with Telegram auth contract implementation.
+CI baseline is wired and RLS/guard tests pass on VPS (`80` tests). Telegram auth contract is implemented in transitional backend; continue by wiring final Supabase persistence/integration.
 ```

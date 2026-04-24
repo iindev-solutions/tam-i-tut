@@ -365,3 +365,42 @@
 - observe first GitHub Actions run and adjust exclusions/timeouts if needed
 - implement Telegram auth contract endpoint
 - continue startup critical path after auth slice
+
+## 2026-04-24 05:35 — Telegram Auth Contract Endpoint Added (Transitional Backend)
+
+### Done
+
+- Added API route: `POST /api/auth/telegram` in `backend/routes/api.php`
+- Implemented Telegram auth contract logic in `backend/app/Http/Controllers/AuthController.php`:
+  - Telegram signature validation (official WebApp hash flow)
+  - payload freshness check (`auth_date` age window)
+  - replay detection (cache-backed payload hash TTL)
+  - typed error responses:
+    - `TG_AUTH_INVALID_SIGNATURE`
+    - `TG_AUTH_EXPIRED_PAYLOAD`
+    - `TG_AUTH_REPLAY_DETECTED`
+    - `TG_AUTH_MALFORMED_PAYLOAD`
+    - `TG_AUTH_INTERNAL_ERROR`
+  - default role assignment `user` and locale normalization (`ru` default, `en` optional)
+  - transitional session-token caching placeholder for integration path
+- Marked legacy `POST /api/auth/login` placeholder as deprecated (410)
+- Added contract-oriented tests: `backend/tests/Feature/TelegramAuthApiTest.php`
+- Updated backend docs/reference map:
+  - `backend/README.md`
+  - `vault/CODE_MAP.md`
+
+### Verified
+
+- PHP syntax lint run on VPS for modified backend files (`php -l`) passed
+- Implementation aligns with `vault/wiki/architecture/telegram-auth-contract.md` rules and error code set
+
+### Blockers
+
+- Backend folder remains transitional/minimal; full Laravel runtime execution for feature tests is not yet active
+- Profile upsert/session persistence still needs final Supabase service-layer integration
+
+### Next
+
+- wire Telegram auth endpoint to final Supabase profile upsert + session persistence
+- run full endpoint tests in runtime environment
+- continue with content seeding and first verified API slice

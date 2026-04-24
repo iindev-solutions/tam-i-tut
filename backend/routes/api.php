@@ -6,3 +6,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/health', [HealthController::class, 'show']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/telegram', [AuthController::class, 'telegram']);

@@ -131,3 +131,20 @@
 - Verified: workflow file committed locally with explicit gate commands aligned to VPS-validated flow
 - Blockers: GitHub Actions runtime execution pending first remote run result
 - Next: monitor first CI run, tune job exclusions if needed, then implement Telegram auth contract
+
+## 2026-04-24 05:35 — Telegram Auth Contract Endpoint (Transitional) Implemented
+
+- Scope: implement Telegram initData auth contract in backend transitional layer
+- Changes:
+  - added `POST /api/auth/telegram` route
+  - implemented signature verification, payload age window, replay guard, typed error responses, and session token issuance in `AuthController`
+  - marked `/api/auth/login` placeholder as deprecated (410 response)
+  - added contract-focused feature tests: `backend/tests/Feature/TelegramAuthApiTest.php`
+  - updated backend README and CODE_MAP references
+- Verified:
+  - PHP syntax check on VPS (`php -l`) for modified backend files passed
+  - contract logic matches error-code set from `telegram-auth-contract.md`
+- Blockers:
+  - backend folder is still transitional/minimal; full Laravel runtime test execution is not wired in current environment
+  - profile upsert/session persistence is still placeholder and must be connected to final Supabase service layer
+- Next: connect Telegram auth flow to final Supabase-backed persistence and execute full endpoint tests in runtime

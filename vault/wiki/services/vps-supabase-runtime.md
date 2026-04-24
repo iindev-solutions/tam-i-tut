@@ -32,28 +32,38 @@ sudo usermod -aG docker $USER
 
 Re-login after `usermod`.
 
+## One-Time Node.js Setup (Ubuntu example)
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+sudo apt-get install -y nodejs
+node -v
+npm -v
+npx -v
+```
+
 ## Runtime Validation Flow
 
 From repository root:
 
 ```bash
-npx supabase start
-npx supabase migration up --local
-npx supabase db lint --local --fail-on error
-npx supabase test db supabase/tests/rls --local
+npx -y supabase start
+npx -y supabase migration up --local
+npx -y supabase db lint --local --fail-on error
+npx -y supabase test db supabase/tests/rls --local
 ```
 
 Optional status checks:
 
 ```bash
-npx supabase status
-npx supabase migration list --local
+npx -y supabase status
+npx -y supabase migration list --local
 ```
 
 Stop stack when done:
 
 ```bash
-npx supabase stop
+npx -y supabase stop
 ```
 
 ## Current Validation Scope
@@ -62,9 +72,36 @@ npx supabase stop
 2. confirm RLS policies compile and apply
 3. run RLS and guard tests under `supabase/tests/rls/`
 
+## Latest Validation Snapshot (2026-04-24)
+
+- VPS: `iind-vps`
+- Runtime path: `/srv/tam-i-tut`
+- `migration up --local`: up to date
+- `db lint --local --fail-on error`: no schema errors
+- `test db supabase/tests/rls --local`: fails because test files are scaffold-level (no TAP plan/assertions)
+
 ## Known Gaps
 
 - test files under `supabase/tests/rls/` are scaffold-level and require concrete assertions before final pass
+
+## Low-Disk VPS Notes
+
+Observed on 10GB VPS: first full `supabase start` can fail with `no space left on device` during image extraction.
+
+Practical recovery sequence:
+
+```bash
+# stop stack if partially started
+npx -y supabase stop || true
+
+# cleanup only when you are sure no critical docker workloads are using stopped images
+docker image prune -a -f
+
+# verify free space
+df -h /
+```
+
+Then retry `npx -y supabase start`.
 
 ## Failure Handling
 

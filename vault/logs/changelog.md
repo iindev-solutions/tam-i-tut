@@ -266,3 +266,37 @@
 - execute VPS runbook
 - validate migrations and tests on running Supabase runtime
 - patch SQL/policies based on runtime errors
+
+## 2026-04-24 03:40 — VPS Runtime Provisioned + First Validation Run
+
+### Done
+
+- Connected to VPS alias `iind-vps` and audited baseline environment
+- Confirmed `git` already installed and GitHub SSH access working
+- Installed Docker Engine + Compose plugin on VPS
+- Installed Node.js 22 + npm/npx on VPS
+- Cloned repository to `/srv/tam-i-tut`
+- Executed Supabase runtime validation commands from VPS:
+  - `npx -y supabase start`
+  - `npx -y supabase migration up --local`
+  - `npx -y supabase db lint --local --fail-on error`
+  - `npx -y supabase test db supabase/tests/rls --local`
+
+### Verified
+
+- `supabase migration up --local` reports local DB up to date
+- `supabase db lint --local --fail-on error` reports no schema errors
+- `supabase migration list --local` shows all migrations `001`–`020` applied
+- Supabase stack can be started/stopped from VPS project path
+
+### Blockers
+
+- Initial `supabase start` attempt failed with `no space left on device` on 10GB VPS during image extraction
+- Recovered by Docker image cleanup and rerun
+- `supabase test db` currently fails with TAP parse errors because `supabase/tests/rls/*.sql` are still scaffold files with no test plan/assertions
+
+### Next
+
+- implement concrete pgTAP assertions in `supabase/tests/rls/001..009_*.sql`
+- rerun `npx -y supabase test db supabase/tests/rls --local` on VPS until green
+- after tests are green, proceed with Telegram auth contract implementation

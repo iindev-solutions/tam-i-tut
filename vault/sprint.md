@@ -20,11 +20,11 @@ Finalize startup foundation so implementation work on Nuxt + Supabase + Telegram
 | 4.10 | Implement Telegram auth contract (signature + replay + error codes) | TODO |
 | 4.11 | Create 200+ entry seeding backlog with evidence metadata | TODO |
 | 4.12 | Wire CI quality gates (lint/type/test + DB policy tests) | TODO |
-| 4.13 | Enable VPS Docker runtime validation (Supabase services) | TODO |
+| 4.13 | Enable VPS Docker runtime validation (Supabase services) | DONE |
 
 ## Current Priority
 
-1. complete role-policy SQL tests for `014`–`018`
-2. enable Docker + run local Supabase migration/test validation
+1. complete role-policy SQL tests under `supabase/tests/rls/001..009_*.sql`
+2. re-run `supabase test db` on VPS and make tests pass
 3. implement Telegram auth endpoint contract
 4. create 200+ content seeding backlog and ownership

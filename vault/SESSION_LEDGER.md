@@ -87,3 +87,21 @@
 - Verified: plan now consistently targets `npx supabase` + VPS Docker runtime
 - Blockers: VPS execution not run yet
 - Next: run playbook on VPS and fix migration/policy runtime issues
+
+## 2026-04-24 03:40 — VPS Runtime Provisioned and First Validation Run
+
+- Scope: execute VPS setup + first real migration/lint/test run from `iind-vps`
+- Changes:
+  - installed Docker Engine and Compose plugin on VPS
+  - installed Node.js 22 + npm/npx on VPS
+  - cloned repo to `/srv/tam-i-tut`
+  - ran Supabase validation commands on VPS
+- Verified:
+  - `npx supabase migration up --local` → up to date
+  - `npx supabase db lint --local --fail-on error` → no schema errors
+  - `npx supabase migration list --local` shows `001`–`020` applied
+- Blockers:
+  - first `supabase start` attempt hit disk pressure (`no space left on device`)
+  - resolved by Docker image cleanup and rerun
+  - `supabase test db` currently fails because test files are still scaffold-level (no TAP plans/assertions)
+- Next: implement pgTAP assertions in `supabase/tests/rls/001..009_*.sql`, then rerun VPS test command until green

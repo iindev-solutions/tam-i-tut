@@ -12,13 +12,19 @@
 - Base schema migrations `001`–`013` now contain concrete SQL from locked schema contract.
 - RLS/policy migrations `014`–`018` now contain concrete SQL.
 - Trust/safety guard migrations `019`–`020` now contain concrete SQL.
+- VPS runtime is prepared: Docker + Node.js installed, repo cloned at `/srv/tam-i-tut`.
+- Supabase runtime validation executed on VPS:
+  - `npx supabase start` succeeded (after disk cleanup)
+  - `npx supabase migration up --local` → up to date
+  - `npx supabase db lint --local --fail-on error` → no schema errors
+  - `npx supabase test db supabase/tests/rls --local` → FAIL (test stubs have no TAP plan/assertions)
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. provision Docker on VPS and run Supabase local stack for migration execution
-2. run migration/policy validation and fix SQL issues found at runtime
-3. complete role-policy SQL tests in `supabase/tests/rls/`
+1. implement concrete pgTAP assertions in `supabase/tests/rls/001..009_*.sql`
+2. re-run `npx supabase test db supabase/tests/rls --local` on VPS until passing
+3. capture and fix any policy/guard behavior issues revealed by tests
 4. scaffold CI checks for frontend + DB policy verification
 5. implement Telegram auth contract endpoint logic
 
@@ -26,5 +32,5 @@
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-All migration files (`001`–`020`) have SQL. Next session: run VPS Docker playbook (`vault/wiki/services/vps-supabase-runtime.md`), fix runtime issues, then finish role-policy tests.
+VPS runtime setup is complete and migrations/lint are validated. Continue by implementing pgTAP assertions in `supabase/tests/rls/`, then re-run VPS `supabase test db` until green.
 ```

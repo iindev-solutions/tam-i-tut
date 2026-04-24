@@ -78,11 +78,11 @@ npx -y supabase stop
 - Runtime path: `/srv/tam-i-tut`
 - `migration up --local`: up to date
 - `db lint --local --fail-on error`: no schema errors
-- `test db supabase/tests/rls --local`: fails because test files are scaffold-level (no TAP plan/assertions)
+- `test db supabase/tests/rls --local`: PASS (`Files=9, Tests=80`)
 
 ## Known Gaps
 
-- test files under `supabase/tests/rls/` are scaffold-level and require concrete assertions before final pass
+- CI is not yet wired to run VPS-equivalent DB tests automatically on each merge
 
 ## Low-Disk VPS Notes
 

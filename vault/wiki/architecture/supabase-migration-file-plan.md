@@ -23,7 +23,9 @@ Notes:
 - `001`–`013`: implemented (base schema SQL complete)
 - `014`–`018`: implemented (RLS helpers + policies complete)
 - `019`–`020`: implemented (trust/safety guard functions + triggers complete)
-- remaining work: execute on running Supabase runtime and validate role-policy tests
+- `tests/rls 001`–`009`: implemented with concrete pgTAP assertions
+- runtime validation status (VPS): migrations/lint/tests passing (`Files=9, Tests=80`)
+- remaining work: wire CI execution and continue feature-layer implementation
 
 ## Target Repository Tree
 

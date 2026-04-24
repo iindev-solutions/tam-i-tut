@@ -17,20 +17,21 @@
   - `npx supabase start` succeeded (after disk cleanup)
   - `npx supabase migration up --local` → up to date
   - `npx supabase db lint --local --fail-on error` → no schema errors
-  - `npx supabase test db supabase/tests/rls --local` → FAIL (test stubs have no TAP plan/assertions)
+  - `npx supabase test db supabase/tests/rls --local` → PASS (80 tests)
+- `supabase/tests/rls/001..009_*.sql` now contain concrete pgTAP assertions for RLS and guard behaviors.
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. implement concrete pgTAP assertions in `supabase/tests/rls/001..009_*.sql`
-2. re-run `npx supabase test db supabase/tests/rls --local` on VPS until passing
-3. capture and fix any policy/guard behavior issues revealed by tests
-4. scaffold CI checks for frontend + DB policy verification
-5. implement Telegram auth contract endpoint logic
+1. scaffold CI checks for frontend + DB policy verification (including `supabase test db`)
+2. implement Telegram auth contract endpoint logic
+3. create content seeding backlog execution plan and ownership
+4. define operational cadence for VPS DB validation in release flow
+5. start first end-to-end backend API slice on top of verified schema/policies
 
 ## Session Restart Prompt
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-VPS runtime setup is complete and migrations/lint are validated. Continue by implementing pgTAP assertions in `supabase/tests/rls/`, then re-run VPS `supabase test db` until green.
+RLS/guard tests are implemented and passing on VPS (`80` tests). Continue with CI wiring and Telegram auth contract implementation.
 ```

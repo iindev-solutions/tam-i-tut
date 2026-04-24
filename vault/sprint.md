@@ -15,7 +15,7 @@ Finalize startup foundation so implementation work on Nuxt + Supabase + Telegram
 | 4.5 | Draft migration file plan + RLS policy matrix v1 | DONE |
 | 4.6 | Scaffold `supabase/` project + ordered migration/test files | DONE |
 | 4.7 | Implement base schema SQL migrations (`001`–`013`) | DONE |
-| 4.8 | Implement RLS helpers/policies (`014`–`018`) + role tests | IN_PROGRESS |
+| 4.8 | Implement RLS helpers/policies (`014`–`018`) + role tests | DONE |
 | 4.9 | Implement trust/safety guards (`019`–`020`) | DONE |
 | 4.10 | Implement Telegram auth contract (signature + replay + error codes) | TODO |
 | 4.11 | Create 200+ entry seeding backlog with evidence metadata | TODO |
@@ -24,7 +24,7 @@ Finalize startup foundation so implementation work on Nuxt + Supabase + Telegram
 
 ## Current Priority
 
-1. complete role-policy SQL tests under `supabase/tests/rls/001..009_*.sql`
-2. re-run `supabase test db` on VPS and make tests pass
-3. implement Telegram auth endpoint contract
-4. create 200+ content seeding backlog and ownership
+1. implement Telegram auth endpoint contract
+2. wire CI quality gates to run frontend + DB policy tests
+3. create 200+ content seeding backlog and ownership
+4. keep VPS runtime runbook as fallback for DB validation

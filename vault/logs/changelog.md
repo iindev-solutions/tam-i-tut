@@ -300,3 +300,36 @@
 - implement concrete pgTAP assertions in `supabase/tests/rls/001..009_*.sql`
 - rerun `npx -y supabase test db supabase/tests/rls --local` on VPS until green
 - after tests are green, proceed with Telegram auth contract implementation
+
+## 2026-04-24 04:35 — RLS/Guard pgTAP Suite Implemented (`001`–`009`)
+
+### Done
+
+- Replaced all RLS test stubs with concrete pgTAP tests:
+  - `001_profiles_access.sql`
+  - `002_guide_entries_access.sql`
+  - `003_evidence_access.sql`
+  - `004_trusted_source_confirmations.sql`
+  - `005_safety_cases_access.sql`
+  - `006_user_suggestions_access.sql`
+  - `007_audit_log_access.sql`
+  - `008_trust_transition_guards.sql`
+  - `009_safety_publish_guards.sql`
+- Added role-scoped access checks and transition-guard failure/success assertions
+- Adjusted tests based on runtime behavior (e.g., 0-row updates under RLS, trigger-first guard failures)
+- Executed full DB test run on VPS runtime and stopped stack after validation
+
+### Verified
+
+- VPS command run:
+  - `npx -y supabase test db supabase/tests/rls --local`
+- Result:
+  - `Files=9, Tests=80`
+  - `Result: PASS`
+- RLS/guard validation is now executable and not scaffold-only
+
+### Next
+
+- wire CI quality gates to execute DB tests automatically
+- implement Telegram auth contract endpoint logic
+- proceed to content seeding backlog execution

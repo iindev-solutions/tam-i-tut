@@ -105,3 +105,17 @@
   - resolved by Docker image cleanup and rerun
   - `supabase test db` currently fails because test files are still scaffold-level (no TAP plans/assertions)
 - Next: implement pgTAP assertions in `supabase/tests/rls/001..009_*.sql`, then rerun VPS test command until green
+
+## 2026-04-24 04:35 — RLS/Guard pgTAP Suite Implemented and Passing
+
+- Scope: replace RLS test stubs with concrete assertions and validate on VPS runtime
+- Changes:
+  - implemented `supabase/tests/rls/001..009_*.sql` with role-policy and guard checks
+  - added explicit checks for profile, guide entry, evidence, source confirmation, safety case, suggestion, and audit-log policy behavior
+  - added trust/safety transition guard tests for migration `019` and `020`
+- Verified:
+  - ran `npx -y supabase test db supabase/tests/rls --local` on VPS (`/srv/tam-i-tut`)
+  - result: PASS (`Files=9, Tests=80`)
+  - all previously scaffold-only tests now provide TAP plans and assertions
+- Blockers: none in DB policy test layer; next work is CI integration and Telegram auth contract
+- Next: wire CI to run DB tests and implement Telegram auth contract

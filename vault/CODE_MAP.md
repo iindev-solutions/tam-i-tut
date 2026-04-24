@@ -6,6 +6,7 @@
 - `README.md` — TAMITUT vision, MVP boundaries, success metric
 - `.env.example` — local env placeholders
 - `skills-lock.json` — reproducible project skill set lock
+- `.github/workflows/ci.yml` — CI gates for frontend + Supabase DB policy tests
 
 ## Frontend (`frontend/`)
 
@@ -31,8 +32,8 @@
 
 - `config.toml` — local Supabase runtime config
 - `seed.sql` — local deterministic seed scaffold
-- `migrations/*_001..020_*.sql` — ordered migration scaffold files from migration plan
-- `tests/rls/*.sql` — RLS test scaffold files mapped to policy matrix
+- `migrations/*_001..020_*.sql` — ordered migration files implementing schema, RLS, and guard logic
+- `tests/rls/*.sql` — pgTAP RLS/guard regression suite (80 tests) mapped to policy matrix
 
 ## Vault (`vault/`)
 

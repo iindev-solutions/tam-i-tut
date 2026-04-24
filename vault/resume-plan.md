@@ -19,19 +19,20 @@
   - `npx supabase db lint --local --fail-on error` → no schema errors
   - `npx supabase test db supabase/tests/rls --local` → PASS (80 tests)
 - `supabase/tests/rls/001..009_*.sql` now contain concrete pgTAP assertions for RLS and guard behaviors.
+- CI baseline is wired in `.github/workflows/ci.yml` for frontend and Supabase DB quality gates.
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. scaffold CI checks for frontend + DB policy verification (including `supabase test db`)
-2. implement Telegram auth contract endpoint logic
-3. create content seeding backlog execution plan and ownership
+1. implement Telegram auth contract endpoint logic
+2. create content seeding backlog execution plan and ownership
+3. start first end-to-end backend API slice on top of verified schema/policies
 4. define operational cadence for VPS DB validation in release flow
-5. start first end-to-end backend API slice on top of verified schema/policies
+5. monitor CI runtime and optimize Supabase job exclusions if needed
 
 ## Session Restart Prompt
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-RLS/guard tests are implemented and passing on VPS (`80` tests). Continue with CI wiring and Telegram auth contract implementation.
+CI baseline is now wired and RLS/guard tests pass on VPS (`80` tests). Continue with Telegram auth contract implementation.
 ```

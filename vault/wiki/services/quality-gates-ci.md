@@ -21,13 +21,23 @@ npm --prefix frontend run typecheck
 npm --prefix frontend run test
 ```
 
-When Supabase migrations are added:
+Database quality gates (current):
 
 ```bash
-# database (placeholder)
-npx supabase db lint
-npx supabase db test
+# database
+npx -y supabase start --exclude studio,imgproxy,kong,mailpit,edge-runtime,logflare,vector,supavisor
+npx -y supabase migration up --local
+npx -y supabase db lint --local --fail-on error
+npx -y supabase test db supabase/tests/rls --local
+npx -y supabase stop
 ```
+
+## CI Workflow
+
+- GitHub Actions workflow: `.github/workflows/ci.yml`
+- Jobs:
+  1. `frontend-quality` (lint, typecheck, unit tests)
+  2. `database-quality` (Supabase start, migration up, db lint, pgTAP RLS suite)
 
 ## Merge Policy
 

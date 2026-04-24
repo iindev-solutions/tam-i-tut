@@ -333,3 +333,35 @@
 - wire CI quality gates to execute DB tests automatically
 - implement Telegram auth contract endpoint logic
 - proceed to content seeding backlog execution
+
+## 2026-04-24 05:05 — CI Quality Gates Workflow Added
+
+### Done
+
+- Added GitHub Actions workflow: `.github/workflows/ci.yml`
+- Implemented `frontend-quality` job:
+  - `npm --prefix frontend install`
+  - `npm --prefix frontend run lint`
+  - `npm --prefix frontend run typecheck`
+  - `npm --prefix frontend run test`
+- Implemented `database-quality` job:
+  - `npx -y supabase start --exclude studio,imgproxy,kong,mailpit,edge-runtime,logflare,vector,supavisor`
+  - `npx -y supabase migration up --local`
+  - `npx -y supabase db lint --local --fail-on error`
+  - `npx -y supabase test db supabase/tests/rls --local`
+  - `npx -y supabase stop` (always)
+- Updated docs to align with new CI baseline:
+  - `vault/wiki/services/quality-gates-ci.md`
+  - `vault/CODE_MAP.md`
+  - sprint/resume/session ledger entries
+
+### Verified
+
+- CI commands mirror VPS-validated DB flow and passing pgTAP suite
+- Workflow is scoped to `push`/`pull_request` on `main`
+
+### Next
+
+- observe first GitHub Actions run and adjust exclusions/timeouts if needed
+- implement Telegram auth contract endpoint
+- continue startup critical path after auth slice

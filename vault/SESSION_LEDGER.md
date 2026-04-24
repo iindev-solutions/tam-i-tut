@@ -119,3 +119,15 @@
   - all previously scaffold-only tests now provide TAP plans and assertions
 - Blockers: none in DB policy test layer; next work is CI integration and Telegram auth contract
 - Next: wire CI to run DB tests and implement Telegram auth contract
+
+## 2026-04-24 05:05 — CI Quality Gates Wired
+
+- Scope: implement automated CI jobs for frontend and Supabase DB policy verification
+- Changes:
+  - added `.github/workflows/ci.yml`
+  - frontend job runs lint, typecheck, and unit tests under Node 22
+  - database job runs Supabase start, migration up, db lint, and pgTAP RLS suite
+  - updated quality-gates and vault planning docs to reflect CI baseline
+- Verified: workflow file committed locally with explicit gate commands aligned to VPS-validated flow
+- Blockers: GitHub Actions runtime execution pending first remote run result
+- Next: monitor first CI run, tune job exclusions if needed, then implement Telegram auth contract

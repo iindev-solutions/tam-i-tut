@@ -25,13 +25,15 @@
   - payload age check
   - replay detection via cache
   - typed error codes per contract
+  - Supabase profile upsert by `telegram_user_id`
+  - signed internal session token issuance
   - contract tests in `backend/tests/Feature/TelegramAuthApiTest.php`
 - Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. connect Telegram auth endpoint to final Supabase profile upsert and session persistence layer
-2. validate Telegram auth contract tests in a full Laravel runtime environment
+1. validate Telegram auth contract tests in a full Laravel runtime environment
+2. replace transitional signed session token with final production session strategy
 3. create content seeding backlog execution plan and ownership
 4. start first end-to-end backend API slice on top of verified schema/policies
 5. monitor CI runtime and optimize Supabase job exclusions if needed
@@ -40,5 +42,5 @@
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-CI baseline is wired and RLS/guard tests pass on VPS (`80` tests). Telegram auth contract is implemented in transitional backend; continue by wiring final Supabase persistence/integration.
+CI baseline is wired and RLS/guard tests pass on VPS (`80` tests). Telegram auth now performs Supabase profile upsert in transitional backend; continue with runtime validation and final session strategy hardening.
 ```

@@ -148,3 +148,21 @@
   - backend folder is still transitional/minimal; full Laravel runtime test execution is not wired in current environment
   - profile upsert/session persistence is still placeholder and must be connected to final Supabase service layer
 - Next: connect Telegram auth flow to final Supabase-backed persistence and execute full endpoint tests in runtime
+
+## 2026-04-24 06:05 — Telegram Auth Supabase Persistence Wiring
+
+- Scope: replace placeholder Telegram auth persistence path with real Supabase profile integration
+- Changes:
+  - wired `POST /api/auth/telegram` to Supabase REST/Auth Admin APIs via service-role key
+  - implemented profile lookup/upsert by `telegram_user_id`
+  - implemented auth-user bootstrap fallback flow for new Telegram users
+  - replaced cache-only session token with signed internal token issuance (transitional)
+  - updated Telegram auth tests to fake Supabase HTTP flows and validate contract behavior
+  - updated env/example and backend docs
+- Verified:
+  - PHP syntax lint (`php -l`) passed on VPS for controller/routes/tests
+  - contract tests updated for Supabase-integrated success/replay/signature/expiry/malformed paths
+- Blockers:
+  - full Laravel runtime execution for feature tests is still not wired in this minimal backend skeleton
+  - final production session strategy remains pending (current token is transitional)
+- Next: enable runtime test execution and choose final production session strategy

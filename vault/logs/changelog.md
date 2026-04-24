@@ -404,3 +404,36 @@
 - wire Telegram auth endpoint to final Supabase profile upsert + session persistence
 - run full endpoint tests in runtime environment
 - continue with content seeding and first verified API slice
+
+## 2026-04-24 06:05 — Telegram Auth Supabase Persistence Wired (Transitional)
+
+### Done
+
+- Extended `backend/app/Http/Controllers/AuthController.php` Telegram flow to integrate Supabase:
+  - resolved Supabase credentials from env/config
+  - profile lookup by `telegram_user_id` via Supabase REST
+  - new-user bootstrap via Supabase Auth Admin API
+  - profile insert/update in `public.profiles` with role forced to `user`
+- Replaced cache-only auth token output with signed internal session token (transitional stateless token)
+- Updated Telegram auth feature tests (`backend/tests/Feature/TelegramAuthApiTest.php`) to fake Supabase HTTP responses for success/replay/failure scenarios
+- Updated `.env.example` with Supabase server-side credentials required by transitional endpoint
+- Updated backend and vault code-map docs to reflect new auth behavior
+
+### Verified
+
+- PHP syntax lint on VPS passed for:
+  - `backend/app/Http/Controllers/AuthController.php`
+  - `backend/routes/api.php`
+  - `backend/tests/Feature/TelegramAuthApiTest.php`
+- Telegram auth contract behavior remains aligned to typed error-code spec
+
+### Blockers
+
+- Minimal backend skeleton still lacks full Laravel runtime/test harness execution in current repo shape
+- Production-grade session strategy is still open (current signed token is transitional)
+
+### Next
+
+- run Telegram auth feature tests in full runtime environment
+- decide and implement final production session strategy
+- proceed with first API slice and content seeding execution

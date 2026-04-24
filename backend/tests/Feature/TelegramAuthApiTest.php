@@ -3,26 +3,44 @@
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class TelegramAuthApiTest extends TestCase
 {
 	private string $botToken = 'test_bot_token_123';
+	private string $supabaseUrl = 'https://example.supabase.co';
+	private string $supabaseServiceRoleKey = 'supabase_service_role_test_key';
 
 	protected function setUp(): void
 	{
 		parent::setUp();
 
-		config(['services.telegram.bot_token' => $this->botToken]);
+		config([
+			'services.telegram.bot_token' => $this->botToken,
+			'services.supabase.url' => $this->supabaseUrl,
+			'services.supabase.service_role_key' => $this->supabaseServiceRoleKey,
+		]);
+
 		putenv('TELEGRAM_BOT_TOKEN=' . $this->botToken);
+		putenv('SUPABASE_URL=' . $this->supabaseUrl);
+		putenv('SUPABASE_SERVICE_ROLE_KEY=' . $this->supabaseServiceRoleKey);
 		$_ENV['TELEGRAM_BOT_TOKEN'] = $this->botToken;
+		$_ENV['SUPABASE_URL'] = $this->supabaseUrl;
+		$_ENV['SUPABASE_SERVICE_ROLE_KEY'] = $this->supabaseServiceRoleKey;
 		$_SERVER['TELEGRAM_BOT_TOKEN'] = $this->botToken;
+		$_SERVER['SUPABASE_URL'] = $this->supabaseUrl;
+		$_SERVER['SUPABASE_SERVICE_ROLE_KEY'] = $this->supabaseServiceRoleKey;
 
 		Cache::flush();
+		Http::preventStrayRequests();
 	}
 
 	public function test_valid_payload_passes_and_returns_session_shape(): void
 	{
+		$profileId = '7a7f7f8f-1ed2-4f89-9f95-7cb3b58f6021';
+		$this->fakeSupabaseNewProfileFlow($profileId);
+
 		$initData = $this->buildSignedInitData();
 
 		$this->postJson('/api/auth/telegram', [
@@ -31,13 +49,21 @@ class TelegramAuthApiTest extends TestCase
 		])
 			->assertOk()
 			->assertJsonPath('success', true)
+			->assertJsonPath('profile.id', $profileId)
 			->assertJsonPath('profile.telegram_user_id', 123456789)
 			->assertJsonPath('profile.role', 'user')
-			->assertJsonPath('profile.locale', 'ru');
+			->assertJsonPath('profile.locale', 'ru')
+			->assertJsonPath('auth.token_type', 'Bearer')
+			->assertJsonPath('auth.expires_in', 3600)
+			->assertJsonPath('meta.upsert_mode', 'supabase_profile_upsert');
+
+		Http::assertSentCount(3);
 	}
 
 	public function test_tampered_payload_fails_signature_check(): void
 	{
+		Http::fake();
+
 		$initData = $this->buildSignedInitData();
 		parse_str($initData, $parsed);
 
@@ -54,10 +80,14 @@ class TelegramAuthApiTest extends TestCase
 		])
 			->assertStatus(401)
 			->assertJsonPath('error.code', 'TG_AUTH_INVALID_SIGNATURE');
+
+		Http::assertNothingSent();
 	}
 
 	public function test_expired_payload_is_rejected(): void
 	{
+		Http::fake();
+
 		$expiredAuthDate = time() - 301;
 		$initData = $this->buildSignedInitData([
 			'auth_date' => (string) $expiredAuthDate,
@@ -68,10 +98,15 @@ class TelegramAuthApiTest extends TestCase
 		])
 			->assertStatus(401)
 			->assertJsonPath('error.code', 'TG_AUTH_EXPIRED_PAYLOAD');
+
+		Http::assertNothingSent();
 	}
 
 	public function test_payload_replay_is_rejected(): void
 	{
+		$profileId = 'fa4f57c9-05c2-4ce5-8969-33718af93fb6';
+		$this->fakeSupabaseNewProfileFlow($profileId);
+
 		$initData = $this->buildSignedInitData();
 
 		$this->postJson('/api/auth/telegram', [
@@ -83,15 +118,43 @@ class TelegramAuthApiTest extends TestCase
 		])
 			->assertStatus(409)
 			->assertJsonPath('error.code', 'TG_AUTH_REPLAY_DETECTED');
+
+		Http::assertSentCount(3);
 	}
 
 	public function test_malformed_payload_is_rejected_with_typed_error(): void
 	{
+		Http::fake();
+
 		$this->postJson('/api/auth/telegram', [
 			'initData' => 'auth_date=1700000000&user=%7B%22id%22%3A123%7D',
 		])
 			->assertStatus(422)
 			->assertJsonPath('error.code', 'TG_AUTH_MALFORMED_PAYLOAD');
+
+		Http::assertNothingSent();
+	}
+
+	private function fakeSupabaseNewProfileFlow(string $profileId): void
+	{
+		Http::fake([
+			$this->supabaseUrl . '/rest/v1/profiles*' => Http::sequence()
+				->push([], 200)
+				->push([
+					[
+						'id' => $profileId,
+						'telegram_user_id' => 123456789,
+						'display_name' => 'Slava Test',
+						'role' => 'user',
+						'locale' => 'ru',
+						'is_active' => true,
+					],
+				], 201),
+			$this->supabaseUrl . '/auth/v1/admin/users' => Http::response([
+				'id' => $profileId,
+				'email' => 'tg_123456789@telegram.tamitut.local',
+			], 200),
+		]);
 	}
 
 	/**

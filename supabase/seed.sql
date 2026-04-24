@@ -1,0 +1,3 @@
+-- TAMITUT seed scaffold
+-- Keep deterministic local seed data for development/test only.
+-- Category canonical seed is defined in migration 002.

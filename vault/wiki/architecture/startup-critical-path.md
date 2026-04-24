@@ -10,6 +10,10 @@ This sequence is mandatory before broad feature implementation.
 
 1. **Supabase schema + migrations + RLS matrix**
    - output: initial schema files and role policy tests
+   - planning artifacts:
+     - `supabase-schema-rls-plan.md`
+     - `supabase-migration-file-plan.md`
+     - `supabase-rls-policy-matrix-v1.md`
 2. **Trust state machine enforcement**
    - output: transition rules + guard checks + audit trail contract
 3. **Telegram auth contract**

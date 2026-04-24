@@ -25,8 +25,8 @@ When Supabase migrations are added:
 
 ```bash
 # database (placeholder)
-supabase db lint
-supabase db test
+npx supabase db lint
+npx supabase db test
 ```
 
 ## Merge Policy

@@ -67,6 +67,8 @@ Serve trusted, curated newcomer guidance for Da Nang with evidence-based publica
 
 - `startup-critical-path.md`
 - `supabase-schema-rls-plan.md`
+- `supabase-migration-file-plan.md`
+- `supabase-rls-policy-matrix-v1.md`
 - `trust-state-machine.md`
 - `telegram-auth-contract.md`
 - `../services/content-seeding-protocol.md`

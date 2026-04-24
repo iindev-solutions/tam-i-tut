@@ -4,19 +4,27 @@
 
 - Project skill stack installed and locked for this repo (`skills-lock.json`).
 - Startup critical path documented in architecture/services docs.
-- Core implementation prerequisites are now explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
+- Schema contract v1 locked in `vault/wiki/architecture/supabase-schema-rls-plan.md`.
+- Migration sequencing and RLS policy matrix now documented in:
+  - `vault/wiki/architecture/supabase-migration-file-plan.md`
+  - `vault/wiki/architecture/supabase-rls-policy-matrix-v1.md`
+- `supabase/` scaffold created with ordered migration stubs (`001`–`020`) and RLS test stubs.
+- Base schema migrations `001`–`013` now contain concrete SQL from locked schema contract.
+- RLS/policy migrations `014`–`018` now contain concrete SQL.
+- Trust/safety guard migrations `019`–`020` now contain concrete SQL.
+- Core implementation prerequisites are explicit: schema/RLS, trust transitions, Telegram auth, seeding, CI gates.
 
 ## Next Step
 
-1. draft first Supabase SQL migration for core tables and enums
-2. write RLS policies for `user/curator/moderator/admin/trusted_source`
-3. add trust-state transition checks and audit event writes
-4. implement Telegram auth validation endpoint contract
-5. scaffold CI checks for frontend + DB policy verification
+1. provision Docker on VPS and run Supabase local stack for migration execution
+2. run migration/policy validation and fix SQL issues found at runtime
+3. complete role-policy SQL tests in `supabase/tests/rls/`
+4. scaffold CI checks for frontend + DB policy verification
+5. implement Telegram auth contract endpoint logic
 
 ## Session Restart Prompt
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, and vault/resume-plan.md.
-Startup docs and skill stack are ready. Start with first Supabase migration + RLS matrix, then trust transition enforcement, then Telegram auth contract implementation.
+All migration files (`001`–`020`) have SQL. Next session: run VPS Docker playbook (`vault/wiki/services/vps-supabase-runtime.md`), fix runtime issues, then finish role-policy tests.
 ```

@@ -13,6 +13,7 @@
 - define verification evidence model and trusted-source registry
 - define trust badge transition rules and publication gates
 - lock startup critical path docs (`startup-critical-path`, schema/RLS, trust machine, auth contract)
+- lock migration sequencing and RLS role matrix before writing SQL
 
 ## Phase 2 — Content Seeding (Pre-launch)
 

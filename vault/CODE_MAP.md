@@ -27,6 +27,13 @@
 - `app/Http/Controllers/AuthController.php` — placeholder login action
 - `tests/Feature/HealthApiTest.php` — sample feature test
 
+## Supabase (`supabase/`)
+
+- `config.toml` — local Supabase runtime config
+- `seed.sql` — local deterministic seed scaffold
+- `migrations/*_001..020_*.sql` — ordered migration scaffold files from migration plan
+- `tests/rls/*.sql` — RLS test scaffold files mapped to policy matrix
+
 ## Vault (`vault/`)
 
 - `master_index.md` — knowledge base entry point
@@ -43,7 +50,9 @@
 - `wiki/architecture/system-design.md` — domain model and enforcement boundaries
 - `wiki/architecture/auth-flow.md` — role/session auth flow
 - `wiki/architecture/startup-critical-path.md` — mandatory startup sequence
-- `wiki/architecture/supabase-schema-rls-plan.md` — schema and RLS plan
+- `wiki/architecture/supabase-schema-rls-plan.md` — schema and RLS contract
+- `wiki/architecture/supabase-migration-file-plan.md` — ordered migration file plan
+- `wiki/architecture/supabase-rls-policy-matrix-v1.md` — role-by-table RLS matrix
 - `wiki/architecture/trust-state-machine.md` — trust badge transition rules
 - `wiki/architecture/telegram-auth-contract.md` — Telegram auth validation contract
 
@@ -53,4 +62,5 @@
 - `wiki/services/agent-skills-stack.md` — installed skill stack and restore/update flow
 - `wiki/services/content-seeding-protocol.md` — launch seeding process
 - `wiki/services/quality-gates-ci.md` — CI and quality gates baseline
+- `wiki/services/vps-supabase-runtime.md` — VPS Docker runbook for migration/test validation
 - `wiki/services/service-template.md` — template for new service docs

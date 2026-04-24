@@ -113,3 +113,156 @@
 - implement first Supabase migration + RLS matrix
 - implement trust badge transition enforcement
 - implement Telegram auth endpoint contract
+
+## 2026-04-23 19:55 — Schema Contract v1 Locked
+
+### Done
+
+- Rewrote `vault/wiki/architecture/supabase-schema-rls-plan.md` from draft list to locked v1 schema contract
+- Locked enums, table set, core columns, constraints, and index baseline
+- Added explicit trust-rule mapping to concrete tables/columns
+- Added RLS anchor fields for upcoming policy implementation
+- Updated sprint and resume plan to reflect schema-contract-complete state
+
+### Verified
+
+- Schema doc now has no `TBD` placeholders
+- Trust model requirements map to concrete schema constraints
+- Next milestone now clearly starts at SQL migration conversion
+
+### Next
+
+- convert schema contract to SQL migrations
+- write RLS policies and role matrix tests
+- implement trust-state enforcement and Telegram auth contract
+
+## 2026-04-23 20:15 — Migration Plan + RLS Matrix Planned
+
+### Done
+
+- Added `supabase-migration-file-plan.md` with exact migration file tree and ordered creation sequence
+- Added `supabase-rls-policy-matrix-v1.md` with role-by-table CRUD boundaries and policy naming convention
+- Linked new docs from startup critical path, system design, CODE_MAP, and README
+- Updated sprint/resume to shift from schema-lock to migration-execution phase
+
+### Verified
+
+- Migration plan maps to schema contract objects in sequence (`001` to `020`)
+- RLS matrix now explicit for all five roles and all core tables
+- Planning docs now provide direct next-step path for SQL implementation
+
+### Next
+
+- scaffold `supabase/` structure and generate migration files
+- implement base schema SQL migrations (`001`–`013`)
+- implement RLS and guard migrations (`014`–`020`) with tests
+
+## 2026-04-23 20:35 — Supabase Migration Scaffold Created
+
+### Done
+
+- Initialized local Supabase project (`supabase init` via `npx supabase`)
+- Generated ordered migration files from plan (`001` through `020`)
+- Added migration header templates to each scaffold file with purpose + source links
+- Added `supabase/tests/rls/` scaffold files mapped to policy matrix tests
+- Added `supabase/seed.sql` scaffold file
+- Updated sprint/resume/CODE_MAP to reflect scaffold-complete state
+
+### Verified
+
+- `supabase/migrations/` contains all planned migration stubs in order
+- `supabase/tests/rls/` contains all planned policy/guard test stubs
+- migration scaffolds align with `supabase-migration-file-plan.md`
+
+### Next
+
+- implement SQL content in migrations `001`–`013`
+- implement RLS and policy SQL in `014`–`018`
+- implement trust/safety guard SQL in `019`–`020`
+- start local Supabase services and validate migrations/tests
+
+## 2026-04-23 21:10 — Base Schema SQL Implemented (`001`–`013`)
+
+### Done
+
+- Implemented concrete SQL for migrations:
+  - `001_extensions_and_enums`
+  - `002_profiles_and_categories`
+  - `003_guide_entries`
+  - `004_contacts_prices_checklists`
+  - `005_verification_evidence`
+  - `006_trusted_sources_and_confirmations`
+  - `007_trust_badge_events`
+  - `008_safety_cases_and_evidence`
+  - `009_scam_patterns`
+  - `010_user_suggestions`
+  - `011_audit_logs`
+  - `012_updated_at_triggers`
+  - `013_performance_indexes`
+- Added append-only guard trigger for `audit_logs`
+- Added partial unique indexes for primary contact, active source confirmations, and checklist positioning rules
+
+### Verified
+
+- `001`–`013` migration files no longer contain template TODO stubs
+- `014`–`020` remain intentionally templated for next phase
+- schema implementation aligns with locked contract and migration plan
+
+### Blockers
+
+- Docker is not installed in current environment (`docker: command not found`), so local Supabase runtime validation is pending
+
+### Next
+
+- implement RLS helpers/policies in `014`–`018`
+- implement trust/safety guard logic in `019`–`020`
+- enable Docker and run local migration + policy tests
+
+## 2026-04-23 21:45 — RLS + Guard SQL Implemented (`014`–`020`)
+
+### Done
+
+- Implemented helper function migration `014_rls_helpers` (role, ownership, entry scope helpers)
+- Enabled RLS on all operational tables in `015_enable_rls`
+- Implemented core read policies in `016_rls_policies_core_read`
+- Implemented curator/trusted-source/user write policies in `017_rls_policies_curation_write`
+- Implemented moderator/admin policies in `018_rls_policies_moderation_admin`
+- Implemented trust transition guards + audit/trust event logging in `019_trust_guard_functions_and_triggers`
+- Implemented safety publish evidence guards + audit logging in `020_safety_publish_guards`
+
+### Verified
+
+- All migration files `001`–`020` now contain SQL (no template TODO stubs remain)
+- RLS matrix rules are now encoded in migration files
+- Migration progress updated in migration plan and sprint/resume docs
+
+### Blockers
+
+- Docker not available locally, so migrations cannot be executed/validated yet
+- Role-policy test files are still scaffold-level and need concrete assertions
+
+### Next
+
+- run migrations on VPS Docker Supabase runtime
+- fix runtime SQL/policy issues found during execution
+- complete role-policy tests under `supabase/tests/rls/`
+- then move to Telegram auth contract implementation
+
+## 2026-04-23 22:05 — VPS Runtime Playbook Added
+
+### Done
+
+- Added `vault/wiki/services/vps-supabase-runtime.md` with Docker install and Supabase validation flow
+- Updated service index and CODE_MAP to include VPS runbook
+- Updated sprint/resume wording from local Docker to VPS Docker validation path
+
+### Verified
+
+- Playbook commands align with current CLI usage (`npx supabase ...`)
+- Resume plan now points to VPS runbook for next execution step
+
+### Next
+
+- execute VPS runbook
+- validate migrations and tests on running Supabase runtime
+- patch SQL/policies based on runtime errors

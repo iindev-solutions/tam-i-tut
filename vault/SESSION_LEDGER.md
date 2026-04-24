@@ -39,3 +39,51 @@
 - Verified: `npx skills ls --json` includes all target skills; sprint/resume/codemap/changelog aligned
 - Blockers: no SQL migrations or policy tests implemented yet
 - Next: start Phase 1 implementation with first Supabase migration and RLS matrix
+
+## 2026-04-23 19:55 — Schema Contract Finalized
+
+- Scope: execute plan step 1 by locking concrete schema contract in vault
+- Changes: rewrote `supabase-schema-rls-plan.md` with full enum/table/constraint/index contract and RLS anchor fields
+- Verified: schema contract has no TBDs and directly maps trust requirements to DB structures
+- Blockers: SQL migrations and RLS test harness still not created
+- Next: convert locked schema into SQL migrations, then implement RLS and trust transition guards
+
+## 2026-04-23 20:15 — Migration and RLS Planning Step
+
+- Scope: execute next plan step by defining exact migration order and policy matrix before SQL writing
+- Changes: added migration file plan and RLS matrix docs; updated roadmap/startup/system-design/readme links
+- Verified: planned migration sequence covers schema contract and policy matrix covers all roles/tables
+- Blockers: Supabase CLI not installed globally; use `npx supabase`
+- Next: scaffold `supabase/` project and create migration files in planned order
+
+## 2026-04-23 20:35 — Migration Scaffold Execution
+
+- Scope: execute scaffold phase for Supabase migrations and RLS test files
+- Changes: initialized `supabase/`, generated migration stubs `001..020`, added template headers, created `supabase/tests/rls` stubs and `seed.sql`
+- Verified: all planned migration/test files exist and match migration plan ordering
+- Blockers: local Supabase containers not started yet, so migration list/test execution not validated against running DB
+- Next: implement SQL in ordered migrations, then run local DB validation
+
+## 2026-04-23 21:10 — Base Schema SQL Pass
+
+- Scope: execute migration implementation phase for base schema (`001`–`013`)
+- Changes: filled concrete SQL for enums, tables, constraints, triggers, and index set per schema contract
+- Verified: migration files `001`–`013` no longer have TODO template lines; `014`–`020` kept for RLS/guards next
+- Blockers: Docker unavailable, cannot run local Supabase containers for full migration execution tests
+- Next: implement `014`–`020`, then validate on running local Supabase stack
+
+## 2026-04-23 21:45 — RLS and Guard Migration Pass
+
+- Scope: implement remaining migration SQL (`014`–`020`) after base schema completion
+- Changes: added helper functions, enabled RLS, added policies for user/curator/trusted_source/mod/admin, and added trust/safety guard triggers with audit logging
+- Verified: all migration files now contain SQL; no template TODO lines remain
+- Blockers: no Docker on local machine; runtime validation must run on VPS Docker environment
+- Next: execute migrations on VPS Supabase stack, then finish role-policy test assertions
+
+## 2026-04-23 22:05 — VPS Validation Path Captured
+
+- Scope: adapt validation plan to environment without local Docker
+- Changes: added VPS Docker/Supabase runbook and linked it from docs/plans
+- Verified: plan now consistently targets `npx supabase` + VPS Docker runtime
+- Blockers: VPS execution not run yet
+- Next: run playbook on VPS and fix migration/policy runtime issues

@@ -1,0 +1,2 @@
+-- TAMITUT RLS test scaffold
+-- Fill assertions per: vault/wiki/architecture/supabase-rls-policy-matrix-v1.md

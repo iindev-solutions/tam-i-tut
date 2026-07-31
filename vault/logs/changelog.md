@@ -10,7 +10,10 @@
 ### Verified
 
 - `npm run typecheck`, `npm run lint`, `npm run test`, and `npm run build` - PASS.
-- Browser preview at 360px - PASS; app loads with no horizontal overflow. Loader source/build contains inline logo mark, two SVG paths, pulse animation, theme override, and reduced-motion fallback.
+- Pre-hydration browser smoke with scripts blocked until DOM load - PASS:
+  - saved `dark`: loader background `rgb(9, 9, 11)`, white logo, `tamitut-pulse`;
+  - saved `light`: loader background `rgb(255, 255, 255)`, dark logo, `tamitut-pulse`;
+  - `prefers-reduced-motion: reduce`: animation `none`, opacity `1`, transform `none`.
 
 ## 2026-04-23 11:20 - Starter Template Initialized
 

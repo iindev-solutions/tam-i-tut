@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-07-31 - Housing Prototype with Real District Map
+
+### Done
+
+- Added production-shaped housing data types and mock values in `frontend/app/mocks/housing.ts`.
+- Created `/categories/housing` route with hero, three guide sections, OpenStreetMap map, and selected district card.
+- Added Leaflet district polygons and tap-to-select colors; map is `ClientOnly` and destroyed on unmount.
+- Homepage housing card now navigates to the housing route.
+- Marked district boundary and price data as illustrative mocks pending verified district sources.
+
+### Verified
+
+- `npm run typecheck`, `npm run lint`, `npm run test`, and `npm run build` - PASS.
+- Browser at 340px: title renders, no horizontal overflow.
+- **UNVERIFIED & UNRESOLVED**: Only text/title/structure was visually confirmed in headless smoke; actual Leaflet container was absent. Map must be manually verified locally; district polygons are mocked drawing and must never be shipped as factual data until sourced from official GeoJSON/Overpass. Treat currently as prototype UI.
+
 ## 2026-07-31 - Supabase-Only Architecture Cutover
 
 ### Decision

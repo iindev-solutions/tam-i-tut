@@ -20,6 +20,62 @@
     "trustDescription": "Checked places - without random listings.",
     "footer": "For people who just arrived"
   },
+  "housing": {
+    "kicker": "Housing guide",
+    "title": "Find housing without overpaying",
+    "description": "Verified districts, price ranges, and step-by-step guidance for your first days.",
+    "mapTitle": "Explore districts",
+    "mapDescription": "Tap a district for prices, pros/cons, and insider notes.",
+    "mapLoading": "Loading map...",
+    "sections": {
+      "renting": {
+        "title": "How to rent",
+        "description": "Own or rent, contract types, deposit norms",
+        "bullets": [
+          "Budget first: 1-bedroom ~12M VND median, 2-bedroom ~18M",
+          "Negotiate: start 10-15% below asking, offer advance rent"
+        ]
+      },
+      "search": {
+        "title": "Where to look",
+        "description": "Best channels, local groups, agent vetting",
+        "bullets": [
+          "Fantastic Da Nang, Da Nang Expats Telegram",
+          "Property portals: Propzy.com, FB groups (casual rentals)"
+        ]
+      },
+      "trust": {
+        "title": "Before signing",
+        "description": "Owner verification, payment receipts, utility checks",
+        "bullets": [
+          "Visit in person, or request walkthrough video with date stamp",
+          "Verify owner name matches utility bills"
+        ]
+      }
+    },
+    "districts": {
+      "idealFor": "Best for",
+      "reference": "Reference",
+      "myKhe": {
+        "area": "My Khe Beach",
+        "distance": "5-10min walk",
+        "summary": "Premium, walkable to beach, cafes, gyms. More expensive."
+      },
+      "bacMyAn": {
+        "area": "Bac My An",
+        "distance": "2-3km cycle",
+        "summary": "Quiet, close to cafes, Russian expat base."
+      }
+    },
+    "pricing": "Price range",
+    "kickerPricing": "Per month",
+    "keyPoints": {
+      "beach": "Beach access",
+      "quiet": "Quiet",
+      "family": "Family-friendly",
+      "budget": "Budget"
+    }
+  },
   "cities": {
     "choose": "Choose a city",
     "daNang": "Da Nang",

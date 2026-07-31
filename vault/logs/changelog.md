@@ -578,6 +578,24 @@ Vault now stores current decisions and operational context only. SQL migrations/
 
 - Compressed `SESSION_LEDGER.md` to a short handoff record; detailed history remains in this changelog.
 
+## 2026-07-31 - SPA Loader and Calm Motion
+
+### Done
+
+- Added initial SPA loading screen (`frontend/app/spa-loading-template.html`): inline, monochrome brand mark, single orange progress bar, reduced-motion safe, dark-mode aware.
+- Added `NuxtLoadingIndicator` in `frontend/app/app.vue` for client-side route loading after boot.
+- Added subtle NuxtPage opacity transition in `app.vue`.
+- Added short background/color transition for light/dark switching plus global `prefers-reduced-motion` kill switch in `frontend/app/assets/css/main.css`.
+- Documented the motion rules in `vault/design.md`.
+
+### Verified
+
+- `npm run typecheck` - PASS.
+- `npm run lint` - PASS.
+- `npm run test` - PASS (1 test).
+- `npm run build` - PASS; SPA template compiled into build.
+- Browser dev server at 360px: loader visible on initial DOM load, then hidden once app hydrates; page no horizontal overflow; title still "Первые дни - без лишнего"; dark theme transition applied on root surfaces.
+
 ## 2026-07-31 - TMA Design System Document
 
 ### Done

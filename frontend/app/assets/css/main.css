@@ -1,12 +1,37 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-
 body {
   margin: 0;
   font-family: Inter, Arial, sans-serif;
 }
 
 code {
-	font-family: Consolas, Monaco, monospace;
+  font-family: Consolas, Monaco, monospace;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 120ms ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+.dark,
+.dark body {
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

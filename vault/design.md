@@ -44,6 +44,14 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 - Light/dark both must produce correct computed background+text; test both, not only the class switch.
 - Unavailable cities: visible but `disabled`, with flag emoji and "Скоро/Coming soon".
 
+## Motion
+
+- Initial SPA boot loader: `app/spa-loading-template.html`, inline and dependency-free, monochrome mark with one tiny orange progress bar.
+- Client-route loading bar: `NuxtLoadingIndicator` in `app.vue` using `--ui-primary`, height 2px.
+- Page transitions: subtle opacity fade (`page-enter/leaving`, 120ms) on `NuxtPage`.
+- Theme change transition: fade background/color on `html.dark` and layout (160ms), never animate transforms.
+- Always respect `prefers-reduced-motion: reduce`: global rule kills animations and transitions.
+
 ## Verification checklist (before committing UI changes)
 
 1. `npm run typecheck && npm run lint && npm run test && npm run build`

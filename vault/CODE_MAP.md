@@ -11,30 +11,20 @@
 ## Frontend (`frontend/`)
 
 - `package.json` - Nuxt 4 toolchain, lint/test scripts
-- `nuxt.config.ts` - runtime defaults (`appName`, `apiBase`)
+- `nuxt.config.ts` - public runtime defaults (`appName`, Supabase URL, anon/publishable key)
 - `app/components/AppHeader.vue` - global header shell
 - `app/pages/index.vue` - curated-guide MVP direction landing page
 - `i18n/locales/en.json` - primary copy strings
-- `app/composables/useAPI.ts` - simple typed fetch helper
-- `app/types/api.ts` - API response/error interfaces
+- `app/spa-loading-template.html` - pre-hydration logo loader
 - `tests/unit/smoke.test.ts` - baseline test runner check
-
-## Backend (`backend/`)
-
-- `README.md` - transitional backend note
-- `composer.json` - legacy Laravel-oriented dependency baseline
-- `routes/api.php` - health + Telegram auth route definitions
-- `app/Http/Controllers/HealthController.php` - health response
-- `app/Http/Controllers/AuthController.php` - Telegram initData auth validation + Supabase profile upsert + opaque cache-backed session token + typed error responses
-- `tests/Feature/HealthApiTest.php` - health endpoint contract test
-- `tests/Feature/TelegramAuthApiTest.php` - Telegram auth contract tests (signature/expiry/replay/malformed/config)
 
 ## Supabase (`supabase/`)
 
 - `config.toml` - local Supabase runtime config
 - `seed.sql` - local deterministic seed scaffold
-- `migrations/*_001..020_*.sql` - ordered migration files implementing schema, RLS, and guard logic
-- `tests/rls/*.sql` - pgTAP RLS/guard regression suite (80 tests) mapped to policy matrix
+- `migrations/*_001..020_*.sql` - ordered schema, RLS, and guard migrations
+- `tests/rls/*.sql` - pgTAP RLS/guard regression suite
+- `functions/` - planned Telegram bootstrap and privileged workflow Edge Functions
 
 ## Vault (`vault/`)
 

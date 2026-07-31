@@ -35,7 +35,7 @@ All content inside `vault/` must be written in English.
 ## Stack
 
 - Nuxt frontend
-- Laravel backend
+- Supabase backend platform (Edge Functions, Auth, Postgres, Storage)
 
 ## Principle
 

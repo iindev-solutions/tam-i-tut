@@ -2,34 +2,29 @@
 
 ## Goal
 
-Define a strict, testable contract for Telegram-based user authentication in bot/mini-app contexts.
+Define a strict, testable Telegram authentication contract implemented by a Supabase Edge Function.
 
 ## Inputs
 
-- Telegram `initData` payload
-- client timestamp
-- optional device/session metadata for abuse controls
+- Telegram `initData` payload from `Telegram.WebApp.initData`.
+- Optional device/session metadata for abuse controls.
 
-## Validation Rules
+## Validation
 
-1. validate Telegram signature exactly per official algorithm
-2. enforce max payload age window (default target: 5 minutes)
-3. reject replayed payload hashes within TTL window
-4. require stable user identifier mapping (`telegram_user_id`)
-5. deny authentication if payload is malformed or required fields missing
+1. Parse the raw payload.
+2. Validate Telegram signature exactly per the official HMAC algorithm.
+3. Enforce payload freshness (target: 5 minutes).
+4. Reject replayed payload hashes within the TTL window.
+5. Require stable `telegram_user_id` mapping.
+6. Reject malformed payloads and missing required fields.
+7. Never trust client role claims.
 
 ## Session Output
 
-On success:
-
-- issue internal session token
-- upsert profile by `telegram_user_id`
-- assign role `user` by default
-- attach locale hint (`ru` default, `en` optional)
-
-On failure:
-
-- return typed error code (no ambiguous generic failures)
+- Map or create a Supabase Auth user/profile by `telegram_user_id`.
+- Assign `user` role by default.
+- Preserve locale hint (`ru` default, `en` optional).
+- Establish the Supabase session contract for the Mini App.
 
 ## Error Codes
 
@@ -41,36 +36,16 @@ On failure:
 
 ## Security Controls
 
-- rate-limit by IP + telegram user id + device fingerprint
-- log auth failures with minimal PII
-- never trust client role claims
-- no privileged role assignment via Telegram auth endpoint
+- Telegram bot token exists only in Supabase Edge Function secrets.
+- Apply rate limits by IP, Telegram user id, and device context where available.
+- Log auth failures with minimal PII.
+- Fail closed for invalid, stale, replayed, or misconfigured requests.
+- Do not expose `service_role` or database credentials to Nuxt.
 
-## Required Tests
+## Implementation Target
 
-1. valid payload passes and creates session
-2. tampered payload fails signature check
-3. expired payload rejected
-4. same payload replay rejected
-5. malformed payload rejected with correct error code
-
-## Current Implementation Snapshot (Transitional Backend)
-
-- endpoint: `POST /api/auth/telegram`
-- replay guard: payload-hash cache key with 5-minute TTL
-- profile persistence: Supabase profile lookup/upsert by `telegram_user_id`
-- role assignment: forced `user`
-- session token mode: opaque random bearer token, cache-backed lookup (`3600s` TTL)
-
-## Target Production Decision
-
-- Laravel BFF owns all TMA data access; Nuxt does not call RLS-protected Supabase APIs with the opaque Laravel token.
-- Replace the transitional bearer response with a Redis-backed secure HttpOnly same-origin session.
-- Make repeated exchange of the same valid `initData` idempotent for compatible retry context instead of rejecting every retry as replay.
-- Keep fail-closed behavior for invalid/stale Telegram data and configuration failures.
-
-## Remaining Parameters
-
-- exact user session TTL, idle renewal, and absolute lifetime
-- Redis availability/eviction policy and session revocation operations
-- compatible-context rules for idempotent exchange retries
+- Edge Function: `telegram-bootstrap`.
+- Client input: raw `Telegram.WebApp.initData`.
+- Database persistence: Supabase Auth/profile tables and application profile records.
+- Authorization: Supabase Auth session plus Postgres RLS.
+- Tests: signature, freshness, replay, malformed payload, profile mapping, role default, and session establishment.

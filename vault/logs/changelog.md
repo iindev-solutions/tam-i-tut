@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-07-31 - Supabase-Only Architecture Cutover
+
+### Decision
+
+- Removed Laravel application backend and Laravel API/admin boundary from active product path.
+- Supabase is now the only backend platform: Edge Functions, Auth, Postgres/PostGIS, Storage, Realtime, and RLS.
+- Supabase Studio is private pilot admin; restrict project membership, and protect publication/evidence/audit invariants with database constraints/triggers because Studio can bypass client RLS.
+- Nuxt exposes only public Supabase URL and anon/publishable key.
+
+### Done
+
+- Removed legacy Laravel backend files.
+- Removed Nuxt Laravel API helper and API response types.
+- Rewrote architecture, auth-flow, Telegram auth contract, sprint, resume plan, session ledger, and code map.
+- Added off-site backup requirement for both database and Storage objects.
+
+### Next
+
+- Implement `telegram-bootstrap` Edge Function.
+- Validate Supabase Auth session exchange for Telegram identities.
+- Connect Nuxt client through RLS-safe Supabase access.
 ## 2026-07-31 - Logo-Only SPA Loader
 
 ### Done

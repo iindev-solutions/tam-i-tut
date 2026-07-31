@@ -105,19 +105,15 @@ npx skills experimental_install -y
 
 Startup-critical implementation order is documented in:
 
-- `vault/wiki/architecture/startup-critical-path.md`
-- `vault/wiki/architecture/supabase-schema-rls-plan.md`
-- `vault/wiki/architecture/supabase-migration-file-plan.md`
-- `vault/wiki/architecture/supabase-rls-policy-matrix-v1.md`
+- `vault/architecture.md`
 - `vault/wiki/architecture/trust-state-machine.md`
 - `vault/wiki/architecture/telegram-auth-contract.md`
 - `vault/wiki/services/content-seeding-protocol.md`
 - `vault/wiki/services/quality-gates-ci.md`
-- `vault/wiki/services/vps-supabase-runtime.md`
+- `vault/wiki/services/vps-supabase-runtime.md` (legacy validation only)
 
 ## Repository Notes
 
-- `frontend/` contains Nuxt baseline for Telegram-facing product UI.
-- `backend/` still has transitional template artifacts and will be adapted for final stack.
-- `supabase/` contains local config plus ordered migration and RLS test scaffolds.
-- `vault/` is operational source of truth for planning and handoff.
+- `frontend/` contains Nuxt 4 + Nuxt UI/Tailwind for the Telegram Mini App.
+- `supabase/` contains local config, ordered migrations, RLS tests, and planned Edge Functions.
+- `vault/` is operational source of truth for architecture, design, planning, and handoff.

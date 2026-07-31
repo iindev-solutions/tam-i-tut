@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+}
+
+code {
+	font-family: Consolas, Monaco, monospace;
+}

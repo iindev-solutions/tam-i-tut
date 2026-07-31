@@ -467,3 +467,113 @@
 - run Telegram auth feature tests in full runtime environment
 - choose long-term production session architecture
 - continue with first API slice and seeding execution
+
+## 2026-07-31 — Product and System Master Plan Locked
+
+### Done
+
+- Reviewed current product vision, roadmap, schema/RLS contract, Telegram auth flow, content protocol, code map, and repository topology.
+- Checked current official Telegram Mini Apps, Bot API, Stars, physical-payment, privacy, and developer-term constraints.
+- Added `vault/wiki/architecture/tamitut-product-system-master-plan.md` covering:
+  - product surfaces and newcomer journeys
+  - Nuxt Mini App/public/admin architecture
+  - Laravel modular-monolith backend and single-gateway boundary
+  - Supabase PostgreSQL/PostGIS/Storage and Redis roles
+  - multi-city normalized content/data model
+  - auth, webhook, search, map, moderation, safety, observability, security, privacy, and operations
+  - trust-safe monetization and payment/entitlement architecture
+  - delivery phases with explicit exit gates
+- Updated roadmap, system-design pointer, schema/auth status notes, sprint, resume plan, master index, and code map.
+
+### Verified
+
+- Target plan accounts for the current opaque Laravel token versus Supabase RLS mismatch and selects one Laravel BFF boundary.
+- Sponsored inventory is separate, labeled, expiry-bound, audit-logged, and cannot alter trust or organic rank.
+- Digital goods/services use Telegram Stars; physical services remain provider/legal-review dependent.
+- Current Telegram origin hardening, raw `initData` validation, webhook secret, payment support, privacy, and data-retention requirements are represented.
+- No application runtime behavior changed in this planning session.
+
+### Next
+
+- lock the exact production session contract
+- design and approve city-aware schema v2 before bulk seeding
+- complete the Laravel runtime and prove one protected end-to-end API slice
+
+## 2026-07-31 — Lean TMA MVP Frontend
+
+### Done
+
+- Reduced first release scope to Telegram Bot -> Telegram Mini App -> Laravel.
+- Explicitly deferred inline mode, separate Nuxt admin, public web, payments, sponsored placements, and multi-city expansion.
+- Moved editorial/admin direction to Laravel server-rendered CRUD/moderation.
+- Confirmed `@nuxt/ui` is declared and installed for Nuxt 4.
+- Moved `logo.svg` and `logo-full.svg` into `frontend/app/assets/brand/`.
+- Added Russian as default locale and added the first Russian/English TMA copy.
+- Rebuilt the landing surface using Nuxt UI components and Tailwind utilities:
+  - `UContainer`
+  - `UCard`
+  - `UButton`
+  - `UInput`
+  - `UBadge`
+  - `UAlert`
+- Added a Nuxt 4 root `tsconfig.json` extending `.nuxt/tsconfig.app.json`.
+- Fixed the existing API composable import/method typing.
+- Moved the stylesheet into Nuxt 4's `frontend/app/assets/css/` location.
+
+### Verified
+
+- `npm run typecheck` — PASS.
+- `npm run lint` — PASS.
+- `npm run test` — PASS (1 file, 1 test).
+- `npm run build` — PASS.
+- Browser smoke test at 390px viewport — rendered Russian TMA surface with logo, search field, category cards, collection CTA, trust alert, and no horizontal overflow.
+
+### Next
+
+- connect search/category actions to Laravel API;
+- add real Telegram WebApp SDK bootstrap;
+- build Laravel server-rendered editorial admin;
+- seed first Da Nang newcomer journeys.
+
+## 2026-07-31 — Header City and Theme Controls
+
+### Done
+
+- Removed repeated Da Nang and pilot labels from the main TMA content.
+- Moved city context into a Nuxt UI `USelectMenu` in the header.
+- Selected Da Nang by default.
+- Added disabled future options with flags:
+  - Nha Trang, Vietnam
+  - Pattaya, Thailand
+  - Phuket, Thailand
+- Added Nuxt UI `UColorModeButton` as the single light/dark control.
+- Removed hardcoded dark-only body/layout colors and added explicit Tailwind light/dark surfaces.
+- Kept the main content city-agnostic while the header carries selected city context.
+
+### Verified
+
+- `npm run typecheck` — PASS.
+- `npm run lint` — PASS.
+- `npm run test` — PASS (1 test).
+- `npm run build` — PASS.
+- Browser at 390px:
+  - no horizontal overflow;
+  - Da Nang remains selected;
+  - disabled cities cannot change selection;
+  - light and dark modes both apply correct background/text colors;
+  - no visible pilot label and Da Nang appears only in the header selector.
+
+## 2026-07-31 — Vault Simplification
+
+### Done
+
+- Added `vault/architecture.md` as the single current product and system architecture.
+- Removed redundant vision, roadmap, system-design, startup, and historical schema-planning documents from the active vault.
+- Kept only focused auth, trust-state, and Telegram auth contracts under `vault/wiki/architecture/`.
+- Updated the master index, code map, sprint, and resume plan.
+
+### Decision
+
+Vault now stores current decisions and operational context only. SQL migrations/tests remain the source of truth for implemented database behavior; historical planning details stay out of the active navigation.
+
+- Compressed `SESSION_LEDGER.md` to a short handoff record; detailed history remains in this changelog.

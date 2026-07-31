@@ -45,16 +45,10 @@
 - `logs/changelog.md` — chronological change log
 - `SESSION_LEDGER.md` — session summaries
 
-### Architecture Docs
+### Architecture
 
-- `wiki/architecture/project-vision.md` — full product vision
-- `wiki/architecture/roadmap.md` — phased delivery roadmap
-- `wiki/architecture/system-design.md` — domain model and enforcement boundaries
+- `architecture.md` — current product and system architecture
 - `wiki/architecture/auth-flow.md` — role/session auth flow
-- `wiki/architecture/startup-critical-path.md` — mandatory startup sequence
-- `wiki/architecture/supabase-schema-rls-plan.md` — schema and RLS contract
-- `wiki/architecture/supabase-migration-file-plan.md` — ordered migration file plan
-- `wiki/architecture/supabase-rls-policy-matrix-v1.md` — role-by-table RLS matrix
 - `wiki/architecture/trust-state-machine.md` — trust badge transition rules
 - `wiki/architecture/telegram-auth-contract.md` — Telegram auth validation contract
 

@@ -1,11 +1,11 @@
 export interface ApiResponse<T> {
-	success: boolean
-	data?: T
-	message?: string
-	errors?: Record<string, string[]>
+  success: boolean
+  data?: T
+  message?: string
+  errors?: Record<string, string[]>
 }
 
 export interface ApiError {
-	message: string
-	errors?: Record<string, string[]>
+  message: string
+  errors?: Record<string, string[]>
 }

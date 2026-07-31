@@ -62,8 +62,15 @@ On failure:
 - role assignment: forced `user`
 - session token mode: opaque random bearer token, cache-backed lookup (`3600s` TTL)
 
-## Open Decisions
+## Target Production Decision
 
-- final production session strategy (keep opaque cache-backed token vs migrate to Supabase-auth-native/session service)
-- exact replay/session cache backend policy in production (Redis retention/eviction controls)
-- fail-open vs fail-closed behavior during Telegram outage (recommended: fail-closed)
+- Laravel BFF owns all TMA data access; Nuxt does not call RLS-protected Supabase APIs with the opaque Laravel token.
+- Replace the transitional bearer response with a Redis-backed secure HttpOnly same-origin session.
+- Make repeated exchange of the same valid `initData` idempotent for compatible retry context instead of rejecting every retry as replay.
+- Keep fail-closed behavior for invalid/stale Telegram data and configuration failures.
+
+## Remaining Parameters
+
+- exact user session TTL, idle renewal, and absolute lifetime
+- Redis availability/eviction policy and session revocation operations
+- compatible-context rules for idempotent exchange retries

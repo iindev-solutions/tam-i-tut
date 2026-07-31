@@ -33,10 +33,13 @@ At the start of every session, read:
 | `vault/CODE_MAP.md` | Code inventory |
 | `vault/logs/changelog.md` | Change and verification history |
 
-## Wiki
+## Architecture
 
-- `vault/wiki/architecture/`
-- `vault/wiki/services/`
+- `vault/architecture.md` — single current product, runtime, trust, data, and delivery architecture
+- `vault/wiki/architecture/auth-flow.md` — role/session auth details
+- `vault/wiki/architecture/trust-state-machine.md` — trust transition rules
+- `vault/wiki/architecture/telegram-auth-contract.md` — Telegram auth validation contract
+- `vault/wiki/services/` — operational runbooks and service-specific notes
 
 ## Rule
 

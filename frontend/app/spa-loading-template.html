@@ -1,15 +1,22 @@
-<div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#fff;color:#18181b;font-family:Inter,Arial,sans-serif">
-  <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-    <rect x="6" y="6" width="36" height="36" rx="12" fill="#18181b"/>
-    <circle cx="20" cy="24" r="4" fill="#fff"/>
-    <circle cx="28" cy="24" r="4" fill="#f97316"/>
+<div class="spa-loader" role="status" aria-label="TAMITUT loading">
+  <svg class="spa-loader-logo" width="88" height="43" viewBox="0 0 419 201" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M182.306 200.757V149.952H86.7359L236.684 0.00330625L164.823 0.00936014L50.8052 114.021L50.8052 18.0038L7.98839e-06 18.0038L0 200.757L182.306 200.757Z" fill="currentColor"/>
+    <path d="M236.649 7.96886e-06V50.8052L332.219 50.8052L182.271 200.753L254.132 200.739L368.15 86.7359V182.753H418.955V0L236.649 7.96886e-06Z" fill="currentColor"/>
   </svg>
-  <div class="spa-loader-bar" style="width:120px;height:2px;border-radius:999px;background:#e4e4e7;overflow:hidden">
-    <div style="width:40%;height:100%;border-radius:999px;background:#f97316;animation:tamitut-slide 1.2s ease-in-out infinite"></div>
-  </div>
+  <script>
+    try {
+      var savedMode = localStorage.getItem('nuxt-color-mode')
+      if (savedMode === 'dark') document.documentElement.classList.add('loader-dark')
+      if (savedMode === 'light') document.documentElement.classList.add('loader-light')
+    } catch (_) {}
+  </script>
   <style>
-    @keyframes tamitut-slide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
-    @media (prefers-reduced-motion: reduce){.spa-loader-bar>div{animation:none;transform:none;width:100%}}
-    @media (prefers-color-scheme: dark){body>div:first-child{background:#09090b!important;color:#fafafa!important}.spa-loader-bar{background:#27272a!important}}
+    :root{color-scheme:dark}
+    .spa-loader{position:fixed;inset:0;display:grid;place-items:center;background:#09090b;color:#fafafa}
+    .spa-loader-logo{display:block;animation:tamitut-pulse 1.6s ease-in-out infinite;transform-origin:center}
+    @keyframes tamitut-pulse{0%,100%{opacity:.52;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
+    @media (prefers-color-scheme:light){:root:not(.loader-dark) .spa-loader{background:#fff;color:#18181b}}
+    :root.loader-light{color-scheme:light}:root.loader-light .spa-loader{background:#fff;color:#18181b}
+    @media (prefers-reduced-motion:reduce){.spa-loader-logo{animation:none;opacity:1;transform:none}}
   </style>
 </div>

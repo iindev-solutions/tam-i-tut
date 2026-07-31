@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-07-31 - Logo-Only SPA Loader
+
+### Done
+
+- Replaced the startup progress bar with the actual TAMITUT `logo.svg` mark inline in `spa-loading-template.html`.
+- Added a soft scale/opacity pulse, dark-first surface, OS light-mode fallback, saved Nuxt color-mode override, and reduced-motion fallback.
+
+### Verified
+
+- `npm run typecheck`, `npm run lint`, `npm run test`, and `npm run build` - PASS.
+- Browser preview at 360px - PASS; app loads with no horizontal overflow. Loader source/build contains inline logo mark, two SVG paths, pulse animation, theme override, and reduced-motion fallback.
+
 ## 2026-04-23 11:20 - Starter Template Initialized
 
 ### Done

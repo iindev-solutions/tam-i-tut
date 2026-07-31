@@ -46,7 +46,7 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 
 ## Motion
 
-- Initial SPA boot loader: `app/spa-loading-template.html`, inline and dependency-free, monochrome mark with one tiny orange progress bar.
+- Initial SPA boot loader: `app/spa-loading-template.html`, inline and dependency-free, uses the actual TAMITUT mark from `assets/brand/logo.svg`, with a soft pulse. It defaults to dark, follows OS light mode, and honors Nuxt's saved `nuxt-color-mode` before the bundle loads.
 - Client-route loading bar: `NuxtLoadingIndicator` in `app.vue` using `--ui-primary`, height 2px.
 - Page transitions: subtle opacity fade (`page-enter/leaving`, 120ms) on `NuxtPage`.
 - Theme change transition: fade background/color on `html.dark` and layout (160ms), never animate transforms.

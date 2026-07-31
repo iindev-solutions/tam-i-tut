@@ -578,6 +578,17 @@ Vault now stores current decisions and operational context only. SQL migrations/
 
 - Compressed `SESSION_LEDGER.md` to a short handoff record; detailed history remains in this changelog.
 
+## 2026-07-31 - TMA Design System Document
+
+### Done
+
+- Added `vault/design.md` as the single visual source of truth: monochrome+zinc surfaces, sparse orange accent rules, copy voice, 360px layout floor, component usage rules, no-dead-affordances policy.
+- Linked it from `master_index.md` and `CODE_MAP.md` so future sessions load it before UI work.
+
+### Decision
+
+One short design file, not a wiki tree; rules mirror what is already in code, so UI changes update both together.
+
 ## 2026-07-31 - Minimal Homepage and Locale Control
 
 ### Done

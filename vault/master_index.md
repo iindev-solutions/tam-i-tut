@@ -36,6 +36,7 @@ At the start of every session, read:
 ## Architecture
 
 - `vault/architecture.md` - single current product, runtime, trust, data, and delivery architecture
+- `vault/design.md` - TMA visual system rules and verification checklist
 - `vault/wiki/architecture/auth-flow.md` - role/session auth details
 - `vault/wiki/architecture/trust-state-machine.md` - trust transition rules
 - `vault/wiki/architecture/telegram-auth-contract.md` - Telegram auth validation contract

@@ -15,6 +15,8 @@ Then read task-specific docs under:
 - `vault/wiki/architecture/`
 - `vault/wiki/services/`
 
+Before any frontend visual or copy change, also read `vault/design.md` and follow its rules. UI changes update `vault/design.md` together with the code.
+
 ## Session End
 
 Before closing meaningful work, update `vault/`.

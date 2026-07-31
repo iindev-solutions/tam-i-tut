@@ -45,9 +45,10 @@
 - `logs/changelog.md` - chronological change log
 - `SESSION_LEDGER.md` - session summaries
 
-### Architecture
+### Architecture & Design
 
 - `architecture.md` - current product and system architecture
+- `design.md` - TMA visual system rules and mobile verification checklist
 - `wiki/architecture/auth-flow.md` - role/session auth flow
 - `wiki/architecture/trust-state-machine.md` - trust badge transition rules
 - `wiki/architecture/telegram-auth-contract.md` - Telegram auth validation contract

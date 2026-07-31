@@ -15,6 +15,19 @@
   - saved `light`: loader background `rgb(255, 255, 255)`, dark logo, `tamitut-pulse`;
   - `prefers-reduced-motion: reduce`: animation `none`, opacity `1`, transform `none`.
 
+## 2026-07-31 - 340px Header Fit
+
+### Done
+
+- Made the city selector borderless and visibly composed as flag + city name.
+- Increased language control breathing room and kept a 36px touch target.
+- Preserved full logo at 360px and mark-only logo below 360px.
+- Locked 340px as the project mobile floor in `vault/design.md`.
+
+### Verified
+
+- Browser at 340px: header width 340px, no horizontal overflow; city trigger 115.6px with transparent background and no border; language control 36px.
+
 ## 2026-04-23 11:20 - Starter Template Initialized
 
 ### Done

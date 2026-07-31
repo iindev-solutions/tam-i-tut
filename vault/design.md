@@ -25,11 +25,11 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 - Dash character in user-facing copy and docs is `-` (hyphen), never long dash characters.
 - Voice: concrete and calm - prices, places, steps. No adjectives like "лучший/легендарный".
 
-## Layout (mobile-first, 360px hard floor)
+## Layout (mobile-first, 340px hard floor)
 
 - `UContainer`, max width `max-w-2xl` on page content.
-- No horizontal overflow at 360px - verify with browser check on every layout change.
-- Header composition: `[logo][city select][RU/EN button][theme button]`; collapse widths by breakpoint (`w-28` -> `sm:w-48`, logo switches `w-12` -> full at 360px).
+- No horizontal overflow at 340px - verify with browser check on every layout change.
+- Header composition: `[logo][flag + city][language][theme]`; at 340px the city trigger is a borderless ghost control with visible flag/name, the language control has a 36px target, and no horizontal overflow is allowed.
 - Radius: `rounded-2xl` icons/buttons, `rounded-3xl` hero/cards. Shadow: `shadow-sm` max.
 
 ## Components

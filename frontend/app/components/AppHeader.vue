@@ -11,29 +11,35 @@ const toggleLocale = async () => {
 
 const cityOptions = computed(() => [
   {
-    label: `🇻🇳 ${t('cities.daNang')}`,
+    label: t('cities.daNang'),
+    flag: '🇻🇳',
     description: t('cities.vietnam'),
     value: 'da-nang'
   },
   {
-    label: `🇻🇳 ${t('cities.nhaTrang')}`,
+    label: t('cities.nhaTrang'),
+    flag: '🇻🇳',
     description: `${t('cities.vietnam')} · ${t('cities.comingSoon')}`,
     value: 'nha-trang',
     disabled: true
   },
   {
-    label: `🇹🇭 ${t('cities.pattaya')}`,
+    label: t('cities.pattaya'),
+    flag: '🇹🇭',
     description: `${t('cities.thailand')} · ${t('cities.comingSoon')}`,
     value: 'pattaya',
     disabled: true
   },
   {
-    label: `🇹🇭 ${t('cities.phuket')}`,
+    label: t('cities.phuket'),
+    flag: '🇹🇭',
     description: `${t('cities.thailand')} · ${t('cities.comingSoon')}`,
     value: 'phuket',
     disabled: true
   }
 ])
+
+const selectedCityOption = computed(() => cityOptions.value.find(city => city.value === selectedCity.value))
 </script>
 
 <template>
@@ -60,15 +66,30 @@ const cityOptions = computed(() => [
         :items="cityOptions"
         :search-input="false"
         value-key="value"
+        variant="ghost"
         size="md"
-        class="w-28 sm:w-48"
+        class="min-w-0 max-w-[7.5rem] shrink sm:w-48 sm:max-w-none"
+        :ui="{ base: 'px-1.5' }"
         :aria-label="t('cities.choose')"
-      />
+      >
+        <template #default>
+          <span class="flex min-w-0 items-center gap-1.5">
+            <span class="shrink-0 text-base leading-none">{{ selectedCityOption?.flag }}</span>
+            <span class="truncate text-sm font-medium">{{ selectedCityOption?.label }}</span>
+          </span>
+        </template>
+        <template #item="{ item }">
+          <div class="flex min-w-0 items-center gap-2">
+            <span class="shrink-0 text-base leading-none">{{ item.flag }}</span>
+            <span class="truncate">{{ item.label }}</span>
+          </div>
+        </template>
+      </USelectMenu>
       <UButton
         color="neutral"
         variant="ghost"
         size="sm"
-        class="w-7 px-0 text-xs font-semibold"
+        class="min-w-9 shrink-0 justify-center px-1.5 text-xs font-semibold tracking-wide"
         :aria-label="locale === 'ru' ? 'Switch to English' : 'Переключить на русский'"
         @click="toggleLocale"
       >

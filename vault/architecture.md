@@ -57,3 +57,10 @@ Cloudflare DNS/TLS/WAF/CDN, one VPS for Laravel/worker/scheduler/reverse proxy, 
 ## Decision rule
 
 When a new feature is proposed, verify: Does it help a newcomer complete a trusted city task in two actions? Does it fit Bot -> TMA -> Laravel? Does it preserve evidence, moderation, and auditability? If not, defer it.
+
+## TMA visual and search rules
+
+- Visual system is mostly monochrome: white/near-black surfaces, zinc neutrals, and orange as a restrained action accent.
+- Orange is reserved for one primary action, selected states, and small trust cues; category icons stay neutral.
+- Locale control sits beside the city selector and theme control in the header. Russian is default; English is a deliberate toggle.
+- Do not keep dead search inputs. When search is introduced, submit the query to Laravel with `city_id`, locale, and optional category, then show ranked verified results and a clear zero-results state. Homepage categories remain informational cues until those routes exist.

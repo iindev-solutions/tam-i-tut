@@ -2,8 +2,12 @@
 import logo from '~/assets/brand/logo.svg'
 import logoFull from '~/assets/brand/logo-full.svg'
 
-const { t } = useI18n()
+const { t, locale, setLocale } = useI18n()
 const selectedCity = useState<string>('selectedCity', () => 'da-nang')
+
+const toggleLocale = async () => {
+  await setLocale(locale.value === 'ru' ? 'en' : 'ru')
+}
 
 const cityOptions = computed(() => [
   {
@@ -57,9 +61,19 @@ const cityOptions = computed(() => [
         :search-input="false"
         value-key="value"
         size="md"
-        class="w-36 sm:w-48"
+        class="w-28 sm:w-48"
         :aria-label="t('cities.choose')"
       />
+      <UButton
+        color="neutral"
+        variant="ghost"
+        size="sm"
+        class="w-7 px-0 text-xs font-semibold"
+        :aria-label="locale === 'ru' ? 'Switch to English' : 'Переключить на русский'"
+        @click="toggleLocale"
+      >
+        {{ locale === 'ru' ? 'EN' : 'RU' }}
+      </UButton>
       <UColorModeButton
         color="neutral"
         variant="ghost"

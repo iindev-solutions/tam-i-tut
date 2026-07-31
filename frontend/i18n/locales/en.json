@@ -1,10 +1,10 @@
 {
   "home": {
     "kicker": "here and there",
-    "title": "A guide that saves time and money",
-    "description": "Verified places, honest prices, and practical guidance for life in new cities.",
-    "exploreLabel": "The guide",
-    "exploreTitle": "What do you need?",
+    "title": "Your first days - without the noise",
+    "description": "Clear places, prices, and next steps for your first days.",
+    "exploreLabel": "Find",
+    "exploreTitle": "Where do you start?",
     "searchPlaceholder": "Try: housing near the beach",
     "housing": "Housing",
     "food": "Food & cafes",
@@ -15,10 +15,10 @@
     "featureBadge": "Useful nearby",
     "firstDayTitle": "First 24 hours",
     "firstDayDescription": "Mobile data, money, housing, and places to eat nearby.",
-    "openCollection": "View collection",
-    "trustTitle": "Every place is checked",
-    "trustDescription": "See the verification date and trust level — no random listings.",
-    "footer": "Made for people who just arrived"
+    "openCollection": "Open collection",
+    "trustTitle": "Checked places",
+    "trustDescription": "Checked places - without random listings.",
+    "footer": "For people who just arrived"
   },
   "cities": {
     "choose": "Choose a city",

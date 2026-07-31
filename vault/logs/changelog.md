@@ -577,3 +577,20 @@
 Vault now stores current decisions and operational context only. SQL migrations/tests remain the source of truth for implemented database behavior; historical planning details stay out of the active navigation.
 
 - Compressed `SESSION_LEDGER.md` to a short handoff record; detailed history remains in this changelog.
+
+## 2026-07-31 - Minimal Homepage and Locale Control
+
+### Done
+
+- Removed repeated "guide" wording and the unnecessary "Where do you start?" heading.
+- Removed the non-functional homepage search field instead of leaving a dead affordance.
+- Changed Nuxt UI primary color from cyan to orange and neutral color from gray to zinc.
+- Reduced orange usage to subtle surfaces, primary actions, and trust cues; category icons are neutral.
+- Added a compact RU/EN locale toggle beside city and theme controls.
+- Kept the header responsive at 360px without horizontal overflow.
+- Replaced long dash characters in active frontend copy with `-`.
+
+### Search contract
+
+- Future search submits query, city, locale, and optional category to Laravel.
+- Results must be ranked verified entries with explicit zero-results state.

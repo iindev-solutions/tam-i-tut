@@ -1,4 +1,4 @@
-# Agent Skills Stack — TAMITUT
+# Agent Skills Stack - TAMITUT
 
 ## Purpose
 
@@ -55,7 +55,7 @@ npx skills update -p -y
 
 These are project-tailored skills planned next:
 
-1. `tamitut-domain-guardrails` — enforce non-marketplace boundaries and trust-first product decisions.
-2. `tamitut-trust-policy` — encode badge transitions and evidence publication rules.
-3. `tamitut-supabase-rls-checklist` — fast RLS and policy review checklist.
-4. `tamitut-telegram-auth` — strict Telegram auth contract checklist.
+1. `tamitut-domain-guardrails` - enforce non-marketplace boundaries and trust-first product decisions.
+2. `tamitut-trust-policy` - encode badge transitions and evidence publication rules.
+3. `tamitut-supabase-rls-checklist` - fast RLS and policy review checklist.
+4. `tamitut-telegram-auth` - strict Telegram auth contract checklist.

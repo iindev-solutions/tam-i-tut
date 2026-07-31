@@ -68,7 +68,7 @@ npx -y supabase stop
 
 ## Current Validation Scope
 
-1. execute migrations `001`–`020`
+1. execute migrations `001`-`020`
 2. confirm RLS policies compile and apply
 3. run RLS and guard tests under `supabase/tests/rls/`
 

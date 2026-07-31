@@ -1,4 +1,4 @@
-# Content Seeding Protocol — TAMITUT
+# Content Seeding Protocol - TAMITUT
 
 ## Objective
 

@@ -1,4 +1,4 @@
-# Quality Gates and CI Baseline — TAMITUT
+# Quality Gates and CI Baseline - TAMITUT
 
 ## Goal
 

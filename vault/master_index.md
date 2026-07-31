@@ -1,4 +1,4 @@
-# Master Index — Project Vault
+# Master Index - Project Vault
 
 ## Overview
 
@@ -35,11 +35,11 @@ At the start of every session, read:
 
 ## Architecture
 
-- `vault/architecture.md` — single current product, runtime, trust, data, and delivery architecture
-- `vault/wiki/architecture/auth-flow.md` — role/session auth details
-- `vault/wiki/architecture/trust-state-machine.md` — trust transition rules
-- `vault/wiki/architecture/telegram-auth-contract.md` — Telegram auth validation contract
-- `vault/wiki/services/` — operational runbooks and service-specific notes
+- `vault/architecture.md` - single current product, runtime, trust, data, and delivery architecture
+- `vault/wiki/architecture/auth-flow.md` - role/session auth details
+- `vault/wiki/architecture/trust-state-machine.md` - trust transition rules
+- `vault/wiki/architecture/telegram-auth-contract.md` - Telegram auth validation contract
+- `vault/wiki/services/` - operational runbooks and service-specific notes
 
 ## Rule
 

@@ -1,4 +1,4 @@
-# Sprint — TAMITUT Startup Critical Path Lock
+# Sprint - TAMITUT Startup Critical Path Lock
 
 ## Goal
 
@@ -15,9 +15,9 @@ Nuxt UI + Tailwind are the frontend UI standard.
 | 4.3 | Consolidate project architecture into `vault/architecture.md` | DONE |
 | 4.4 | Implement schema/RLS migrations and tests | DONE |
 | 4.6 | Scaffold `supabase/` project + ordered migration/test files | DONE |
-| 4.7 | Implement base schema SQL migrations (`001`–`013`) | DONE |
-| 4.8 | Implement RLS helpers/policies (`014`–`018`) + role tests | DONE |
-| 4.9 | Implement trust/safety guards (`019`–`020`) | DONE |
+| 4.7 | Implement base schema SQL migrations (`001`-`013`) | DONE |
+| 4.8 | Implement RLS helpers/policies (`014`-`018`) + role tests | DONE |
+| 4.9 | Implement trust/safety guards (`019`-`020`) | DONE |
 | 4.10 | Implement Telegram auth contract (signature + replay + error codes) | IN_PROGRESS |
 | 4.11 | Create 200+ entry seeding backlog with evidence metadata | TODO |
 | 4.12 | Wire CI quality gates (lint/type/test + DB policy tests) | DONE |

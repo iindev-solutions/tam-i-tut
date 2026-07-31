@@ -2,7 +2,7 @@
 
 Short record of durable project decisions and handoffs. Detailed history lives in `vault/logs/changelog.md`; current architecture lives in `vault/architecture.md`.
 
-## 2026-07-31 — Lean TMA MVP
+## 2026-07-31 - Lean TMA MVP
 
 - Reduced first release to Telegram Bot -> Telegram Mini App -> Laravel.
 - Nuxt 4 + Nuxt UI + Tailwind is the TMA frontend; Russian is default locale.

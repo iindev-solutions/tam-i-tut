@@ -1,6 +1,6 @@
 # TAMITUT
 
-> **Arrived — Opened — Know**
+> **Arrived - Opened - Know**
 
 TAMITUT is a companion bot for Russian-speaking expats and nomads landing in Da Nang.
 
@@ -20,7 +20,7 @@ Partially verified entries can appear only as **Under review** with clear warnin
 | Russian-speaking expats (long-stay) | Core | high repeat use, strong word-of-mouth |
 | Digital nomads | Core | high relocation friction, strong need for trusted orientation |
 | Newly arrived relocants | Core | highest pain in first days, highest trust impact |
-| Tourists (1–30 days) | Secondary | lower retention, still useful for organic spread |
+| Tourists (1-30 days) | Secondary | lower retention, still useful for organic spread |
 | English-speaking expats | Secondary | expansion layer after RU-first experience is stable |
 
 **Language strategy:** Russian is primary. English is a parallel content layer (not literal translation only).

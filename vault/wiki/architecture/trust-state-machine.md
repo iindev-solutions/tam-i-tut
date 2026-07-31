@@ -1,4 +1,4 @@
-# Trust State Machine — TAMITUT
+# Trust State Machine - TAMITUT
 
 ## Purpose
 

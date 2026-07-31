@@ -5,10 +5,10 @@
 - Project skill stack installed and locked for this repo (`skills-lock.json`).
 - Architecture is consolidated in `vault/architecture.md`; detailed auth/trust contracts remain in `vault/wiki/architecture/`.
 - Historical schema/RLS planning documents were removed from the active vault; SQL migrations and tests remain the implementation baseline.
-- `supabase/` scaffold created with ordered migration stubs (`001`–`020`) and RLS test stubs.
-- Base schema migrations `001`–`013` now contain concrete SQL from locked schema contract.
-- RLS/policy migrations `014`–`018` now contain concrete SQL.
-- Trust/safety guard migrations `019`–`020` now contain concrete SQL.
+- `supabase/` scaffold created with ordered migration stubs (`001`-`020`) and RLS test stubs.
+- Base schema migrations `001`-`013` now contain concrete SQL from locked schema contract.
+- RLS/policy migrations `014`-`018` now contain concrete SQL.
+- Trust/safety guard migrations `019`-`020` now contain concrete SQL.
 - VPS runtime is prepared: Docker + Node.js installed, repo cloned at `/srv/tam-i-tut`.
 - Supabase runtime validation executed on VPS:
   - `npx supabase start` succeeded (after disk cleanup)

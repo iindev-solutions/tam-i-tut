@@ -1,4 +1,4 @@
-# AGENTS.md — starter-template
+# AGENTS.md - starter-template
 
 > Build with discipline. Record with `vault/`.
 

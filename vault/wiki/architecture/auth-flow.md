@@ -1,4 +1,4 @@
-# Auth Flow — TAMITUT (Target)
+# Auth Flow - TAMITUT (Target)
 
 ## Auth Modes
 

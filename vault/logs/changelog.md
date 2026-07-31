@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026-04-23 11:20 — Starter Template Initialized
+## 2026-04-23 11:20 - Starter Template Initialized
 
 ### Done
 
@@ -19,7 +19,7 @@
 - define product direction
 - update sprint and resume plan
 
-## 2026-04-23 17:45 — TamITut Direction Bootstrap
+## 2026-04-23 17:45 - TamITut Direction Bootstrap
 
 ### Done
 
@@ -41,7 +41,7 @@
 - define Telegram initData verification contract
 - implement first listings flow slice
 
-## 2026-04-23 18:20 — Vision Reframed to Curated Bot Guide
+## 2026-04-23 18:20 - Vision Reframed to Curated Bot Guide
 
 ### Done
 
@@ -64,7 +64,7 @@
 - define verification evidence model and moderation publish gates
 - draft Telegram navigation tree for Russian-first onboarding
 
-## 2026-04-23 19:05 — Vision Expanded with Full Audit
+## 2026-04-23 19:05 - Vision Expanded with Full Audit
 
 ### Done
 
@@ -87,7 +87,7 @@
 - define evidence object contract and trusted-source registry logic
 - design moderation SLA and stale-entry re-verification cycle
 
-## 2026-04-23 19:35 — Skill Stack + Startup Critical Path Locked
+## 2026-04-23 19:35 - Skill Stack + Startup Critical Path Locked
 
 ### Done
 
@@ -114,7 +114,7 @@
 - implement trust badge transition enforcement
 - implement Telegram auth endpoint contract
 
-## 2026-04-23 19:55 — Schema Contract v1 Locked
+## 2026-04-23 19:55 - Schema Contract v1 Locked
 
 ### Done
 
@@ -136,7 +136,7 @@
 - write RLS policies and role matrix tests
 - implement trust-state enforcement and Telegram auth contract
 
-## 2026-04-23 20:15 — Migration Plan + RLS Matrix Planned
+## 2026-04-23 20:15 - Migration Plan + RLS Matrix Planned
 
 ### Done
 
@@ -154,10 +154,10 @@
 ### Next
 
 - scaffold `supabase/` structure and generate migration files
-- implement base schema SQL migrations (`001`–`013`)
-- implement RLS and guard migrations (`014`–`020`) with tests
+- implement base schema SQL migrations (`001`-`013`)
+- implement RLS and guard migrations (`014`-`020`) with tests
 
-## 2026-04-23 20:35 — Supabase Migration Scaffold Created
+## 2026-04-23 20:35 - Supabase Migration Scaffold Created
 
 ### Done
 
@@ -176,12 +176,12 @@
 
 ### Next
 
-- implement SQL content in migrations `001`–`013`
-- implement RLS and policy SQL in `014`–`018`
-- implement trust/safety guard SQL in `019`–`020`
+- implement SQL content in migrations `001`-`013`
+- implement RLS and policy SQL in `014`-`018`
+- implement trust/safety guard SQL in `019`-`020`
 - start local Supabase services and validate migrations/tests
 
-## 2026-04-23 21:10 — Base Schema SQL Implemented (`001`–`013`)
+## 2026-04-23 21:10 - Base Schema SQL Implemented (`001`-`013`)
 
 ### Done
 
@@ -204,8 +204,8 @@
 
 ### Verified
 
-- `001`–`013` migration files no longer contain template TODO stubs
-- `014`–`020` remain intentionally templated for next phase
+- `001`-`013` migration files no longer contain template TODO stubs
+- `014`-`020` remain intentionally templated for next phase
 - schema implementation aligns with locked contract and migration plan
 
 ### Blockers
@@ -214,11 +214,11 @@
 
 ### Next
 
-- implement RLS helpers/policies in `014`–`018`
-- implement trust/safety guard logic in `019`–`020`
+- implement RLS helpers/policies in `014`-`018`
+- implement trust/safety guard logic in `019`-`020`
 - enable Docker and run local migration + policy tests
 
-## 2026-04-23 21:45 — RLS + Guard SQL Implemented (`014`–`020`)
+## 2026-04-23 21:45 - RLS + Guard SQL Implemented (`014`-`020`)
 
 ### Done
 
@@ -232,7 +232,7 @@
 
 ### Verified
 
-- All migration files `001`–`020` now contain SQL (no template TODO stubs remain)
+- All migration files `001`-`020` now contain SQL (no template TODO stubs remain)
 - RLS matrix rules are now encoded in migration files
 - Migration progress updated in migration plan and sprint/resume docs
 
@@ -248,7 +248,7 @@
 - complete role-policy tests under `supabase/tests/rls/`
 - then move to Telegram auth contract implementation
 
-## 2026-04-23 22:05 — VPS Runtime Playbook Added
+## 2026-04-23 22:05 - VPS Runtime Playbook Added
 
 ### Done
 
@@ -267,7 +267,7 @@
 - validate migrations and tests on running Supabase runtime
 - patch SQL/policies based on runtime errors
 
-## 2026-04-24 03:40 — VPS Runtime Provisioned + First Validation Run
+## 2026-04-24 03:40 - VPS Runtime Provisioned + First Validation Run
 
 ### Done
 
@@ -286,7 +286,7 @@
 
 - `supabase migration up --local` reports local DB up to date
 - `supabase db lint --local --fail-on error` reports no schema errors
-- `supabase migration list --local` shows all migrations `001`–`020` applied
+- `supabase migration list --local` shows all migrations `001`-`020` applied
 - Supabase stack can be started/stopped from VPS project path
 
 ### Blockers
@@ -301,7 +301,7 @@
 - rerun `npx -y supabase test db supabase/tests/rls --local` on VPS until green
 - after tests are green, proceed with Telegram auth contract implementation
 
-## 2026-04-24 04:35 — RLS/Guard pgTAP Suite Implemented (`001`–`009`)
+## 2026-04-24 04:35 - RLS/Guard pgTAP Suite Implemented (`001`-`009`)
 
 ### Done
 
@@ -334,7 +334,7 @@
 - implement Telegram auth contract endpoint logic
 - proceed to content seeding backlog execution
 
-## 2026-04-24 05:05 — CI Quality Gates Workflow Added
+## 2026-04-24 05:05 - CI Quality Gates Workflow Added
 
 ### Done
 
@@ -366,7 +366,7 @@
 - implement Telegram auth contract endpoint
 - continue startup critical path after auth slice
 
-## 2026-04-24 05:35 — Telegram Auth Contract Endpoint Added (Transitional Backend)
+## 2026-04-24 05:35 - Telegram Auth Contract Endpoint Added (Transitional Backend)
 
 ### Done
 
@@ -405,7 +405,7 @@
 - run full endpoint tests in runtime environment
 - continue with content seeding and first verified API slice
 
-## 2026-04-24 06:05 — Telegram Auth Supabase Persistence Wired (Transitional)
+## 2026-04-24 06:05 - Telegram Auth Supabase Persistence Wired (Transitional)
 
 ### Done
 
@@ -438,7 +438,7 @@
 - decide and implement final production session strategy
 - proceed with first API slice and content seeding execution
 
-## 2026-04-24 06:30 — Telegram Session Strategy Hardened (Transitional)
+## 2026-04-24 06:30 - Telegram Session Strategy Hardened (Transitional)
 
 ### Done
 
@@ -468,7 +468,7 @@
 - choose long-term production session architecture
 - continue with first API slice and seeding execution
 
-## 2026-07-31 — Product and System Master Plan Locked
+## 2026-07-31 - Product and System Master Plan Locked
 
 ### Done
 
@@ -499,7 +499,7 @@
 - design and approve city-aware schema v2 before bulk seeding
 - complete the Laravel runtime and prove one protected end-to-end API slice
 
-## 2026-07-31 — Lean TMA MVP Frontend
+## 2026-07-31 - Lean TMA MVP Frontend
 
 ### Done
 
@@ -522,11 +522,11 @@
 
 ### Verified
 
-- `npm run typecheck` — PASS.
-- `npm run lint` — PASS.
-- `npm run test` — PASS (1 file, 1 test).
-- `npm run build` — PASS.
-- Browser smoke test at 390px viewport — rendered Russian TMA surface with logo, search field, category cards, collection CTA, trust alert, and no horizontal overflow.
+- `npm run typecheck` - PASS.
+- `npm run lint` - PASS.
+- `npm run test` - PASS (1 file, 1 test).
+- `npm run build` - PASS.
+- Browser smoke test at 390px viewport - rendered Russian TMA surface with logo, search field, category cards, collection CTA, trust alert, and no horizontal overflow.
 
 ### Next
 
@@ -535,7 +535,7 @@
 - build Laravel server-rendered editorial admin;
 - seed first Da Nang newcomer journeys.
 
-## 2026-07-31 — Header City and Theme Controls
+## 2026-07-31 - Header City and Theme Controls
 
 ### Done
 
@@ -552,10 +552,10 @@
 
 ### Verified
 
-- `npm run typecheck` — PASS.
-- `npm run lint` — PASS.
-- `npm run test` — PASS (1 test).
-- `npm run build` — PASS.
+- `npm run typecheck` - PASS.
+- `npm run lint` - PASS.
+- `npm run test` - PASS (1 test).
+- `npm run build` - PASS.
 - Browser at 390px:
   - no horizontal overflow;
   - Da Nang remains selected;
@@ -563,7 +563,7 @@
   - light and dark modes both apply correct background/text colors;
   - no visible pilot label and Da Nang appears only in the header selector.
 
-## 2026-07-31 — Vault Simplification
+## 2026-07-31 - Vault Simplification
 
 ### Done
 

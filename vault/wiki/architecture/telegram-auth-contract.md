@@ -1,4 +1,4 @@
-# Telegram Auth Contract — TAMITUT
+# Telegram Auth Contract - TAMITUT
 
 ## Goal
 

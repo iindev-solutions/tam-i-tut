@@ -1,11 +1,21 @@
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/i18n', 'nitro-cloudflare-dev'],
   ssr: false,
+
+  devtools: {
+    enabled: false
+  },
 
   app: {
     head: {
       charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1'
+      viewport: 'width=device-width, initial-scale=1',
+      script: [
+        {
+          // Official Telegram WebApp bridge; inert in a plain browser.
+          src: 'https://telegram.org/js/telegram-web-app.js'
+        }
+      ]
     }
   },
 
@@ -19,7 +29,27 @@ export default defineNuxtConfig({
     }
   },
 
+  // No X-Frame-Options / CSP frame-ancestors: the app must stay framable for the Telegram Mini App.
+  routeRules: {
+    '/**': {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+      }
+    }
+  },
+
   compatibilityDate: '2026-01-19',
+
+  nitro: {
+    preset: 'cloudflare_module',
+
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
+  },
 
   eslint: {
     config: {

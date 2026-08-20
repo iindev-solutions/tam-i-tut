@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import logo from '~/assets/brand/logo.svg'
 
 const { t } = useI18n()
+const { db } = useDb()
 
-const quickLinks = [
-  { label: 'home.housing', icon: 'i-lucide-house' },
-  { label: 'home.food', icon: 'i-lucide-utensils' },
-  { label: 'home.transport', icon: 'i-lucide-bike' },
-  { label: 'home.money', icon: 'i-lucide-wallet' },
-  { label: 'home.safety', icon: 'i-lucide-shield-check' },
-  { label: 'home.culture', icon: 'i-lucide-book-open' }
-]
+const categories = computed(() => db.value.categories)
+
+const selectedCity = useState<string>('selectedCity', () => 'da-nang')
+const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
 </script>
 
 <template>
@@ -21,6 +21,7 @@ const quickLinks = [
         <div class="relative space-y-3">
           <h1 class="max-w-xl text-4xl font-semibold tracking-tight text-highlighted sm:text-5xl">
             {{ t('home.title') }}
+            <span class="mt-1 block text-muted">{{ t('home.inCity', { city: selectedCityIn }) }}</span>
           </h1>
           <p class="max-w-lg text-base leading-7 text-muted">
             {{ t('home.description') }}
@@ -34,19 +35,28 @@ const quickLinks = [
       >
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <UCard
-            v-for="link in quickLinks"
-            :key="link.label"
-            class="border-default"
+            v-for="category in categories"
+            :key="category.id"
+            class="border-default session-hover-card"
           >
-            <div class="flex items-center justify-between">
-              <UIcon
-                :name="link.icon"
-                class="size-5 text-muted"
-              />
-            </div>
-            <p class="mt-5 text-sm font-medium text-highlighted">
-              {{ t(link.label) }}
-            </p>
+            <NuxtLink
+              :to="category.to"
+              class="block"
+            >
+              <div class="flex items-center justify-between">
+                <UIcon
+                  :name="category.icon"
+                  class="size-5 text-muted"
+                />
+                <UIcon
+                  name="i-lucide-arrow-right"
+                  class="size-4 text-muted"
+                />
+              </div>
+              <p class="mt-5 text-sm font-medium text-highlighted">
+                {{ t(category.labelKey) }}
+              </p>
+            </NuxtLink>
           </UCard>
         </div>
       </section>
@@ -59,7 +69,7 @@ const quickLinks = [
           {{ t('home.firstDayDescription') }}
         </p>
         <UButton
-          to="#start"
+          to="/journey/first-day"
           variant="link"
           color="primary"
           class="mt-3 px-0"
@@ -77,13 +87,21 @@ const quickLinks = [
         {{ t('home.trustDescription') }}
       </p>
 
-      <footer class="flex items-center justify-between border-t border-default pt-6 text-xs text-muted">
+      <footer class="flex items-center justify-between gap-3 border-t border-default pt-6 text-xs text-muted">
         <img
           class="h-4 w-auto opacity-50 dark:invert"
           :src="logo"
           alt="TAMITUT"
         >
-        <span>{{ t('home.footer') }}</span>
+        <span class="flex items-center gap-3">
+          <NuxtLink
+            to="/privacy"
+            class="hover:text-default"
+          >
+            {{ t('privacy.link') }}
+          </NuxtLink>
+          <span>{{ t('home.footer') }}</span>
+        </span>
       </footer>
     </div>
   </UContainer>

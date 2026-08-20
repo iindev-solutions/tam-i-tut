@@ -1,0 +1,47 @@
+name: Backup
+
+on:
+  schedule:
+    # Daily 03:00 UTC (off-peak), per vault/wiki/services/supabase-backup-runbook.md
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: Database dump + upload to off-site bucket
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dump database (logical)
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          pg_dump "$DB_URL" --format=custom --file=db.dump --no-owner --no-privileges
+          ls -lh db.dump
+
+      - name: Upload to R2 (off-site)
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          DATE=$(date +%F)
+          aws s3 cp db.dump "s3://$R2_BUCKET/db/$DATE.dump" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --no-progress
+          echo "Uploaded s3://$R2_BUCKET/db/$DATE.dump"
+
+      - name: Verify upload
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          DATE=$(date +%F)
+          SIZE=$(aws s3 ls "s3://$R2_BUCKET/db/$DATE.dump" --endpoint-url "$R2_ENDPOINT" | awk '{print $3}')
+          echo "Remote size: $SIZE bytes"
+          test -n "$SIZE" && test "$SIZE" -gt 1000000 && echo "Backup OK" || { echo "Backup too small/absent"; exit 1; }

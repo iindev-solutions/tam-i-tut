@@ -1,0 +1,14 @@
+name = "tamitut-keepalive"
+main = "src/index.ts"
+compatibility_date = "2026-08-18"
+
+# Ping every 5 minutes so the free Supabase project never hits the 7-day
+# inactivity pause, and verify the TMA is reachable.
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+SUPABASE_URL = "https://tepsurbgsrivvcvizxph.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlcHN1cmJnc3JpdnZjdml6eHBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMTQ2MjksImV4cCI6MjA5MzY5MDYyOX0.q0LnXkyPgVm5Xjsc7GlAqTaIwFVORkexB8Lb9u5MkqM"
+TMA_URL = "https://tamitut.tamitut-frontend.workers.dev"
+ALERT_CHAT_ID = ""

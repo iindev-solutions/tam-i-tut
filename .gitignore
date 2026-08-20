@@ -12,3 +12,6 @@ storage/logs/*.log
 # Skills CLI generated local agent mounts/symlinks
 skills/
 .*/skills/
+bot-token.txt
+.wrangler/
+.zcode/

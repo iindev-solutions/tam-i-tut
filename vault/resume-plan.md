@@ -2,27 +2,28 @@
 
 ## Stop Point
 
-- TAMITUT architecture changed to Supabase-only.
-- Laravel transitional backend files were removed from the repository.
-- Supabase is the only backend platform: Edge Functions, Auth, Postgres/PostGIS, Storage, Realtime, and RLS.
-- Supabase Studio is the private pilot operations/admin surface; project membership is restricted and database invariants must survive privileged Studio edits through constraints/triggers/guarded workflows.
-- Nuxt runtime config now exposes only public Supabase URL and anon/publishable key.
-- Legacy Nuxt Laravel API helper and API response types were removed.
-- Existing Supabase migrations, RLS policies, and pgTAP tests remain the database baseline.
-- The first implementation gap is Telegram auth: Edge Function must validate raw `Telegram.WebApp.initData`, freshness, replay, and establish the Supabase session contract.
+- Live infra verified: hosted Supabase (23 migrations, seed, RLS proven live), `telegram-bootstrap` + `telegram-bot` deployed, TMA on Cloudflare Pages, bot @tamittutbot configured (menu button, webhook, emoji RU/EN description), frontend gates 32/32.
+- Honest gap: NOT prod-ready - admin is a mock prototype (no real CRUD, no district polygon editor), housing data in frontend mocks, food-only seed, no keep-awake/backups/CI/cleanup.
+- Full plan written: `vault/wiki/architecture/admin-panel-and-prod-plan.md` (Phases 0-4: foundations -> content admin -> map admin -> hardening -> content & launch). Awaiting founder approval + 3 decisions.
 
 ## Next Step
 
-1. create `supabase/functions/telegram-bootstrap`
-2. validate Telegram HMAC, freshness, malformed input, and replay behavior
-3. validate Supabase Auth identity/session exchange for Telegram users
-4. connect Nuxt Supabase client with RLS-safe reads/writes
-5. verify Studio editorial workflow on a small Da Nang dataset
-6. add off-site database + Storage backup procedure before production data
+1. founder: create public GitHub repo, add secrets (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, NUXT_PUBLIC_SUPABASE_URL/ANON_KEY, SUPABASE_DB_URL), enable R2 in the Cloudflare dashboard, push to main -> CI + auto-deploy + daily backups activate
+2. after push: verify CI green + first auto-deploy + first backup; set R2 API token secrets
+3. Phase 4: pilot seed (~80 high-value entries) + freshness SLA + closed pilot
+4. Optional Phase 1 follow-up: full guide authoring form
+5. Optional: R2 restore drill per backup runbook
+
+## Session Restart Prompt
+
+```text
+Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, vault/resume-plan.md, vault/design.md, and vault/wiki/architecture/admin-panel-and-prod-plan.md.
+Current direction: live pilot infra is done; the real editorial admin + prod hardening plan (Phases 0-4) is in the vault, awaiting founder approval. Next is Phase 0 (PostGIS, districts migration, admin write RLS, founder admin identity, pg_cron nonce purge, district seed).
+```
 
 ## Session Restart Prompt
 
 ```text
 Read vault/master_index.md, vault/WORKFLOW.md, vault/sprint.md, vault/resume-plan.md, and vault/design.md.
-Current direction is Supabase-only: Nuxt TMA -> Supabase public client/RLS and Edge Functions for privileged workflows. Laravel has been removed. Supabase Studio is temporary private pilot admin. Next implement and test telegram-bootstrap, including Telegram initData validation, replay protection, and Supabase Auth session establishment.
+Current direction: prototype feature-complete. Supabase cutover at the accepted food-slice scope: telegram-bootstrap Edge Function + schema v2 (cities/places/reviews) coded and unit-tested; Nuxt RLS-safe read layer (useDb + db-mappers) wired into home/food/city selector with a mock fallback; food seed and backup runbook done. Remaining: runtime validation on a Docker-capable host (RLS pgTAP, session exchange, live read path in browser), Studio editorial workflow check, remaining journey seeding, backup schedule standup.
 ```

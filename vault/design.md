@@ -29,7 +29,8 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 
 - `UContainer`, max width `max-w-2xl` on page content.
 - No horizontal overflow at 340px - verify with browser check on every layout change.
-- Header composition: `[logo][flag + city][language][theme]`; at 340px the city trigger is a borderless ghost control with visible flag/name, the language control has a 36px target, and no horizontal overflow is allowed.
+- Header composition: `[logo][city select][language][theme]`; the city trigger is a borderless ghost control with visible flag/name, the language control has a 36px target, and no horizontal overflow is allowed.
+- Home hero: title with a large muted second line "in {city}" (same size as the title, no dropdown in the hero); city switching lives in the header only.
 - Radius: `rounded-2xl` icons/buttons, `rounded-3xl` hero/cards. Shadow: `shadow-sm` max.
 
 ## Components
@@ -37,6 +38,24 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 - Use Nuxt UI components as-is (`UCard`, `UButton`, `USelectMenu`, `UColorModeButton`). Custom classes only for surface/spacing/tokens.
 - No dead affordances: remove search inputs, links, and buttons that do nothing. Informational cues stay static (no `href="#"`).
 - Icons: Lucide via `i-lucide-*`. Category icons neutral (`text-muted`).
+- Housing uses two `UTabs` tabs: Guide (sections + district price list) and Map (`HousingTileMap.client.vue`). The district list rows select a district and switch to the Map tab.
+- The map is Leaflet with CARTO raster tiles (Voyager for light, Dark Matter for dark; tiles swap with color mode). District polygons come from `mocks/housing.ts` GeoJSON, get permanent labels, orange marks the selection, and `scrollWheelZoom` stays off so page scroll is never hijacked. Tile attribution is mandatory. The schematic-boundary disclaimer stays until official GeoJSON replaces the polygons. Details: `vault/wiki/services/housing-map.md`.
+- Filter chips (food types): wrapped pill buttons, active state is `bg-elevated` + `text-highlighted`, never orange. No horizontal scroll strips in user-facing pages; card rows that would scroll use `UCarousel` (embla, arrows + dots, `basis-*` on item slot for per-view width).
+- Bilingual mock content renders through `useLocalized().tt`; UI chrome stays on i18n keys.
+- Navigation back: a slim "Назад" row under the header on every non-root route (history back with `/` fallback); the header itself never changes (logo always visible). Inside Telegram the native `BackButton` is synced by `plugins/telegram.client.ts`.
+- District details open in a bottom `USlideover` sheet (`side="bottom"`, rounded top, `max-h-[78vh]`); closed overlay layers must never block input (global CSS guard on `[data-state="closed"]`).
+
+## Admin prototype (`/admin`)
+
+- Separate layout (`layouts/admin.vue`): sticky header with "TAMITUT Admin" wordmark, warning-toned "prototype - mock data" badge, horizontal-scrollable pill nav, "open app" link. No user header.
+- Tables are `AdminTable.vue` (generic, cell slots): `rounded-2xl` border, uppercase muted headers, `min-w-[32rem]` with horizontal scroll on narrow screens - overflow scrolls, never squishes.
+- Status is `StatusBadge.vue`: neutral for published/active/approved, warning for draft/pending/coming-soon, error for rejected. Orange stays out of admin chrome.
+- Admin actions are small ghost buttons; icon-only actions require `aria-label`.
+- Admin mutations affect user pages live within one SPA session; a full reload re-seeds the mock store.
+
+## Errors
+
+- `app/error.vue` is the only error surface: centered card, status code, bilingual copy, single primary "go home" action. No themed variants per error.
 
 ## States / behavior
 
@@ -46,7 +65,7 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 
 ## Motion
 
-- Initial SPA boot loader: `app/spa-loading-template.html`, inline and dependency-free, uses the actual TAMITUT mark from `assets/brand/logo.svg`, with a soft pulse. It defaults to dark, follows OS light mode, and honors Nuxt's saved `nuxt-color-mode` before the bundle loads.
+- Initial SPA boot loader: `app/spa-loading-template.html`. Nuxt mounts it outside `#__nuxt` as `#__nuxt-loader` (default `spaLoadingTemplateLocation: body`) and removes that node on `app:suspense:resolve`. Template renames the node, keeps the logo mark split across left/right panels, then curtains them open with the arrow halves. Finish hook: `plugins/spa-loader.client.ts`. Dark/light + reduced-motion preserved.
 - Client-route loading bar: `NuxtLoadingIndicator` in `app.vue` using `--ui-primary`, height 2px.
 - Page transitions: subtle opacity fade (`page-enter/leaving`, 120ms) on `NuxtPage`.
 - Theme change transition: fade background/color on `html.dark` and layout (160ms), never animate transforms.

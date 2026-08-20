@@ -8,6 +8,7 @@ Use this directory for service-specific docs.
 - `content-seeding-protocol.md` - 200+ entry launch seeding workflow
 - `quality-gates-ci.md` - required quality gates and merge policy
 - `vps-supabase-runtime.md` - legacy local/VPS validation runbook; not MVP production runtime
+- `supabase-backup-runbook.md` - off-site database + Storage backup and restore drill (sprint 5.10)
 - `service-template.md` - template for new service docs
 
 ## Typical Content

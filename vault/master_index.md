@@ -40,6 +40,7 @@ At the start of every session, read:
 - `vault/wiki/architecture/auth-flow.md` - role/session auth details
 - `vault/wiki/architecture/trust-state-machine.md` - trust transition rules
 - `vault/wiki/architecture/telegram-auth-contract.md` - Telegram auth validation contract
+- `vault/wiki/architecture/schema-v2-city-aware.md` - city-aware v2 cutover design (cities/places/reviews/RLS)
 - `vault/wiki/services/` - operational runbooks and service-specific notes
 
 ## Rule

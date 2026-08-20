@@ -375,6 +375,23 @@ inspector_port = 8083
 # The Deno major version to use.
 deno_version = 2
 
+[functions]
+# Telegram Mini App bootstrap endpoint. Access is authenticated inside the
+# function by the Telegram initData signature/HMAC, not by a Supabase JWT
+# (the caller has none yet), so HTTP-level verification is disabled here.
+[functions.telegram-bootstrap]
+enabled = true
+# The caller is the website itself before login, so we skip JWT verification.
+# Security is provided by the Telegram HMAC validation inside the function.
+verify_jwt = false
+
+# Telegram bot webhook: replies to /start with a welcome and an inline
+# web_app button that opens the Mini App. Telegram signs the payload; the
+# platform-level JWT is not used here.
+[functions.telegram-bot]
+enabled = true
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

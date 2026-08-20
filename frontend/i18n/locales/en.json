@@ -1,79 +1,214 @@
 {
   "home": {
-    "kicker": "here and there",
     "title": "Your first days - without the noise",
     "description": "Clear places, prices, and next steps for your first days.",
-    "exploreLabel": "Find",
-    "exploreTitle": "Where do you start?",
-    "searchPlaceholder": "Try: housing near the beach",
     "housing": "Housing",
     "food": "Food & cafes",
     "transport": "Transport",
     "money": "Money",
     "safety": "Safety",
     "culture": "Culture",
-    "featureBadge": "Useful nearby",
     "firstDayTitle": "First 24 hours",
     "firstDayDescription": "Mobile data, money, housing, and places to eat nearby.",
     "openCollection": "Open collection",
-    "trustTitle": "Checked places",
     "trustDescription": "Checked places - without random listings.",
-    "footer": "For people who just arrived"
+    "footer": "For people who just arrived",
+    "inCity": "in {city}"
   },
   "housing": {
-    "kicker": "Housing guide",
+    "kicker": "Housing",
     "title": "Find housing without overpaying",
-    "description": "Verified districts, price ranges, and step-by-step guidance for your first days.",
-    "mapTitle": "Explore districts",
-    "mapDescription": "Tap a district for prices, pros/cons, and insider notes.",
-    "mapLoading": "Loading map...",
+    "description": "Six districts with real rent ranges, checked search channels, and checks before signing.",
+    "mapAriaLabel": "Interactive Da Nang district map",
+    "mapDisclaimer": "District positions are accurate; exact boundaries are being verified against official data.",
+    "mapCredits": "Tiles: OpenStreetMap · CARTO.",
+    "chipsAria": "Quick district pick",
+    "rentTitle": "Rent, 1-bed / studio",
+    "districtsTitle": "Districts & rents",
+    "districtsHint": "Tap a district to open it on the map tab with details.",
+    "tabs": {
+      "info": "Guide",
+      "map": "Map"
+    },
     "sections": {
       "renting": {
-        "title": "How to rent",
-        "description": "Own or rent, contract types, deposit norms",
-        "bullets": [
-          "Budget first: 1-bedroom ~12M VND median, 2-bedroom ~18M",
-          "Negotiate: start 10-15% below asking, offer advance rent"
-        ]
-      },
-      "search": {
-        "title": "Where to look",
-        "description": "Best channels, local groups, agent vetting",
-        "bullets": [
-          "Fantastic Da Nang, Da Nang Expats Telegram",
-          "Property portals: Propzy.com, FB groups (casual rentals)"
-        ]
+        "title": "Contract & money",
+        "description": "How renting works in Da Nang",
+        "bullets": {
+          "contract": "Contracts run 3, 6, or 12 months; shorter terms shrink the choice and raise the price",
+          "deposit": "Deposit is 1-2 months, pay monthly; short stays may require the full amount up front",
+          "agent": "The agent commission is paid by the landlord - using an agent is free for you",
+          "bilingual": "The contract is in Vietnamese and English; the owner rarely attends the signing",
+          "registration": "At check-in the owner must register your place of residence",
+          "utilities": "Ask what is included: electricity at 3,000-3,500 VND/kWh and water are often extra"
+        }
       },
       "trust": {
-        "title": "Before signing",
-        "description": "Owner verification, payment receipts, utility checks",
-        "bullets": [
-          "Visit in person, or request walkthrough video with date stamp",
-          "Verify owner name matches utility bills"
-        ]
+        "title": "Inspection before signing",
+        "description": "What to check in and around the home",
+        "bullets": {
+          "visit": "Visit in person or request a dated video walkthrough",
+          "pests": "Check for cockroaches and ants, look for mold",
+          "neighbors": "Catch the neighbors and ask for their review of the building and area",
+          "walk": "Walk around in the morning and evening - any construction or karaoke nearby?",
+          "meters": "Photograph the water and electricity meter readings at check-in"
+        }
       }
     },
     "districts": {
-      "idealFor": "Best for",
-      "reference": "Reference",
-      "myKhe": {
-        "area": "My Khe Beach",
-        "distance": "5-10min walk",
-        "summary": "Premium, walkable to beach, cafes, gyms. More expensive."
+      "idealFor": "Good for",
+      "reference": "What to know",
+      "sonTra": {
+        "label": "Sơn Trà",
+        "area": "My Khe coast and An Thượng",
+        "distance": "5-10 min walk to the sea",
+        "rent": "7-15M ₫/mo",
+        "summary": "Beach, cafes, and gyms in walking distance. Tourist core: noisy in season, highest prices."
       },
-      "bacMyAn": {
-        "area": "Bac My An",
-        "distance": "2-3km cycle",
-        "summary": "Quiet, close to cafes, Russian expat base."
+      "nguHanhSon": {
+        "label": "Ngũ Hành Sơn",
+        "area": "Southeast: Bắc Mỹ An, Hòa Hải",
+        "distance": "10-15 min by bike to the sea",
+        "rent": "5-10M ₫/mo",
+        "summary": "Quieter and cheaper than the coast. Marble Mountains nearby, beach by bike."
+      },
+      "haiChau": {
+        "label": "Hải Châu",
+        "area": "Center and Han riverfront",
+        "distance": "15-20 min by bike to the sea",
+        "rent": "5-8M ₫/mo",
+        "summary": "Downtown: markets, banks, local cafes. City life without the sea next door."
+      },
+      "thanhKhe": {
+        "label": "Thanh Khê",
+        "area": "West of the center",
+        "distance": "10-15 min by bike to the beach",
+        "rent": "4-6M ₫/mo",
+        "summary": "Local life without tourists. Its own beach away from the crowds."
+      },
+      "lienChieu": {
+        "label": "Liên Chiểu",
+        "area": "Northwest, Xuân Thiều beach",
+        "distance": "beach nearby, 20-30 min to the center",
+        "rent": "4-7M ₫/mo",
+        "summary": "Quiet and cheap, wide empty beaches. Far from the center and cafes."
+      },
+      "camLe": {
+        "label": "Cẩm Lệ",
+        "area": "South, behind the center",
+        "distance": "20-25 min by bike to the sea",
+        "rent": "4-6M ₫/mo",
+        "summary": "New buildings at local prices. For living with a bike, not a beach holiday."
       }
     },
-    "pricing": "Price range",
-    "kickerPricing": "Per month",
+    "priceRanges": {
+      "budget": "Below average",
+      "average": "Average",
+      "aboveAverage": "Above average"
+    },
     "keyPoints": {
-      "beach": "Beach access",
-      "quiet": "Quiet",
-      "family": "Family-friendly",
-      "budget": "Budget"
+      "beach": "Near the sea",
+      "quiet": "Quieter area",
+      "family": "Good for families",
+      "budget": "Lower budget",
+      "nightlife": "Bars and late food",
+      "expat": "Many expats",
+      "local": "Local vibe",
+      "markets": "Markets nearby",
+      "transport": "Transport and banks nearby"
+    },
+    "resources": {
+      "title": "Where to search",
+      "subtitle": "Checked channels: from Russian-language chats to local groups and agencies.",
+      "tip": "Post your criteria in the Facebook groups - agents will flood your inbox with offers."
+    }
+  },
+  "food": {
+    "kicker": "Food",
+    "title": "Where to eat nearby",
+    "description": "Checked places with price levels - from street food to cafes.",
+    "filters": {
+      "aria": "Filter by place type",
+      "all": "All",
+      "cafe": "Cafes",
+      "street": "Street food",
+      "market": "Markets",
+      "restaurant": "Restaurants"
+    },
+    "price": {
+      "budget": "Budget",
+      "average": "Average",
+      "above": "Above average"
+    },
+    "verifiedTitle": "Place verified",
+    "reviewsLabel": "reviews"
+  },
+  "transport": {
+    "kicker": "Transport",
+    "title": "Move around with ease",
+    "description": "Ways to get across the city with price references."
+  },
+  "money": {
+    "kicker": "Money",
+    "title": "Money under control",
+    "description": "Cash, cards, and transfers - what to use and when."
+  },
+  "safety": {
+    "kicker": "Safety",
+    "title": "Numbers that work",
+    "description": "Emergency contacts and habits that reduce risk.",
+    "contactsTitle": "Emergency numbers",
+    "tipsTitle": "Habits",
+    "consulateNote": "Russian Consulate General: Trần Hưng Đạo, Hải Châu - keep the address handy."
+  },
+  "culture": {
+    "kicker": "Culture",
+    "title": "Manners that matter",
+    "description": "Short behavior rules - no lectures.",
+    "doTitle": "Do",
+    "dontTitle": "Don't",
+    "do": {
+      "1": "Take off your shoes when entering homes and temples",
+      "2": "Greet with \"xin chào\" - it is appreciated",
+      "3": "Hand over and receive items with your right hand or both hands",
+      "4": "Dress modestly in temples and government offices"
+    },
+    "dont": {
+      "1": "Do not leave chopsticks standing upright in rice",
+      "2": "Do not touch people on the head, including children",
+      "3": "Do not raise your voice - calm resolves conflicts",
+      "4": "Do not photograph people without consent"
+    },
+    "note": "Locals forgive slips - staying calm and smiling matters more than etiquette."
+  },
+  "firstDay": {
+    "kicker": "Journey",
+    "title": "First 24 hours",
+    "description": "Five steps to get on your feet after landing.",
+    "progress": "{done} of {total}",
+    "done": "Mark step",
+    "openCategory": "Open section",
+    "steps": {
+      "sim": {
+        "label": "Connectivity",
+        "hint": "Viettel and Vinaphone desks at the airport: passport + about 100,000 VND for a data package"
+      },
+      "cash": {
+        "label": "Cash",
+        "hint": "Vietcombank and Techcombank ATMs are at the airport - withdraw dong right away"
+      },
+      "ride": {
+        "label": "First ride",
+        "hint": "Grab to the center: 100,000-150,000 VND, a 10-15 minute drive"
+      },
+      "housing": {
+        "label": "Temporary stay",
+        "hint": "Book 2-3 days first, then pick a district on the Housing map"
+      },
+      "food": {
+        "label": "Food nearby",
+        "hint": "Breakfast with the locals: soup is 30-50k VND, cash only"
+      }
     }
   },
   "cities": {
@@ -85,5 +220,162 @@
     "vietnam": "Vietnam",
     "thailand": "Thailand",
     "comingSoon": "Coming soon"
+  },
+  "citiesIn": {
+    "da-nang": "Da Nang",
+    "nha-trang": "Nha Trang",
+    "pattaya": "Pattaya",
+    "phuket": "Phuket"
+  },
+  "nav": {
+    "back": "Back"
+  },
+  "status": {
+    "published": "Published",
+    "draft": "Draft",
+    "pending": "In moderation",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "active": "Active",
+    "comingSoon": "Coming soon"
+  },
+  "error": {
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "Check the address or head back home.",
+    "genericTitle": "Something broke",
+    "genericDescription": "Our side failed. Give it another try.",
+    "backHome": "Go home"
+  },
+  "admin": {
+    "title": "TAMITUT Admin",
+    "openApp": "Open app",
+    "empty": "Empty",
+    "nav": {
+      "dashboard": "Dashboard",
+      "cities": "Cities",
+      "categories": "Categories",
+      "districts": "Districts",
+      "places": "Places",
+      "guides": "Guides",
+      "reviews": "Reviews"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Pilot city state at a glance.",
+      "activity": "Recent activity",
+      "pendingCta": "Open moderation"
+    },
+    "stats": {
+      "cities": "Active cities",
+      "places": "Published places",
+      "guides": "Guide entries",
+      "reviews": "Awaiting moderation"
+    },
+    "columns": {
+      "city": "City",
+      "country": "Country",
+      "category": "Category",
+      "district": "District",
+      "area": "Zone",
+      "name": "Name",
+      "type": "Type",
+      "price": "Prices",
+      "title": "Title",
+      "note": "Reference",
+      "place": "Place",
+      "author": "Author",
+      "rating": "Rating",
+      "text": "Review",
+      "status": "Status",
+      "updated": "Updated",
+      "items": "Items",
+      "actions": "Actions"
+    },
+    "actions": {
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "activate": "Enable",
+      "deactivate": "Disable",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "cities": {
+      "subtitle": "The pilot runs in Da Nang; other cities follow in order."
+    },
+    "categories": {
+      "subtitle": "App sections and their published item counts."
+    },
+    "districts": {
+      "subtitle": "Housing districts for the selection map.",
+      "note": "District positions are accurate; exact boundaries are being verified."
+    },
+    "places": {
+      "subtitle": "Publishing and unpublishing affects the app immediately."
+    },
+    "guides": {
+      "subtitle": "Transport, money, and safety guide entries."
+    },
+    "reviews": {
+      "subtitle": "Approved reviews appear on place pages."
+    },
+    "login": {
+      "title": "Admin sign in",
+      "subtitle": "TAMITUT editorial staff only",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "error": "Sign in failed",
+      "required": "The admin panel requires a configured Supabase project"
+    },
+    "logout": "Sign out",
+    "editor": {
+      "newPlace": "New place",
+      "editPlace": "Edit place",
+      "newCity": "New city",
+      "nameRu": "Name (RU)",
+      "nameEn": "Name (EN)",
+      "areaRu": "Area / address (RU)",
+      "areaEn": "Area / address (EN)",
+      "summaryRu": "Summary (RU)",
+      "summaryEn": "Summary (EN)",
+      "citySlug": "City slug",
+      "placeSlug": "Place slug",
+      "cityNameRu": "City name (RU)",
+      "cityNameEn": "City name (EN)",
+      "flag": "Flag",
+      "sortOrder": "Sort order",
+      "type": "Type",
+      "priceLevel": "Price level",
+      "verified": "Editor verified",
+      "status": "Status",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Saved",
+      "saveError": "Save failed",
+      "newDistrict": "New district",
+      "editDistrict": "Edit district"
+    }
+  },
+  "privacy": {
+    "link": "Privacy policy",
+    "title": "Privacy policy",
+    "updated": "Updated: 18.08.2026",
+    "back": "Back to home",
+    "what": {
+      "title": "What we store",
+      "body": "We store only your Telegram ID (to sign you in) and your chosen language. We do not store or request your name, phone number or chats."
+    },
+    "why": {
+      "title": "Why",
+      "body": "The Telegram ID is used to create your session and show content in your language. It is not used for anything else."
+    },
+    "share": {
+      "title": "Data sharing",
+      "body": "We do not share or sell your data. Everything is stored in our database (Supabase) and protected by access controls."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "Questions about your data: message the bot TAMITUT (tamittutbot)."
+    }
   }
 }

@@ -4,6 +4,7 @@
 body {
   margin: 0;
   font-family: Inter, Arial, sans-serif;
+  min-width: 340px;
 }
 
 code {
@@ -22,7 +23,36 @@ code {
 
 .dark,
 .dark body {
-  transition: background-color 160ms ease, color 160ms ease;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.session-hover-card {
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.session-hover-card:hover {
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+/* Guard: a closed slideover/modal layer must never stay visible or block input,
+   even when the exit animation never fires (headless guests, strict WebViews). */
+[data-slot="content"][data-state="closed"],
+[data-slot="overlay"][data-state="closed"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Overlays appear/disappear instantly: some WebView guests freeze CSS keyframe
+   animations on the first frame, leaving an open sheet translated off-screen
+   (looks like a dead click) or a closed sheet stuck on screen. A near-zero
+   duration still fires animationend, so mount/unmount lifecycle stays intact. */
+[data-slot="content"],
+[data-slot="overlay"] {
+  animation-duration: 0.01ms !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

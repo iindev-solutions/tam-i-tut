@@ -1,22 +1,116 @@
 <div class="spa-loader" role="status" aria-label="TAMITUT loading">
-  <svg class="spa-loader-logo" width="88" height="43" viewBox="0 0 419 201" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M182.306 200.757V149.952H86.7359L236.684 0.00330625L164.823 0.00936014L50.8052 114.021L50.8052 18.0038L7.98839e-06 18.0038L0 200.757L182.306 200.757Z" fill="currentColor"/>
-    <path d="M236.649 7.96886e-06V50.8052L332.219 50.8052L182.271 200.753L254.132 200.739L368.15 86.7359V182.753H418.955V0L236.649 7.96886e-06Z" fill="currentColor"/>
-  </svg>
+  <div class="spa-loader-panel spa-loader-panel--left" aria-hidden="true">
+    <svg class="spa-loader-mark" width="88" height="42" viewBox="0 0 419 201" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M182.306 200.757V149.952H86.7359L236.684 0.00330625L164.823 0.00936014L50.8052 114.021L50.8052 18.0038L7.98839e-06 18.0038L0 200.757L182.306 200.757Z" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="spa-loader-panel spa-loader-panel--right" aria-hidden="true">
+    <svg class="spa-loader-mark" width="88" height="42" viewBox="0 0 419 201" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M236.649 7.96886e-06V50.8052L332.219 50.8052L182.271 200.753L254.132 200.739L368.15 86.7359V182.753H418.955V0L236.649 7.96886e-06Z" fill="currentColor"/>
+    </svg>
+  </div>
   <script>
     try {
       var savedMode = localStorage.getItem('nuxt-color-mode')
       if (savedMode === 'dark') document.documentElement.classList.add('loader-dark')
       if (savedMode === 'light') document.documentElement.classList.add('loader-light')
     } catch (_) {}
+
+    ;(function () {
+      // Nuxt body-loader: #__nuxt-loader is removed on app:suspense:resolve.
+      // Rename so we can play the curtain exit before unmount.
+      var shell = document.getElementById('__nuxt-loader')
+      if (shell) shell.id = 'tamitut-spa-loader'
+
+      var loader = document.querySelector('#tamitut-spa-loader .spa-loader')
+      if (!loader) return
+
+      var reduced = false
+      try {
+        reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      } catch (_) {}
+      if (reduced) loader.classList.add('is-reduced')
+
+      var started = Date.now()
+      var minMs = reduced ? 0 : 650
+      var finishing = false
+
+      window.__TAMITUT_FINISH_LOADER = function () {
+        if (finishing) return
+        finishing = true
+        var root = document.getElementById('tamitut-spa-loader')
+        var wait = Math.max(0, minMs - (Date.now() - started))
+        setTimeout(function () {
+          if (!root) return
+          if (reduced) {
+            root.remove()
+            return
+          }
+          loader.classList.add('is-leaving')
+          setTimeout(function () { root.remove() }, 780)
+        }, wait)
+      }
+    })()
   </script>
   <style>
-    :root{color-scheme:dark}
-    .spa-loader{position:fixed;inset:0;display:grid;place-items:center;background:#09090b;color:#fafafa}
-    .spa-loader-logo{display:block;animation:tamitut-pulse 1.6s ease-in-out infinite;transform-origin:center}
-    @keyframes tamitut-pulse{0%,100%{opacity:.52;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
-    @media (prefers-color-scheme:light){:root:not(.loader-dark) .spa-loader{background:#fff;color:#18181b}}
-    :root.loader-light{color-scheme:light}:root.loader-light .spa-loader{background:#fff;color:#18181b}
-    @media (prefers-reduced-motion:reduce){.spa-loader-logo{animation:none;opacity:1;transform:none}}
+    :root { color-scheme: dark; }
+    #tamitut-spa-loader,
+    #__nuxt-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .spa-loader {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #fafafa;
+    }
+    .spa-loader-panel {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: #09090b;
+      display: flex;
+      align-items: center;
+      transition: transform 760ms cubic-bezier(.77, 0, .175, 1);
+      will-change: transform;
+    }
+    .spa-loader-panel--left {
+      left: 0;
+      justify-content: flex-end;
+    }
+    .spa-loader-panel--right {
+      right: 0;
+      justify-content: flex-start;
+    }
+    .spa-loader-mark {
+      display: block;
+      width: 88px;
+      height: 42px;
+      flex: none;
+      color: inherit;
+    }
+    /* Same viewBox as logo.svg — center the mark on the panel seam. */
+    .spa-loader-panel--left .spa-loader-mark { transform: translateX(50%); }
+    .spa-loader-panel--right .spa-loader-mark { transform: translateX(-50%); }
+    .spa-loader.is-leaving .spa-loader-panel--left {
+      transform: translateX(-100%);
+    }
+    .spa-loader.is-leaving .spa-loader-panel--right {
+      transform: translateX(100%);
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not(.loader-dark) .spa-loader { color: #18181b; }
+      :root:not(.loader-dark) .spa-loader-panel { background: #fff; }
+    }
+    :root.loader-light { color-scheme: light; }
+    :root.loader-light .spa-loader { color: #18181b; }
+    :root.loader-light .spa-loader-panel { background: #fff; }
+    :root.loader-dark .spa-loader { color: #fafafa; }
+    :root.loader-dark .spa-loader-panel { background: #09090b; }
+    .spa-loader.is-reduced .spa-loader-panel { transition: none; }
   </style>
 </div>

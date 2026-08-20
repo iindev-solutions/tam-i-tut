@@ -5,18 +5,39 @@ export interface HousingSection {
   bullets: string[]
 }
 
+export type HousingResourceKind = 'telegram' | 'facebook' | 'zalo' | 'site' | 'agency'
+
+export interface HousingResource {
+  id: string
+  kind: HousingResourceKind
+  name: string
+  url: string
+  note?: {
+    ru: string
+    en: string
+  }
+}
+
 export interface HousingDistrictProperties {
   id: string
   label: string
   area: string
+  rentRange: string
   priceRange: string
   bestFor: string[]
   distanceToBeach: string
   summary: string
 }
 
-export interface HousingDistrictFeature extends GeoJSON.Feature<GeoJSON.Polygon> {
+export type HousingCoordinate = [longitude: number, latitude: number]
+
+export interface HousingDistrictFeature {
+  type: 'Feature'
   properties: HousingDistrictProperties
+  geometry: {
+    type: 'Polygon'
+    coordinates: HousingCoordinate[][]
+  }
 }
 
 export interface HousingGuideData {
@@ -26,6 +47,7 @@ export interface HousingGuideData {
     description: string
   }
   sections: HousingSection[]
+  resources: HousingResource[]
   districts: {
     type: 'FeatureCollection'
     features: HousingDistrictFeature[]

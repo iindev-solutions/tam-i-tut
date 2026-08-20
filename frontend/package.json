@@ -1,40 +1,46 @@
 {
-	"name": "tamitut-frontend",
-	"version": "1.0.0",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"build": "nuxt build",
-		"dev": "nuxt dev",
-		"generate": "nuxt generate",
-		"preview": "nuxt preview",
-		"postinstall": "nuxt prepare",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"lint": "eslint .",
-		"lint:fix": "eslint . --fix",
-		"format": "prettier --check .",
-		"format:fix": "prettier --write .",
-		"typecheck": "nuxt typecheck"
-	},
-	"dependencies": {
-		"@nuxt/ui": "^4.3.0",
-		"@nuxtjs/i18n": "^10.2.1",
-		"@vue-leaflet/vue-leaflet": "^0.10.1",
-		"leaflet": "^1.9.4",
-		"nuxt": "^4.2.2",
-		"zod": "^4.3.6"
-	},
-	"devDependencies": {
-		"@nuxt/eslint": "^1.12.1",
-		"@types/leaflet": "^1.9.21",
-		"@types/node": "^25.0.9",
-		"eslint": "^9.39.2",
-		"eslint-config-prettier": "^10.1.8",
-		"eslint-plugin-prettier": "^5.5.5",
-		"prettier": "^3.8.0",
-		"typescript": "^5.9.3",
-		"vitest": "^4.1.5",
-		"vue-tsc": "^3.2.1"
-	}
+  "name": "tamitut-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "npm run build && wrangler dev",
+    "postinstall": "nuxt prepare",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "typecheck": "nuxt typecheck",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.3.0",
+    "@nuxtjs/i18n": "^10.2.1",
+    "@supabase/supabase-js": "^2.112.3",
+    "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
+    "nuxt": "^4.2.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.12.1",
+    "@types/leaflet": "^1.9.22",
+    "@types/leaflet-draw": "^1.0.13",
+    "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "nitro-cloudflare-dev": "^0.2.2",
+    "prettier": "^3.8.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5",
+    "vue-tsc": "^3.2.1",
+    "wrangler": "^4.123.0"
+  }
 }

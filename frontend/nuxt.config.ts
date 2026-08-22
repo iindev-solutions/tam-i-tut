@@ -46,7 +46,12 @@ export default defineNuxtConfig({
     preset: 'cloudflare_module',
 
     cloudflare: {
-      deployConfig: true,
+      // Deployment is a static SPA via the repo-root wrangler.jsonc
+      // (assets + SPA fallback). deployConfig makes Nitro emit
+      // .output/server/wrangler.json plus a .wrangler/deploy/config.json
+      // redirect that hijacks `wrangler deploy` into a server build with a
+      // missing index.mjs entry point.
+      deployConfig: false,
       nodeCompat: true
     }
   },

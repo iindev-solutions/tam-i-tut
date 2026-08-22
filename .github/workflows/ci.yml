@@ -84,7 +84,17 @@ jobs:
         run: npx -y supabase db lint --local --fail-on none
 
       - name: Run RLS pgTAP suite
-        run: npx -y supabase test db supabase/tests/rls --local
+        run: |
+          set -o pipefail
+          npx -y supabase test db supabase/tests/rls --local 2>&1 | tee pgtap-output.log
+
+      - name: Upload pgTAP output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pgtap-output
+          path: pgtap-output.log
+          retention-days: 7
 
       - name: Stop Supabase local stack
         if: always()

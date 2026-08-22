@@ -83,23 +83,26 @@ jobs:
       - name: Lint database schema
         run: npx -y supabase db lint --local --fail-on none
 
+      # Capture everything (stdout+stderr) to a file first, print it, and
+      # fail the step if the CLI failed - tee+pipefail proved unreliable
+      # here (empty log on failure).
       - name: Run RLS pgTAP suite
         run: |
-          set -o pipefail
-          npx -y supabase test db supabase/tests/rls --local 2>&1 | tee pgtap-output.log
-
-      - name: Publish pgTAP output on failure
-        if: failure()
-        run: |
-          {
-            echo "### pgTAP output"
-            echo '```'
-            tail -c 6000 pgtap-output.log
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          grep -E "not ok|Failed|error:" pgtap-output.log | while read -r line; do
-            echo "::error::${line:0:180}"
-          done || true
+          rc=0
+          npx -y supabase test db supabase/tests/rls --local --debug > pgtap-output.log 2>&1 || rc=$?
+          cat pgtap-output.log
+          if [ "$rc" -ne 0 ]; then
+            {
+              echo "### pgTAP output (tail)"
+              echo '```'
+              tail -c 6000 pgtap-output.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY" || true
+            grep -iaE "not ok|fail|error|exception" pgtap-output.log | tail -20 | while IFS= read -r line; do
+              echo "::error::${line:0:180}"
+            done || true
+            exit "$rc"
+          fi
 
       - name: Stop Supabase local stack
         if: always()

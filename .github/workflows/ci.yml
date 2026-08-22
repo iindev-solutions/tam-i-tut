@@ -88,13 +88,18 @@ jobs:
           set -o pipefail
           npx -y supabase test db supabase/tests/rls --local 2>&1 | tee pgtap-output.log
 
-      - name: Upload pgTAP output
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pgtap-output
-          path: pgtap-output.log
-          retention-days: 7
+      - name: Publish pgTAP output on failure
+        if: failure()
+        run: |
+          {
+            echo "### pgTAP output"
+            echo '```'
+            tail -c 6000 pgtap-output.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          grep -E "not ok|Failed|error:" pgtap-output.log | while read -r line; do
+            echo "::error::${line:0:180}"
+          done || true
 
       - name: Stop Supabase local stack
         if: always()

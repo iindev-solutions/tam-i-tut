@@ -94,23 +94,27 @@ jobs:
       # Capture everything (stdout+stderr) to a file first, print it, and
       # fail the step if the CLI failed - tee+pipefail proved unreliable
       # here (empty log on failure).
-      - name: Run RLS pgTAP suite
+      # Run each suite separately so a fixture-level SQL error in one file
+      # surfaces its exact psql error text (the CLI's combined run only
+      # reports TAP parse errors). Every failing line becomes an annotation,
+      # readable via the API without auth.
+      - name: Run RLS pgTAP suites
         run: |
           rc=0
-          npx -y supabase test db supabase/tests/rls --local --debug > pgtap-output.log 2>&1 || rc=$?
-          cat pgtap-output.log
-          if [ "$rc" -ne 0 ]; then
-            {
-              echo "### pgTAP output (tail)"
-              echo '```'
-              tail -c 6000 pgtap-output.log
-              echo '```'
-            } >> "$GITHUB_STEP_SUMMARY" || true
-            grep -iaE "not ok|fail|error|exception" pgtap-output.log | tail -20 | while IFS= read -r line; do
-              echo "::error::${line:0:180}"
-            done || true
-            exit "$rc"
-          fi
+          for f in supabase/tests/rls/*.sql; do
+            echo "::group::$f"
+            fr=0
+            npx -y supabase test db "$f" --local --debug > "pgtap-$(basename "$f" .sql).log" 2>&1 || fr=$?
+            tail -n 60 "pgtap-$(basename "$f" .sql).log"
+            echo "::endgroup::"
+            if [ "$fr" -ne 0 ]; then
+              rc=$fr
+              grep -iaE "ERROR:|not ok|psql:" "pgtap-$(basename "$f" .sql).log" | head -8 | while IFS= read -r line; do
+                echo "::error::$(basename "$f"): ${line:0:170}"
+              done || true
+            fi
+          done
+          exit "$rc"
 
       - name: Stop Supabase local stack
         if: always()

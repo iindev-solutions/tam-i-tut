@@ -18,6 +18,7 @@ values
 
 insert into public.guide_entries (
 	id,
+	slug,
 	category_slug,
 	title,
 	summary,
@@ -33,8 +34,8 @@ insert into public.guide_entries (
 values
 	(
 		'00000000-0000-0000-0000-000000004001',
+		'test-entry-one',
 		'housing',
-		'Entry One',
 		'Published entry for confirmations',
 		'ru',
 		'published',
@@ -47,8 +48,8 @@ values
 	),
 	(
 		'00000000-0000-0000-0000-000000004002',
+		'test-entry-two',
 		'events',
-		'Entry Two',
 		'Second published entry for confirmations',
 		'ru',
 		'published',

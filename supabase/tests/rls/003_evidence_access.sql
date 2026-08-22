@@ -18,6 +18,7 @@ values
 
 insert into public.guide_entries (
 	id,
+	slug,
 	category_slug,
 	title,
 	summary,
@@ -33,6 +34,7 @@ insert into public.guide_entries (
 values
 	(
 		'00000000-0000-0000-0000-000000003001',
+		'test-curator-draft',
 		'housing',
 		'Curator Draft',
 		'Draft entry for curator evidence access',
@@ -47,6 +49,7 @@ values
 	),
 	(
 		'00000000-0000-0000-0000-000000003002',
+		'test-curator-published',
 		'food',
 		'Curator Published',
 		'Published entry for trusted source evidence access',
@@ -61,6 +64,7 @@ values
 	),
 	(
 		'00000000-0000-0000-0000-000000003003',
+		'test-foreign-draft',
 		'events',
 		'Other Draft',
 		'Foreign draft',

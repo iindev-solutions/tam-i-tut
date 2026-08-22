@@ -52,6 +52,7 @@ values
 
 insert into public.guide_entries (
 	id,
+	slug,
 	category_slug,
 	title,
 	summary,
@@ -67,6 +68,7 @@ insert into public.guide_entries (
 values
 	(
 		'00000000-0000-0000-0000-000000008001',
+		'test-trust-transition',
 		'housing',
 		'Trust Transition Entry',
 		'Entry used to test trust badge guard transitions',

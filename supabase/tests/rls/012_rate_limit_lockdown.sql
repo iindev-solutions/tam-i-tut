@@ -22,7 +22,7 @@ values
 	('00000000-0000-0000-0000-000000000301', 'user', 'Reader', 'ru', true),
 	('00000000-0000-0000-0000-000000000302', 'admin', 'Admin', 'ru', true);
 
-select plan(8);
+select plan(9);
 
 -- ---- Rate limit table + RPC lockdown ----
 set role authenticated;

@@ -35,7 +35,6 @@ values
 	(
 		'00000000-0000-0000-0000-000000002001',
 		'test-published-entry',
-		'00000000-0000-0000-0000-000000002001',
 		'housing',
 		'Published Entry',
 		'Visible to authenticated users',

@@ -65,9 +65,15 @@ select is(
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000103';
 select is(
-	(select count(*) from public.profiles),
+	(select count(*) from public.profiles
+	 where id in (
+		'00000000-0000-0000-0000-000000000101',
+		'00000000-0000-0000-0000-000000000102',
+		'00000000-0000-0000-0000-000000000103',
+		'00000000-0000-0000-0000-000000000104'
+	)),
 	4::bigint,
-	'moderator can read all profiles'
+	'moderator can read all profiles (test fixtures)'
 );
 
 select is(

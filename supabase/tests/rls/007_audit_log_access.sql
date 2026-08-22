@@ -92,7 +92,9 @@ select is(
 );
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000701';
-select throws_like(
+-- Migration 028 allows moderator/admin audit inserts (the admin panel
+-- writes them); the append-only trigger remains the mutation guard.
+select lives_ok(
 	$$
 	insert into public.audit_logs (
 		actor_profile_id,
@@ -104,13 +106,12 @@ select throws_like(
 	values (
 		'00000000-0000-0000-0000-000000000701',
 		'moderator',
-		'illegal.insert',
+		'test.insert',
 		'test',
 		'{}'::jsonb
 	)
 	$$,
-	'%row-level security policy%',
-	'moderator cannot insert audit logs via RLS'
+	'moderator can insert an audit log row (policy 028)'
 );
 
 reset role;
@@ -139,8 +140,8 @@ set local role authenticated;
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000703';
 select is(
 	(select count(*) from public.audit_logs),
-	3::bigint,
-	'audit log row count unchanged after forbidden mutations'
+	4::bigint,
+	'audit log row count reflects the allowed staff insert only'
 );
 
 select * from finish();

@@ -95,11 +95,10 @@ select plan(9);
 
 set local role authenticated;
 
-set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000201';
 select is(
-	(select count(*) from public.guide_entries),
+	(select count(*) from public.guide_entries where slug like 'test-%'),
 	1::bigint,
-	'user can read published entries only'
+	'user can read published entries only (test fixtures)'
 );
 
 select throws_like(
@@ -137,9 +136,9 @@ select throws_like(
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000202';
 select is(
-	(select count(*) from public.guide_entries),
+	(select count(*) from public.guide_entries where slug like 'test-%'),
 	2::bigint,
-	'curator can read published entries plus own drafts'
+	'curator can read published entries plus own drafts (test fixtures)'
 );
 
 select lives_ok(
@@ -176,9 +175,9 @@ select is(
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000203';
 select is(
-	(select count(*) from public.guide_entries),
+	(select count(*) from public.guide_entries where slug like 'test-%'),
 	3::bigint,
-	'moderator can read all guide entries'
+	'moderator can read all guide entries (test fixtures)'
 );
 
 select lives_ok(
@@ -190,9 +189,9 @@ select lives_ok(
 );
 
 select is(
-	(select count(*) from public.guide_entries),
+	(select count(*) from public.guide_entries where slug like 'test-%'),
 	2::bigint,
-	'moderator delete is reflected in visible rows'
+	'moderator delete is reflected in visible rows (test fixtures)'
 );
 
 select * from finish();

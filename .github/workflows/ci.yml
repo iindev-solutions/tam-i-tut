@@ -59,8 +59,13 @@ jobs:
       # excluded. --ignore-health-check keeps flaky/slow container health
       # probes from failing the job - `migration up` below waits on Postgres
       # itself and is the real gate.
+      # All supabase commands run from the repo root WITHOUT --workdir:
+      # the CLI derives the docker network name (supabase_network_<dir>)
+      # from the working directory, and a --workdir mismatch between steps
+      # made `test db` look for a network the start step never created
+      # ("network supabase_network_tam-i-tut not found", exit 125).
       - name: Start Supabase local stack
-        run: npx -y supabase start --workdir supabase --ignore-health-check --exclude studio,imgproxy,kong,mailpit,edge-runtime,logflare,vector,supavisor,gotrue,realtime,storage-api,postgrest,postgres-meta
+        run: npx -y supabase start --ignore-health-check --exclude studio,imgproxy,kong,mailpit,edge-runtime,logflare,vector,supavisor,gotrue,realtime,storage-api,postgrest,postgres-meta
 
       - name: Wait for local Postgres
         run: |
@@ -70,7 +75,7 @@ jobs:
             fi
             sleep 2
           done
-          echo "postgres did not become ready"; npx -y supabase status --workdir supabase || true; exit 1
+          echo "postgres did not become ready"; npx -y supabase status || true; exit 1
 
       - name: Apply migrations
         run: npx -y supabase migration up --local

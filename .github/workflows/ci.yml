@@ -109,7 +109,7 @@ jobs:
             echo "::endgroup::"
             if [ "$fr" -ne 0 ]; then
               rc=$fr
-              grep -iaE "ERROR:|not ok|psql:" "pgtap-$(basename "$f" .sql).log" | head -8 | while IFS= read -r line; do
+              grep -iaE "ERROR:|not ok|psql:|^[[:space:]]*#" "pgtap-$(basename "$f" .sql).log" | head -12 | while IFS= read -r line; do
                 echo "::error::$(basename "$f"): ${line:0:170}"
               done || true
             fi

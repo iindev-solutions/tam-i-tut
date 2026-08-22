@@ -94,6 +94,7 @@ $$;
 select plan(9);
 
 set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000201';
 
 select is(
 	(select count(*) from public.guide_entries where slug like 'test-%'),

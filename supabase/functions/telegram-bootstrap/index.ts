@@ -9,6 +9,7 @@
 //
 // Replay protection uses the telegram_bootstrap_nonces table (migration 021).
 
+import { createRateLimiter } from './rate-limit.ts'
 import { validateInitData } from './validate.ts'
 
 const CORS_HEADERS = {
@@ -21,6 +22,32 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
   })
+
+// Per-IP burst cap in two layers: this in-memory counter (cheap, best-effort
+// per isolate - Supabase may spawn a fresh isolate per request) plus the
+// durable Postgres RPC below (authoritative). See rate-limit.ts.
+const rateLimiter = createRateLimiter()
+
+const clientIp = (request: Request): string =>
+  (request.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
+
+// Authoritative fixed-window counter via the check_rate_limit RPC (migration
+// 030). Fails open: if the counter store is unreachable the request still
+// proceeds - the initData HMAC and the replay-nonce table remain the guards.
+const dbRateLimit = async (ip: string, supabaseUrl: string, serviceRoleKey: string): Promise<number | null> => {
+  const response = await fetch(`${supabaseUrl}/rest/v1/rpc/check_rate_limit`, {
+    method: 'POST',
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ p_key: `bootstrap-ip:${ip}`, p_max: 10, p_window_seconds: 60 })
+  })
+  if (!response.ok) return null
+  const retryAfter = (await response.json()) as number
+  return retryAfter > 0 ? retryAfter : null
+}
 
 interface SessionResponse {
   access_token: string
@@ -48,6 +75,17 @@ Deno.serve(async (request: Request) => {
     return json({ error: 'malformed' }, 400)
   }
   if (!initData) return json({ error: 'malformed' }, 400)
+
+  const rateLimitResponse = (retryAfter: number | null) =>
+    new Response(JSON.stringify({ error: 'rate_limited' }), {
+      status: 429,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json', 'Retry-After': String(retryAfter ?? 60) }
+    })
+
+  const ip = clientIp(request)
+  if (rateLimiter.check(ip) !== null) return rateLimitResponse(60)
+  const dbRetryAfter = await dbRateLimit(ip, supabaseUrl, serviceRoleKey)
+  if (dbRetryAfter !== null) return rateLimitResponse(dbRetryAfter)
 
   const result = await validateInitData(initData, botToken)
   if (!result.ok || !result.user || !result.initDataHash) {

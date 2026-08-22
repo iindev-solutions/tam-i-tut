@@ -16,6 +16,9 @@ export default defineConfig({
       // Shared with the Supabase edge function; alias keeps Vite inside its root.
       '#telegram-validate': fileURLToPath(
         new URL('../supabase/functions/telegram-bootstrap/validate.ts', import.meta.url)
+      ),
+      '#telegram-rate-limit': fileURLToPath(
+        new URL('../supabase/functions/telegram-bootstrap/rate-limit.ts', import.meta.url)
       )
     }
   }

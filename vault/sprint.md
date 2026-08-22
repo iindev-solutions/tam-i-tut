@@ -8,7 +8,7 @@ Nuxt UI + Tailwind remain the frontend UI standard.
 
 ## Current Direction
 
-Real editorial admin (founder decision) + production hardening. Full plan: `vault/wiki/architecture/admin-panel-and-prod-plan.md` (DRAFT, awaiting approval).
+Phase 3 production hardening DONE in code and verified live (rate limiting, grants, privacy, keepalive, cleanup, CI). CI is fully green for the first time (sha 252c144: frontend + database jobs). Remaining Phase 3 gaps are founder-side secrets: `CLOUDFLARE_API_TOKEN` for auto-deploy, `SUPABASE_DB_URL` + R2 credentials for scheduled backups.
 
 ## Plan Phases
 
@@ -17,8 +17,8 @@ Real editorial admin (founder decision) + production hardening. Full plan: `vaul
 | 0 | Foundations: PostGIS, districts migration, admin write RLS, founder admin identity, pg_cron nonce purge, district seed | DONE |
 | 1 | Content admin: auth gate, useAdminDb, places/reviews/cities/guides CRUD, audit, UI polish | DONE (guide authoring form = follow-up) |
 | 2 | Map admin: Leaflet.draw polygon editor, housing page cutover to DB | DONE |
-| 3 | Prod hardening: keep-awake worker, automated backups, CI on GitHub + auto-deploy, cleanup, privacy, rate limits | TODO |
-| 4 | Content & launch: ~80-entry pilot seed, freshness SLA, closed pilot | TODO |
+| 3 | Prod hardening: keep-awake worker, automated backups, CI on GitHub + auto-deploy, cleanup, privacy, rate limits | CODE DONE + CI GREEN; auto-deploy/backup secrets pending founder |
+| 4 | Content & launch: ~80-entry pilot seed, freshness SLA, closed pilot | PARTIAL (guides SLA done; ~15 food places need sourced venues) |
 
 ## Current Tasks
 
@@ -37,11 +37,12 @@ Real editorial admin (founder decision) + production hardening. Full plan: `vaul
 
 ## Current Priority
 
-1. founder approves the admin + prod plan (3 decisions: admin identity, geometry storage, repo visibility)
-2. Phase 0 foundations -> Phase 1 content admin -> Phase 2 map admin
-3. Phase 3 hardening (keep-awake, backups, CI) in parallel where possible
-4. Phase 4 pilot seed + closed pilot
+1. founder: set `CLOUDFLARE_API_TOKEN` repo secret (auto-deploy) and `SUPABASE_DB_URL` + R2 secrets (backups); rotate the Telegram bot token that was shared in chat
+2. founder: live Telegram test of the full session exchange (5.5)
+3. Phase 4: sourced food expansion (~15 venues), closed pilot with metrics
+4. Optional follow-ups: guide authoring form, R2 restore drill
 
 ## Notes
+- 2026-08-22: Phase 3 hardening completed (rate limiting live + locked down, migration 032 grants, CI fully green for the first time, deploy root cause fixed at the source). Details: vault/logs/changelog.md.
 
 - 2026-08-16: full mock prototype shipped (six categories, first-day journey, `/admin` demo with live publish/moderate loop), upgraded to real-world Da Nang data (six real districts with VND rents, ten real venues), then given a real Leaflet/CARTO map in a Guide/Map tab split, food carousels, hero city select, and Telegram-native back navigation. It defines the UI/content contract for the Supabase cutover but replaces no backend work.

@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-08-22 - Phase 3 Hardening Completed: Rate Limiting, CI Green, Deploy Diagnosed
+
+### Done (resumed from the uncommitted WIP found in the tree)
+
+- **Rate limiting (3.6) finished and live**: migration 030 (durable `check_rate_limit` RPC + `telegram_rate_limits`) was applied but the function had default PUBLIC execute - any client could mint rows or burn another key's window. Migration 031 revoked it from public/anon/authenticated, granted execute to service_role only, pinned `search_path`. The edge function now rate-limits per IP in two layers (best-effort in-isolate counter + authoritative Postgres RPC), returns 429 with a real `Retry-After`, fails open if the store is unreachable. `rate-limit.ts` is pure and shared with vitest (`#telegram-rate-limit` alias, 5 unit tests).
+- **Live verification**: 12-request burst -> 10x401 then 429s with `Retry-After: 17`; window expiry restores access; anon RPC call now `42501 permission denied`; anon reads of `telegram_rate_limits` return an empty set; bootstrap still validates initData normally.
+- **Migration 032**: hosted Supabase grants table privileges via platform init scripts; a fresh local stack does not. Added explicit grants for anon/authenticated/service_role (schema usage, DML on all tables, function execute) plus ALTER DEFAULT PRIVILEGES. Verified live that RLS still gates everything (anon still reads zero rows).
+- **CI database job fixed end-to-end** (it had never passed): raised db health timeout to 5m; excluded all non-database services; `--ignore-health-check` with an explicit `pg_isready` wait; removed a `--workdir` mismatch that made later steps look for a docker network the start step never created; scoped `db lint` to non-gating signal (its 13 errors are pgTAP/PostGIS internal helpers, verified identical on live); per-suite execution so failures surface exact psql errors as annotations.
+- **pgTAP suites repaired for schema v2** (they predated migrations 022+ and had never run green anywhere): added required `slug` to guide_entries fixtures (002/003/004/008); scoped row-count asserts to suite fixtures (001/002); updated 007 to policy 028 semantics (moderator audit inserts are allowed by design; append-only trigger assertions stay).
+- **Deploy workflow root cause found**: Nitro's `cloudflare.deployConfig=true` emits `.output/server/wrangler.json` plus a `.wrangler/deploy/config.json` redirect, hijacking `wrangler deploy` into a server build with a missing entrypoint. Fixed at the source (`deployConfig: false`) and removed the redundant CI cleanup step. Every historical Deploy failure is explained by this.
+- Frontend gates: test 39/39, lint, typecheck, build PASS. Manual deploy via local OAuth wrangler re-verified (site serves baked env, privacy/admin routes 200).
+
+### Verified
+
+- Live: burst -> 429 with Retry-After; window resets; grants do not weaken RLS; site + functions healthy after redeploy.
+- CI on sha 252c144: frontend-quality SUCCESS, database-quality (RLS pgTAP, all 12 suites) SUCCESS - first fully green CI in repo history.
+
+### Blocked (founder actions)
+
+- Deploy workflow needs a valid `CLOUDFLARE_API_TOKEN` repo secret (fails fast at auth; local OAuth deploys work).
+- Backup workflow needs `SUPABASE_DB_URL` + R2 secrets; pgTAP artifact download also needs auth (fine - annotations carry diagnostics).
+
 ## 2026-08-18 - Freshness SLA (guides admin)
 
 ### Done

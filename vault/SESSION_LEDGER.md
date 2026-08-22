@@ -2,6 +2,14 @@
 
 Short record of durable project decisions and handoffs. Detailed history lives in `vault/logs/changelog.md`.
 
+## 2026-08-22 - Phase 3 Hardening Complete + CI Green
+
+- Resumed the uncommitted rate-limiting WIP; finished it: migration 031 locked `check_rate_limit` to service_role, edge function returns 429 + Retry-After (two-layer: in-isolate + Postgres RPC), live burst verified (10 req then 429, window resets).
+- Migration 032: explicit anon/authenticated/service_role grants for fresh-stack parity (hosted init scripts do this implicitly); RLS still gates everything.
+- CI green for the first time ever: fixed health timeout, workdir/network mismatch, non-gating db lint, and repaired stale pgTAP suites (slug NOT NULL from 029, seeded-row counts, policy 028 audit inserts).
+- Deploy root cause: Nitro `deployConfig: true` hijacked wrangler into a missing server bundle; set `deployConfig: false`. Local OAuth deploys verified.
+- Founder blockers: repo secrets `CLOUDFLARE_API_TOKEN` (deploy), `SUPABASE_DB_URL` + R2 (backups); rotate shared bot token; Telegram live session test.
+
 ## 2026-08-18 - Live Verification on Hosted Supabase Free
 
 - Path B chosen (free hosted project `tepsurbgsrivvcvizxph`, restored from pause).

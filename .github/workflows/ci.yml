@@ -77,8 +77,11 @@ jobs:
           done
           echo "postgres did not become ready"; npx -y supabase status || true; exit 1
 
-      - name: Apply migrations
-        run: npx -y supabase migration up --local
+      # db reset = migrations + seed.sql - the exact state the pgTAP suites
+      # were verified against (--linked on the seeded live project). Bare
+      # `migration up` left the DB unseeded and 005-009 failed there.
+      - name: Apply migrations + seed
+        run: npx -y supabase db reset --local
 
       # plpgsql_check flags pgTAP/pgTAP-adjacent internal helpers (plan,
       # add_result, _currtest, ...) that reference temp tables existing only

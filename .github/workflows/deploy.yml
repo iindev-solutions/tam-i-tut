@@ -42,6 +42,18 @@ jobs:
           NUXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NUXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: npm run generate
 
+      # `nuxt generate` (cloudflare-module preset) also emits
+      # .output/server/wrangler.json with main: index.mjs and Nitro writes a
+      # redirect to it in frontend/.wrangler/deploy/config.json - wrangler
+      # then deploys the server bundle instead of the static assets and fails
+      # with "entry-point file at index.mjs was not found" (verified on run
+      # 32357758921). Remove both so the repo-root wrangler.jsonc (static
+      # assets, SPA fallback) is the only deploy config.
+      - name: Remove Nitro server deploy state
+        run: |
+          rm -rf .output/server .wrangler/deploy
+          ls .output/public/index.html
+
       - name: Deploy to Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

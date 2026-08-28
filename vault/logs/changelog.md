@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-29 - Bot texts made city-neutral
+
+### Done
+
+- Founder flagged that the profile texts hard-coded Da Nang while the product is multi-city (cities table already holds inactive nha-trang/pattaya/phuket). Description and About (default EN + ru override) reworded to "first weeks in a new city ... more cities coming"; the `/start` blocks aligned the same way and the function redeployed. Commit `fix(bot): city-neutral welcome wording` (c66d4c7). Da Nang stays the active pilot city in the app itself (city select hero).
+
 ## 2026-08-29 - Bot profile localized, bilingual /start, avatar asset
 
 ### Done

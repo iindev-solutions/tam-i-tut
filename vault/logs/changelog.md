@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-29 - Photos visible without a session; native-only back nav
+
+### Done
+
+- **Why photos were invisible**: no CSP was blocking images - readers without a TMA session (plain browser, or TMA before bootstrap fires) get the mock fallback, and mock places had `imageUrl: null`. Filled all 10 mock places with the same sourced URLs as the DB (`fix(ui): photos in mock fallback, native-only back navigation`, dde68b0). Deployed and smoke-checked.
+- **Back navigation simplified** (founder's call): removed the in-page back button on `/places/[slug]` and the unused `food.details.back` i18n key. The only back control is now the Telegram native BackButton, already synced to client-side routing by `plugins/telegram.client.ts`. In a plain browser this means browser-back only - acceptable for a TMA-first pilot.
+- Gates: lint clean, vitest 39/39, typecheck 0. Live: `/` and `/places/<slug>` 200.
+
+### Note
+
+- If photos still do not appear for a specific user, check whether they see 23 places (session/DB) or 10 (mock fallback) - that distinguishes session issues from image issues. The TMA session path (bootstrap 5.5) is the founder live test still pending.
+
 ## 2026-08-28 - Photo coverage complete: 23/23 venues
 
 ### Done

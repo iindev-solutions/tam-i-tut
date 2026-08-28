@@ -72,7 +72,7 @@ export function useDb() {
         client.from('categories').select('slug,title_ru,title_en,sort_order,is_active').order('sort_order'),
         client
           .from('places')
-          .select('id,city_slug,slug,place_type,price_level,verified,status,updated_at')
+          .select('id,city_slug,slug,place_type,price_level,verified,status,updated_at,image_url')
           .eq('status', 'published'),
         client.from('place_localizations').select('place_id,language,name,area,summary').in('language', ['ru', 'en']),
         client.from('reviews').select('id,place_id,author,rating,status'),

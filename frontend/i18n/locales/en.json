@@ -141,7 +141,14 @@
       "above": "Above average"
     },
     "verifiedTitle": "Place verified",
-    "reviewsLabel": "reviews"
+    "reviewsLabel": "reviews",
+    "empty": "Nothing here yet - places are added as they get verified.",
+    "details": {
+      "openMaps": "Open in Google Maps",
+      "back": "Back to all places",
+      "location": "How to find it",
+      "reviews": "reviews"
+    }
   },
   "transport": {
     "kicker": "Transport",

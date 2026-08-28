@@ -31,11 +31,15 @@ export interface CategoryEntry {
 
 export interface Place {
   id: string
+  /** URL-safe slug (unique per city) used for the detail route. */
+  slug: string
   name: string
   type: PlaceType
   priceLevel: PriceLevel
   area: LocalizedText
   summary: LocalizedText
+  /** Externally sourced photo URL; null renders the styled placeholder. */
+  imageUrl: string | null
   verified: boolean
   status: ContentStatus
   updated: string

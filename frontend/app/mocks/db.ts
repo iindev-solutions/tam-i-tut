@@ -20,6 +20,7 @@ export const mockDb: MockDb = {
   places: [
     {
       id: 'banh-mi-madam-khanh',
+      slug: 'banh-mi-madam-khanh',
       name: 'Bánh mì Madam Khanh',
       type: 'street',
       priceLevel: 'budget',
@@ -28,12 +29,14 @@ export const mockDb: MockDb = {
         ru: 'Банхми с начинками на выбор, 25-40 тыс. ₫. Работает с раннего утра, очередь к вечеру.',
         en: 'Banh mi with fillings to pick, 25-40k VND. Opens early, expect a queue in the evening.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-12'
     },
     {
       id: 'mi-quang-1a',
+      slug: 'mi-quang-1a',
       name: 'Mì Quang 1A',
       type: 'street',
       priceLevel: 'budget',
@@ -42,12 +45,14 @@ export const mockDb: MockDb = {
         ru: 'Мискуанг - фирменный суп Дананга с рисовой лапшой и креветкой. 35-60 тыс. ₫.',
         en: 'Mi quang - Da Nang signature rice noodle soup with shrimp. 35-60k VND.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-10'
     },
     {
       id: 'banh-xeo-ba-duong',
+      slug: 'banh-xeo-ba-duong',
       name: 'Bánh xèo Bà Dưỡng',
       type: 'street',
       priceLevel: 'budget',
@@ -56,12 +61,14 @@ export const mockDb: MockDb = {
         ru: 'Хрустящие баншо с зеленью и арахисовым соусом. Легендарное место, 40-70 тыс. ₫.',
         en: 'Crispy banh xeo pancakes with herbs and peanut sauce. A local legend, 40-70k VND.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-14'
     },
     {
       id: 'bun-cha-ca-ba-lu',
+      slug: 'bun-cha-ca-ba-lu',
       name: 'Bún chả cá Bà Lữ',
       type: 'street',
       priceLevel: 'budget',
@@ -70,12 +77,14 @@ export const mockDb: MockDb = {
         ru: 'Рыбный суп бунчакка - завтрак местных. Идти до обеда, дальше закрывается. 30-50 тыс. ₫.',
         en: 'Fish cake noodle soup - a local breakfast. Go before noon, it closes after. 30-50k VND.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-09'
     },
     {
       id: 'cho-con',
+      slug: 'cho-con',
       name: 'Chợ Cồn',
       type: 'market',
       priceLevel: 'budget',
@@ -84,12 +93,14 @@ export const mockDb: MockDb = {
         ru: 'Главный рынок города: фудкорт наверху, фрукты и хозяйственное внизу. Только наличные.',
         en: 'The main city market: food court upstairs, fruit and goods below. Cash only.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-08'
     },
     {
       id: 'cho-han',
+      slug: 'cho-han',
       name: 'Chợ Hàn',
       type: 'market',
       priceLevel: 'budget',
@@ -98,12 +109,14 @@ export const mockDb: MockDb = {
         ru: 'Рынок у набережной реки Хан. Фрукты, кофе, сухофрукты - цены ниже туристических.',
         en: 'Market by the Han river promenade. Fruit, coffee, dried fruit - cheaper than tourist spots.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-07'
     },
     {
       id: 'highlands-beach',
+      slug: 'highlands-beach',
       name: 'Highlands Coffee (Võ Nguyên Giáp)',
       type: 'cafe',
       priceLevel: 'average',
@@ -112,12 +125,14 @@ export const mockDb: MockDb = {
         ru: 'Сетка кофеен прямо у пляжа Mỹкхе. Кофе 45-75 тыс. ₫, карта принимают, Wi-Fi.',
         en: 'Chain cafe right on My Khe beach. Coffee 45-75k VND, cards accepted, Wi-Fi.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-13'
     },
     {
       id: 'cong-cafe',
+      slug: 'cong-cafe',
       name: 'Cộng Cà Phê (Bạch Đằng)',
       type: 'cafe',
       priceLevel: 'average',
@@ -126,12 +141,14 @@ export const mockDb: MockDb = {
         ru: 'Кофейня в ретро-стиле с видом на реку Хан и мост Дракона. Есть розетки.',
         en: 'Retro-style cafe with Han river and Dragon Bridge views. Power sockets available.'
       },
+      imageUrl: null,
       verified: false,
       status: 'published',
       updated: '2026-08-06'
     },
     {
       id: 'be-man-seafood',
+      slug: 'be-man-seafood',
       name: 'Bé Mặn Seafood',
       type: 'restaurant',
       priceLevel: 'above',
@@ -140,12 +157,14 @@ export const mockDb: MockDb = {
         ru: 'Морепродукты с витрины: вес подтверждают при тебе. 150-400 тыс. ₫ за блюдо.',
         en: 'Seafood from the display: weight confirmed in front of you. 150-400k VND per dish.'
       },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-11'
     },
     {
       id: 'an-thuong-street',
+      slug: 'an-thuong-street',
       name: 'An Thượng food street',
       type: 'street',
       priceLevel: 'budget',
@@ -154,6 +173,7 @@ export const mockDb: MockDb = {
         ru: 'Пешеходная улица еды в двух кварталах от моря: гриль, смузи, кофе до поздна.',
         en: 'Pedestrian food street two blocks from the sea: grills, smoothies, late-night coffee.'
       },
+      imageUrl: null,
       verified: false,
       status: 'published',
       updated: '2026-08-15'

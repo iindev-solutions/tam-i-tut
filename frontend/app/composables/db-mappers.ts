@@ -50,6 +50,7 @@ export interface PlaceRow {
   verified: boolean
   status: ContentStatus
   updated_at: string
+  image_url: string | null
 }
 
 export interface PlaceLocalizationRow {
@@ -179,11 +180,13 @@ export function mapPlaces(rows: PlaceRow[], localizations: PlaceLocalizationRow[
       const name = (locale === 'en' ? en ?? ru : ru ?? en)?.name ?? row.slug
       return {
         id: row.id,
+        slug: row.slug,
         name,
         type: row.place_type,
         priceLevel: row.price_level,
         area: { ru: ru?.area ?? '', en: en?.area ?? '' },
         summary: { ru: ru?.summary ?? '', en: en?.summary ?? '' },
+        imageUrl: row.image_url,
         verified: row.verified,
         status: row.status,
         updated: row.updated_at

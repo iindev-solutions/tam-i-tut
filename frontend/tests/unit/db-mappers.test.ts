@@ -72,7 +72,8 @@ describe('mapPlaces', () => {
     price_level: 'budget',
     verified: true,
     status: 'published',
-    updated_at: '2026-08-01T10:00:00Z'
+    updated_at: '2026-08-01T10:00:00Z',
+    image_url: null
   }
   const draft: PlaceRow = { ...place, id: 'p2', slug: 'draft-place', status: 'draft' }
 
@@ -85,11 +86,13 @@ describe('mapPlaces', () => {
     const [ru] = mapPlaces([place, draft], localizations, 'ru')
     expect(ru).toEqual({
       id: 'p1',
+      slug: 'banh-mi',
       name: 'Банхми',
       type: 'street',
       priceLevel: 'budget',
       area: { ru: 'Район', en: 'Area' },
       summary: { ru: 'Описание', en: 'Summary' },
+      imageUrl: null,
       verified: true,
       status: 'published',
       updated: '2026-08-01T10:00:00Z'

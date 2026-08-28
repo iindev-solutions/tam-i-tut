@@ -141,7 +141,14 @@
       "above": "Выше среднего"
     },
     "verifiedTitle": "Место проверено",
-    "reviewsLabel": "отзывы"
+    "reviewsLabel": "отзывы",
+    "empty": "В этом фильтре пока пусто - места добавляем по мере проверки.",
+    "details": {
+      "openMaps": "Открыть в Google Maps",
+      "back": "Ко всем местам",
+      "location": "Как найти",
+      "reviews": "отзывов"
+    }
   },
   "transport": {
     "kicker": "Транспорт",

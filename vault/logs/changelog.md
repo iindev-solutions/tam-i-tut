@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-28 - Photo coverage complete: 23/23 venues
+
+### Done
+
+- Second sourcing pass resolved the 9 venues that stayed null in 034: Wayback Machine og:image extraction for the bot-blocked Michelin pages (Bé Mặn, Hồng Vân, Cơm Gà Lan - cloudimg/michelin CDN URLs hotlink fine) and the JS-rendered Burger Bros site (amebaowndme CDN), wp-content extraction from the already-sourced Vietnamese guides (Ghiền Đà Nẵng → Nhắng Nướng, Kala Kala → Bé Loan, hoiandaytrip → Madam Khanh + An Thượng street), and RIONI via its Trip.com review cover. All 9 URLs re-verified from this machine (HTTP 206, image/jpeg).
+- Migration `20260828130000_035_place_images_pass2.sql` carries the 9 updates; first attempt edited the already-applied 034, which db push correctly skipped ("up to date") - reverted, statements live in 035 only. Mirrored into seed.sql (23 update statements, parity-checked).
+- Hosted applied + verified: 23 places, 23 with image_url. Commits: `feat(db): photos for the remaining 9 venues` (3021e61), `fix(db): move pass-2 photo updates into migration 035` (3bb3873).
+
+### Caveats
+
+- banh-mi-madam-khanh photo is the brand's Hội An original (no Da Nang-branch editorial photo exists yet); burger-bros/rioni-georgian are og:image covers (valid JPEGs, not human-inspected).
+
 ## 2026-08-28 - Prod deploy fixed: SSR worker entry restored
 
 ### Done

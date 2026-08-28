@@ -34,7 +34,21 @@ values
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f07', 'da-nang', 'highlands-beach', 'cafe', 'average', true, 'published'),
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f08', 'da-nang', 'cong-cafe', 'cafe', 'average', false, 'published'),
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f09', 'da-nang', 'be-man-seafood', 'restaurant', 'above', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'da-nang', 'an-thuong-street', 'street', 'budget', false, 'published')
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'da-nang', 'an-thuong-street', 'street', 'budget', false, 'published'),
+	-- Phase 4 sourced food expansion (migration 033; also applied to hosted)
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'da-nang', 'bun-cha-ca-ba-hoa', 'street', 'budget', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0c', 'da-nang', 'mi-quang-sua-hong-van', 'street', 'budget', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0d', 'da-nang', 'com-ga-lan', 'street', 'budget', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0e', 'da-nang', 'bun-mam-ba-dong', 'street', 'budget', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0f', 'da-nang', 'mi-quang-ech-bep-trang', 'restaurant', 'average', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f10', 'da-nang', 'nhang-nuong', 'restaurant', 'average', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f11', 'da-nang', 'be-loan', 'street', 'budget', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f12', 'da-nang', 'burger-bros', 'restaurant', 'average', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f13', 'da-nang', 'ganesh-da-nang', 'restaurant', 'average', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f14', 'da-nang', 'cardi-pizzeria', 'restaurant', 'above', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f15', 'da-nang', 'rioni-georgian', 'restaurant', 'above', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f16', 'da-nang', 'xliii-coffee', 'cafe', 'above', true, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f17', 'da-nang', 'banh-mi-co-tien', 'street', 'budget', true, 'published')
 on conflict (id) do update
 set
 	city_slug = excluded.city_slug,
@@ -75,7 +89,34 @@ values
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f09', 'en', 'Bé Mặn Seafood', 'Ngu Hanh Son, Vo Nguyen Giap', 'Seafood from the display: weight confirmed in front of you. 150-400k VND per dish.'),
 	-- An Thượng food street
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'ru', 'An Thượng food street', 'Sơn Trà, улица An Thượng', 'Пешеходная улица еды в двух кварталах от моря: гриль, смузи, кофе до поздна.'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'en', 'An Thượng food street', 'Son Tra, An Thuong street', 'Pedestrian food street two blocks from the sea: grills, smoothies, late-night coffee.')
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'en', 'An Thượng food street', 'Son Tra, An Thuong street', 'Pedestrian food street two blocks from the sea: grills, smoothies, late-night coffee.'),
+	-- Phase 4 sourced food expansion (migration 033 mirror)
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'ru', 'Bún chả cá Bà Hoa', 'Hải Châu, Lê Hồng Phong', 'Рыбный суп с фрикадельками - главный завтрак Дананга. Улица Lê Hồng Phong - его родина: рядом ещё несколько таких же. С раннего утра до вечера.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'en', 'Bún chả cá Bà Hoa', 'Hai Chau, Le Hong Phong', 'Fish cake noodle soup - Da Nang''s signature breakfast. Le Hong Phong street is its home: several more like it nearby. Early morning to evening.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0c', 'ru', 'Mỳ Quảng Sứa Hồng Vân', 'Hải Châu, Lê Hồng Phong', 'Мискуанг с медузой - редкий данангский специалитет, в списке Michelin Bib Gourmand. Работает только утром - приходи до полудня.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0c', 'en', 'Mỳ Quảng Sứa Hồng Vân', 'Hai Chau, Le Hong Phong', 'Mi Quang with jellyfish - a rare Da Nang specialty, Michelin Bib Gourmand listed. Mornings only - come before noon.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0d', 'ru', 'Cơm Gà Lan', 'Hải Châu, Trưng Nữ Vương', 'Рис с курицей - одно блюдо, три варианта (гриль/варёная/рваная). От 35 тыс. ₫. В списке Michelin 2026. Заказывать просто - идеален в первый день.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0d', 'en', 'Cơm Gà Lan', 'Hai Chau, Trung Nu Vuong', 'Chicken rice - one dish, three ways (grilled/poached/shredded). From 35k VND. Michelin Guide 2026. Zero ordering stress - perfect for day one.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0e', 'ru', 'Bún mắm Bà Đông', 'Hải Châu, Huỳnh Thúc Kháng', 'Суп бунмам на ферментированной рыбной пасте - самый смелый вкус города, в списке Michelin. Бюджетно. Для любителей сильных впечатлений.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0e', 'en', 'Bún mắm Bà Đông', 'Hai Chau, Huynh Thuc Khang', 'Fermented fish paste noodle soup - the boldest flavor in town, Michelin listed. Budget friendly. For adventurous eaters only.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0f', 'ru', 'Mỳ Quảng Ếch Bếp Trang', 'Hải Châu, Bạch Đằng', 'Мискуанг с лягушкой в сидячей кафе с кондиционером прямо на набережной. От 59 тыс. ₫. Хороший «переход» от уличных точек к ресторанам.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0f', 'en', 'Mỳ Quảng Ếch Bếp Trang', 'Hai Chau, Bach Dang', 'Frog mi Quang at a proper sit-down place with AC on the riverside. From 59k VND. A good step up from street stalls.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f10', 'ru', 'Nhắng Nướng', 'Sơn Trà, Ngô Quyền', 'Угольный гриль: местная рыбка нханг и морепродукты на углях. Блюда 35-100 тыс. ₫. Работает с 16:00 до полуночи - вечерний вариант без туристических цен.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f10', 'en', 'Nhắng Nướng', 'Son Tra, Ngo Quyen', 'Charcoal grill: local nhang fish and seafood over coals. Dishes 35-100k VND. Open 16:00 to midnight - an evening option at local prices.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f11', 'ru', 'Bé Loan', 'Hải Châu, Trưng Nữ Vương', 'Хуэские рисовые пирожные: bánh bèo, bánh nậm, bánh lọc. От 20 тыс. ₫. С 6:30 до 21:30. Лёгкая закуска между делом.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f11', 'en', 'Bé Loan', 'Hai Chau, Trung Nu Vuong', 'Hue-style rice cakes: banh beo, banh nam, banh loc. From 20k VND. Open 6:30-21:30. A light snack between stops.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f12', 'ru', 'Burger Bros', 'Hải Châu, Nguyễn Chí Thanh', 'Смэш-бургеры у экспатов - около 100 тыс. ₫ за бургер. Настоящие точки: NCT (4 Nguyễn Chí Thanh) и пляжная ветка на An Thượng - у бренда много подражателей.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f12', 'en', 'Burger Bros', 'Hai Chau, Nguyen Chi Thanh', 'Expat-famous smash burgers - around 100k VND each. Real shops: NCT (4 Nguyen Chi Thanh) and the beach branch on An Thuong - the brand has many imitators.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f13', 'ru', 'Ganesh Da Nang', 'Ngũ Hành Sơn, Lê Quang Đạo', 'Северная индийская кухня: карри, тандыр, много веган/вегетарианского. Филиал известной вьетнамской сети Ganesh, в экспатском районе An Thượng.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f13', 'en', 'Ganesh Da Nang', 'Ngu Hanh Son, Le Quang Dao', 'North Indian: curries, tandoor, plenty of veg/vegan. A branch of the well-known Ganesh Vietnam chain, in the An Thuong expat area.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f14', 'ru', 'Cardi Pizzeria', 'Hải Châu, Bạch Đằng', 'Неаполитанская пицца из дровяной печи 400°C на набережной. Tripadvisor 4.9 - экспаты называют лучшей пиццей города.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f14', 'en', 'Cardi Pizzeria', 'Hai Chau, Bach Dang', 'Neapolitan pizza from a 400°C wood-fired oven on the riverside. Tripadvisor 4.9 - expats call it the best pizza in town.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f15', 'ru', 'RIONI Georgian', 'Ngũ Hành Sơn, Đỗ Bí', 'Первая грузинская в Дананге: хинкали 55 тыс. ₫, хачапури 240 тыс. ₫. Знакомый вкус «как дома» для русскоязычных.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f15', 'en', 'RIONI Georgian', 'Ngu Hanh Son, Do Bi', 'The first Georgian restaurant in Da Nang: khinkali 55k VND, khachapuri 240k VND. A taste of home for Russian speakers.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f16', 'ru', 'XLIII Coffee', 'Ngũ Hành Sơn, Ngô Thì Sỹ', 'Спешелти обжарка недалеко от пляжа Mỹ Khê (бывший 43 Factory). Напитки 60-120 тыс. ₫, премиальные пуроверы дороже. Открытие в 6:30, можно с ноутбуком.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f16', 'en', 'XLIII Coffee', 'Ngu Hanh Son, Ngo Thi Sy', 'Specialty roastery near My Khe beach (the former 43 Factory). Drinks 60-120k VND, premium pour-overs higher. Opens 6:30, laptop friendly.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f17', 'ru', 'Bánh Mì Cô Tiên', 'Hải Châu, Trần Phú', 'Банхми с высокой оценкой (Tripadvisor 4.8) в центре. Быстро, дёшево, с собой - классический уличный перекус.'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f17', 'en', 'Bánh Mì Cô Tiên', 'Hai Chau, Tran Phu', 'Highly rated banh mi (Tripadvisor 4.8) in the center. Fast, cheap, to go - the classic street snack.')
 on conflict (place_id, language) do update
 set
 	name = excluded.name,
@@ -87,6 +128,22 @@ set
 -- shows zero approved counts until real reviews are added.
 -- Districts (housing slice) - seeded from the accepted frontend mock contract
 -- Districts (housing slice): geometry from frontend mocks, text from locale files.
+-- Sourced venue photos (mirror of migration 034; null renders a UI placeholder).
+update public.places set image_url = 'https://upload.wikimedia.org/wikipedia/commons/d/df/Mi_Quang_1A_Danang.jpg' where slug = 'mi-quang-1a';
+update public.places set image_url = 'https://mia.vn/media/uploads/blog-du-lich/thoa-man-voi-banh-xeo-ba-duong-ngon-nhat-da-nang-1636651211.jpg' where slug = 'banh-xeo-ba-duong';
+update public.places set image_url = 'https://danangbest.com/upload_content/bun-cha-ca-da-nang-3.webp' where slug = 'bun-cha-ca-ba-lu';
+update public.places set image_url = 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Con_Market_at_sunset.jpg' where slug = 'cho-con';
+update public.places set image_url = 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Han_Market_Da_Nang.JPG' where slug = 'cho-han';
+update public.places set image_url = 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Highlands_Coffee_storefront_DN.JPG' where slug = 'highlands-beach';
+update public.places set image_url = 'https://upload.wikimedia.org/wikipedia/commons/6/67/C%E1%BB%99ng_C%C3%A0_Ph%C3%AA_coffee_milk.jpg' where slug = 'cong-cafe';
+update public.places set image_url = 'https://axwwgrkdco.cloudimg.io/v7/__gmpics3__/adc7acfaa0c04ac4ac201d3bcadc81e1.jpeg' where slug = 'bun-cha-ca-ba-hoa';
+update public.places set image_url = 'https://cdn3.ivivu.com/2022/08/bun-mam-ba-dong-ivivu-3.jpg' where slug = 'bun-mam-ba-dong';
+update public.places set image_url = 'https://mia.vn/media/uploads/blog-du-lich/mi-quang-ech-bep-trang-mon-ngon-ngo-cuong-khi-den-da-nang-1637316606.jpg' where slug = 'mi-quang-ech-bep-trang';
+update public.places set image_url = 'https://vietnamlife.asia/wp-content/uploads/2024/09/Front-entrance-to-Indian-Restaurant-Ganesh-Da-Nang.jpg' where slug = 'ganesh-da-nang';
+update public.places set image_url = 'https://www.pizzacardi.com/templates/yootheme/cache/a0/home-gallery-05-a0b66d50.jpeg' where slug = 'cardi-pizzeria';
+update public.places set image_url = 'https://xliiicoffee.com/wp-content/uploads/2023/06/202306060712-43-factory-coffee-roaster-da-nang-vietnam-08.jpeg' where slug = 'xliii-coffee';
+update public.places set image_url = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg1aQLnSUfqLxZpx7s_VmHJxM_p9mlNSDv093GKJUrDJ8d5koGnPIqVQWvdfnN-d-yv5zk2cPofgC1m5KF2vTnitAoWBtX_P8lKDcX2eTKt_yzFILaRdnS4xiYqHk0QsTqrKlRry1krNxqg50F037KsFle9nrMRH6RGgz4P21XFe06LaPl2nHug/s1640/09%20TWN_5807%20B%C3%A1nh%20M%C3%AC%20C%C3%B4%20Ti%C3%AAn%20@%20Da%20Nang%20in%20Vietnam.JPG' where slug = 'banh-mi-co-tien';
+
 insert into public.districts (id, city_slug, slug, sort_order, price_level, geometry)
 values
   ('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f01', 'da-nang', 'son-tra', 1, 'above', ST_GeomFromGeoJSON('{"type": "Polygon", "coordinates": [[[108.235, 16.078], [108.245, 16.11], [108.26, 16.14], [108.3, 16.165], [108.33, 16.16], [108.315, 16.12], [108.28, 16.075], [108.255, 16.05], [108.235, 16.078]]]}')),

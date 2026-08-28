@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-08-29 - Bot profile localized, bilingual /start, avatar asset
+
+### Done
+
+- `/start` reply is now one bilingual message (RU block + EN block, dual button label `Открыть TAMITUT · Open TAMITUT`): per-locale branching hid a language, and many RU-speaking expats run English Telegram clients. Function redeployed to the hosted project; webhook verified to point at it.
+- Bot profile texts set via the Bot API (BotFather commands cannot store per-language strings): description (empty-chat) and About text in default EN + `language_code=ru` override, `/start` command hint in both locales. Verified with getMyDescription/getMyShortDescription/getMyCommands. Encoding gotcha: raw Cyrillic in curl `-d` under Git Bash mangles to non-UTF-8 - send JSON via node instead.
+- Bot avatar: no Bot API method exists, so BotFather upload is manual. Generated `frontend/app/assets/brand/bot-avatar-512.png` (512x512, brand mark centered on white) from `logo.svg` via sharp for the founder to send to @BotFather `/setuserpic`.
+- Commit: `feat(bot): bilingual /start, ru/en profile texts, avatar asset` (688a6d9).
+
+### Pending
+
+- Founder: send bot-avatar-512.png to @BotFather → /setuserpic.
+- Founder: rotate the bot token (still the chat-exposed one driving the API calls above), then `supabase secrets set TELEGRAM_BOT_TOKEN=<new>` + re-register webhook with the new token.
+
 ## 2026-08-29 - Photos visible without a session; native-only back nav
 
 ### Done

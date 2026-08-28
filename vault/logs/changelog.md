@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-08-28 - Food seed + photos + UI shipped: CI green, migrations applied to hosted
+
+### Done
+
+- Committed in three conventional commits and pushed to main: `feat(db): seed sourced venues and photos` (41ea46f), `feat(ui): place photos, food list, detail page` (a6b22df), `docs(vault)` (d11a97d), plus the CI fix below.
+- **CI caught a real bug**: the database job failed because `db reset` runs seed.sql after migrations, so `cities` was empty when migration 033 inserted places - every row died on the `city_slug` FK. Fixed in `fix(db): upsert da-nang city before venue places insert` (357341d). After the fix the db job is green: migrations + seed + all 13 pgTAP suites, including the new 013 parity suite, pass on CI (sha 357341d). Frontend job green too.
+- **Hosted applied**: `supabase db push --linked` applied 033 + 034. Verified via `db query`: hosted now has 23 places (all published), 46 ru/en localizations, 14 with image_url. Anon REST returns 0 places - correct RLS (select requires `app_private.is_authenticated()`); the TMA reads with a session.
+- Deploy workflow still fails: `CLOUDFLARE_API_TOKEN` repo secret is still missing (pre-existing founder blocker, unrelated to this change).
+
+### Pending
+
+- Frontend deploy (the new list/detail UI) rides on the Cloudflare Deploy workflow - it will ship as soon as the founder sets `CLOUDFLARE_API_TOKEN`, or via a local `wrangler deploy` (OAuth fallback).
+- Photo coverage 14/23; the rest need founder/on-site photos into Supabase Storage later.
+- Audit backlog still open (mock-fallback UX, guide authoring form, review submission).
+
 ## 2026-08-28 - Food UI pass: photo cards, detail page, image column
 
 ### Done

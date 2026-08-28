@@ -18,7 +18,7 @@ Phase 3 production hardening DONE in code and verified live (rate limiting, gran
 | 1 | Content admin: auth gate, useAdminDb, places/reviews/cities/guides CRUD, audit, UI polish | DONE (guide authoring form = follow-up) |
 | 2 | Map admin: Leaflet.draw polygon editor, housing page cutover to DB | DONE |
 | 3 | Prod hardening: keep-awake worker, automated backups, CI on GitHub + auto-deploy, cleanup, privacy, rate limits | CODE DONE + CI GREEN; auto-deploy/backup secrets pending founder |
-| 4 | Content & launch: ~80-entry pilot seed, freshness SLA, closed pilot | PARTIAL (guides SLA done; ~15 food places need sourced venues) |
+| 4 | Content & launch: ~80-entry pilot seed, freshness SLA, closed pilot | IN PROGRESS (guides SLA done; food seed +13 sourced venues written as migration 033, not yet deployed) |
 
 ## Current Tasks
 
@@ -32,7 +32,7 @@ Phase 3 production hardening DONE in code and verified live (rate limiting, gran
 | 5.6 | Connect Nuxt client with RLS-safe Supabase queries | DONE (useDb + mappers + fallback; live-verified against hosted project) |
 | 5.7 | Validate Supabase Studio editorial workflow | BLOCKED - superseded by the admin plan (Phase 1) |
 | 5.8 | Approve city-aware schema v2 before content seeding | DONE (migrations 022/023 + RLS verified live) |
-| 5.9 | Seed first Da Nang newcomer journeys | PARTIAL (food slice live: 4 cities, 10 places, 20 localizations) |
+| 5.9 | Seed first Da Nang newcomer journeys | PARTIAL (food slice: 4 cities, 10 places live; +13 sourced venues written as migration 033, pending founder review + deploy) |
 | 5.10 | Add off-site database and Storage backup runbook | DONE (vault/wiki/services/supabase-backup-runbook.md) |
 
 ## Current Priority

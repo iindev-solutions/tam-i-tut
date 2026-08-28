@@ -1,5 +1,47 @@
 # Changelog
 
+## 2026-08-28 - Food UI pass: photo cards, detail page, image column
+
+### Done
+
+- **Place photos in the DB**: migration `20260828120000_034_place_images.sql` adds nullable `places.image_url` and fills 14 of 23 venues with externally sourced, hotlink-verified photo URLs (Wikimedia Commons, official sites pizzacardi.com/xliiicoffee.com, editorial CDNs). Every URL verified to return `image/*` with no referer (all 14 re-checked live from this machine). No Tripadvisor/Foody/Google hotlinks (blocked/rotating). 9 venues stay null by design - the UI renders a styled type-icon placeholder. Mirrored into seed.sql.
+- **Food slider redesign** (`app/pages/categories/food.vue`): dropped the UCarousel (embla mis-measures inside a Telegram WebView) for a vertical full-width card list (founder's call over a scroll-snap rail): photo headers (`h-44 object-cover`, lazy), image-error fallback to a gradient+type-icon placeholder, verified badge overlay, line-clamped summary, whole card is a `NuxtLink` to the detail page, empty-state message for filters with zero results.
+- **Detail page** `app/pages/places/[slug].vue`: hero photo, name + verified icon, type/price/reviews meta, full summary, "How to find it" block with the area text and a Google Maps deep link (`/maps/search/?api=1&query=<name>, <area>, Da Nang` - no stored coordinates needed). Telegram native BackButton already syncs with routing via `telegram.client.ts`, so back navigation works in the TMA for free.
+- **Data plumbing**: `Place` type + `slug`/`imageUrl`, `PlaceRow.image_url`, `mapPlaces` maps both, `useDb` selects `image_url`, mock places carry `slug` + `imageUrl: null`. i18n keys `food.empty` + `food.details.*` (ru/en).
+- Gates: vitest 39/39 (mapper fixture updated), eslint clean, typecheck exit 0, production build complete.
+
+### Pending
+
+- Not deployed (frontend or DB): migration 034 + all of today's content/UI lands with the next `supabase db push` + frontend deploy.
+- Photo coverage 14/23; remaining 9 need founder/on-site photos into Supabase Storage later (storage policies are the first prerequisite).
+- Audit items still open (mock-fallback UX, guide authoring form, review submission).
+
+## 2026-08-28 - Phase 4: sourced food expansion (13 new venues) + parity test
+
+### Done
+
+- Sourced 13 new real Da Nang venues (each with at least one external source: Michelin Guide 2025/2026, Tripadvisor, official site/social; prices/hours only where sourced): bun-cha-ca-ba-hoa, mi-quang-sua-hong-van (Bib Gourmand), com-ga-lan (Michelin 2026), bun-mam-ba-dong, mi-quang-ech-bep-trang, nhang-nuong, be-loan, burger-bros, ganesh-da-nang, cardi-pizzeria, rioni-georgian, xliii-coffee, banh-mi-co-tien (spare). Three researched candidates were already seeded (banh-xeo-ba-duong, bun-cha-ca-ba-lu, cong-cafe). Rejected during research: Bánh Mì Queen (Hoi An, not Da Nang), Cơm Gà A Chà (unverifiable).
+- Migration `20260828000000_033_food_expansion_seed.sql`: 13 places (ids continuing the `b937c18f-...e7f` prefix, `...0b`–`...17`) + 26 ru/en localizations, idempotent upserts, all `published`/`verified`. Mirrored 1:1 into `supabase/seed.sql` (now 23 places / 46 localizations).
+- New pgTAP suite `tests/rls/013_seed_localization_parity.sql`: every authenticated-visible place has exactly one ru + one en localization; also proves the seed loads non-empty. Auto-picked up by the CI loop.
+- Verification without local Docker (not installed): static node checks prove migration == seed byte-for-byte across all 26 localization rows and all 13 place rows (field-level), 23 unique ids/slugs, no quote/row malformations. Frontend vitest 39/39. SQL semantics (db reset + full pgTAP run) will be proven by the CI database job on push - NOT yet run locally or on hosted.
+
+### Pending
+
+- Founder reviews venue list, then `supabase db push` (or CI-verified commit to main) applies 033 to the hosted project.
+- Seed content not yet deployed anywhere: local Docker stack and hosted project both untouched.
+
+## 2026-08-28 - Frontend local env fixed
+
+### Done
+
+- Founder had created a root `.env` with Next.js-style names (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) - Nuxt ignores it (wrong prefix, wrong directory). Created `frontend/.env` with the correct names (`NUXT_PUBLIC_SUPABASE_URL`, `NUXT_PUBLIC_SUPABASE_ANON_KEY`, `NUXT_PUBLIC_APP_NAME`) using the project ref `tepsurbgsrivvcvizxph` and the public publishable key. Both values are public by design (RLS-gated); file is gitignored (verified via `git check-ignore`).
+- Verified live: `npm run dev` in `frontend/` serves 200 on :3000 with the Supabase ref baked into the page; dev server stopped afterwards.
+
+### Reminders (founder)
+
+- `TELEGRAM_BOT_TOKEN` was shared in chat again - rotate via @BotFather /revoke, then `supabase secrets set TELEGRAM_BOT_TOKEN=<new>` (it is an Edge Function secret, not a frontend var).
+- CI secrets still pending: `CLOUDFLARE_API_TOKEN` (value received in chat, not yet set), `SUPABASE_DB_URL`, R2 backup secrets (see `vault/wiki/services/supabase-backup-runbook.md`). These go to GitHub Secrets, not `.env`.
+
 ## 2026-08-22 - Phase 3 Hardening Completed: Rate Limiting, CI Green, Deploy Diagnosed
 
 ### Done (resumed from the uncommitted WIP found in the tree)

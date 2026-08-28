@@ -22,7 +22,8 @@
 - `app/layouts/admin.vue` - admin prototype layout (sticky nav, prototype badge)
 - `app/pages/index.vue` - landing; six category cards, city line with inline city select
 - `app/pages/categories/housing.vue` - housing with Guide/Map tabs; guide cards, 12 real search-channel links, district price list opens the map tab
-- `app/pages/categories/food.vue` - mock places with wrapped filter chips and a UCarousel (arrows + dots)
+- `app/pages/categories/food.vue` - DB places with filter chips and a scroll-snap photo-card rail (external `image_url` with type-icon placeholder fallback); each card links to the detail page
+- `app/pages/places/[slug].vue` - place detail: hero photo, meta, summary, "how to find" block with a Google Maps deep link (no stored coordinates - query is name + area)
 - `app/pages/categories/transport.vue` / `money.vue` / `safety.vue` / `culture.vue` - mock-driven guide pages
 - `app/pages/journey/first-day.vue` - interactive first-day checklist with progress counter
 - `app/pages/admin/*` - mock admin prototype: dashboard, cities, categories, districts, places, guides, reviews
@@ -48,9 +49,9 @@
 ## Supabase (`supabase/`)
 
 - `config.toml` - local Supabase runtime config (incl. `[functions.telegram-bootstrap]` with `verify_jwt = false`)
-- `seed.sql` - local deterministic seed scaffold
-- `migrations/*_001..023_*.sql` - ordered schema, RLS, guard, replay, and city-aware v2 migrations (cities/places/reviews)
-- `tests/rls/*.sql` - pgTAP RLS/guard regression suite (incl. `010_places_and_reviews_rls.sql`)
+- `seed.sql` - local deterministic seed scaffold (23 da-nang places incl. the Phase 4 sourced food expansion)
+- `migrations/*_001..033_*.sql` - ordered schema, RLS, guard, replay, city-aware v2 migrations (cities/places/reviews), and the Phase 4 sourced food seed (`20260828000000_033_food_expansion_seed.sql`, mirrored 1:1 into seed.sql)
+- `tests/rls/*.sql` - pgTAP RLS/guard regression suite (incl. `010_places_and_reviews_rls.sql`, `013_seed_localization_parity.sql` content-integrity suite)
 - `functions/telegram-bootstrap/` - implemented Edge Function: `index.ts` (session exchange, nonce replay, profile upsert) + `validate.ts` (pure initData HMAC/freshness, shared with frontend tests)
 
 ## Vault (`vault/`)

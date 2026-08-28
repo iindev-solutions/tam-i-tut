@@ -18,11 +18,13 @@ const WEBHOOK_SECRET = Deno.env.get('WEBHOOK_SECRET') ?? ''
 // One bilingual welcome for everyone: many RU-speaking expats keep their
 // Telegram client in English, so per-locale branching showed one language
 // only. Both blocks always travel together; the button label is dual too.
+// City-neutral wording: da-nang is the pilot, more cities follow (cities
+// table already carries inactive nha-trang/pattaya/phuket rows).
 const WELCOME =
-  '🇻🇳 Привет! Это TAMITUT — гид для первых недель в Дананге 🏖️\n' +
+  '🇻🇳 Привет! Это TAMITUT — гид для первых недель в новом городе 🏖️\n' +
   '🏠 Жильё • 🍜 Еда • 🛵 Транспорт • 💰 Деньги • 🛡️ Безопасность\n' +
   '\n' +
-  '🇬🇧 Hi! This is TAMITUT — a guide for your first weeks in Da Nang\n' +
+  '🇬🇧 Hi! This is TAMITUT — a guide for your first weeks in a new city\n' +
   '🏠 Housing • 🍜 Food • 🛵 Transport • 💰 Money • 🛡️ Safety\n' +
   '\n' +
   'Выбери город и жми кнопку ↓ / Pick your city and tap the button ↓'

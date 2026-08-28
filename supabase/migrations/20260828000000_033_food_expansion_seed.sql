@@ -7,6 +7,19 @@
 -- places has no coordinates column; street addresses live in area text.
 -- Mirrored into supabase/seed.sql for local/CI parity.
 
+-- The da-nang FK target must exist before the places insert: cities are
+-- normally seeded by seed.sql, which runs AFTER all migrations on db reset.
+insert into public.cities (slug, name_en, name_ru, country_code, flag, is_active, sort_order)
+values ('da-nang', 'Da Nang', 'Дананг', 'VN', '🇻🇳', true, 1)
+on conflict (slug) do update
+set
+	name_en = excluded.name_en,
+	name_ru = excluded.name_ru,
+	country_code = excluded.country_code,
+	flag = excluded.flag,
+	is_active = excluded.is_active,
+	sort_order = excluded.sort_order;
+
 insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
 values
 	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'da-nang', 'bun-cha-ca-ba-hoa', 'street', 'budget', true, 'published'),

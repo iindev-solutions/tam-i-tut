@@ -15,14 +15,19 @@ const BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN')
 const TMA_URL = Deno.env.get('TMA_URL') ?? ''
 const WEBHOOK_SECRET = Deno.env.get('WEBHOOK_SECRET') ?? ''
 
-const WELCOME_RU =
-  '🇻🇳 Привет! Это TAMITUT — гид для первых недель в новом городе 🏖️\n\n' +
-  '🏠 Жильё • 🍜 Еда • 🛵 Транспорт • 💰 Деньги • 🛡️ Безопасность\n\n' +
-  'Выбери город в приложении и нажми кнопку ниже ✨'
-const WELCOME_EN =
-  '🇻🇳 Hi! This is TAMITUT — a guide for your first weeks in a new city 🏖️\n\n' +
-  '🏠 Housing • 🍜 Food • 🛵 Transport • 💰 Money • 🛡️ Safety\n\n' +
-  'Pick your city in the app and tap the button below ✨'
+// One bilingual welcome for everyone: many RU-speaking expats keep their
+// Telegram client in English, so per-locale branching showed one language
+// only. Both blocks always travel together; the button label is dual too.
+const WELCOME =
+  '🇻🇳 Привет! Это TAMITUT — гид для первых недель в Дананге 🏖️\n' +
+  '🏠 Жильё • 🍜 Еда • 🛵 Транспорт • 💰 Деньги • 🛡️ Безопасность\n' +
+  '\n' +
+  '🇬🇧 Hi! This is TAMITUT — a guide for your first weeks in Da Nang\n' +
+  '🏠 Housing • 🍜 Food • 🛵 Transport • 💰 Money • 🛡️ Safety\n' +
+  '\n' +
+  'Выбери город и жми кнопку ↓ / Pick your city and tap the button ↓'
+
+const BUTTON_TEXT = 'Открыть TAMITUT · Open TAMITUT'
 
 const replyMarkup = (text: string) => ({
   inline_keyboard: [[{ text, web_app: { url: TMA_URL } }]]
@@ -52,18 +57,14 @@ Deno.serve(async (request: Request) => {
   const text = update.message?.text ?? ''
   if (!chatId) return new Response('ok', { status: 200 })
 
-  const lang = update.message?.from?.language_code === 'en' ? 'en' : 'ru'
-  const welcome = lang === 'en' ? WELCOME_EN : WELCOME_RU
-  const buttonText = lang === 'en' ? 'Open TAMITUT' : 'Открыть TAMITUT'
-
   try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: welcome,
-        reply_markup: replyMarkup(buttonText)
+        text: WELCOME,
+        reply_markup: replyMarkup(BUTTON_TEXT)
       })
     })
   } catch (error) {

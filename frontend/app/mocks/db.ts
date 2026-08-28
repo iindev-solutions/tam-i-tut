@@ -29,7 +29,7 @@ export const mockDb: MockDb = {
         ru: 'Банхми с начинками на выбор, 25-40 тыс. ₫. Работает с раннего утра, очередь к вечеру.',
         en: 'Banh mi with fillings to pick, 25-40k VND. Opens early, expect a queue in the evening.'
       },
-      imageUrl: null,
+      imageUrl: 'https://hoiandaytrip.com/wp-content/uploads/2025/12/madam-khanh-1.jpg',
       verified: true,
       status: 'published',
       updated: '2026-08-12'
@@ -45,7 +45,7 @@ export const mockDb: MockDb = {
         ru: 'Мискуанг - фирменный суп Дананга с рисовой лапшой и креветкой. 35-60 тыс. ₫.',
         en: 'Mi quang - Da Nang signature rice noodle soup with shrimp. 35-60k VND.'
       },
-      imageUrl: null,
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/df/Mi_Quang_1A_Danang.jpg',
       verified: true,
       status: 'published',
       updated: '2026-08-10'
@@ -61,7 +61,7 @@ export const mockDb: MockDb = {
         ru: 'Хрустящие баншо с зеленью и арахисовым соусом. Легендарное место, 40-70 тыс. ₫.',
         en: 'Crispy banh xeo pancakes with herbs and peanut sauce. A local legend, 40-70k VND.'
       },
-      imageUrl: null,
+      imageUrl: 'https://mia.vn/media/uploads/blog-du-lich/thoa-man-voi-banh-xeo-ba-duong-ngon-nhat-da-nang-1636651211.jpg',
       verified: true,
       status: 'published',
       updated: '2026-08-14'
@@ -77,7 +77,7 @@ export const mockDb: MockDb = {
         ru: 'Рыбный суп бунчакка - завтрак местных. Идти до обеда, дальше закрывается. 30-50 тыс. ₫.',
         en: 'Fish cake noodle soup - a local breakfast. Go before noon, it closes after. 30-50k VND.'
       },
-      imageUrl: null,
+      imageUrl: 'https://danangbest.com/upload_content/bun-cha-ca-da-nang-3.webp',
       verified: true,
       status: 'published',
       updated: '2026-08-09'
@@ -93,7 +93,7 @@ export const mockDb: MockDb = {
         ru: 'Главный рынок города: фудкорт наверху, фрукты и хозяйственное внизу. Только наличные.',
         en: 'The main city market: food court upstairs, fruit and goods below. Cash only.'
       },
-      imageUrl: null,
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Con_Market_at_sunset.jpg',
       verified: true,
       status: 'published',
       updated: '2026-08-08'
@@ -109,7 +109,7 @@ export const mockDb: MockDb = {
         ru: 'Рынок у набережной реки Хан. Фрукты, кофе, сухофрукты - цены ниже туристических.',
         en: 'Market by the Han river promenade. Fruit, coffee, dried fruit - cheaper than tourist spots.'
       },
-      imageUrl: null,
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Han_Market_Da_Nang.JPG',
       verified: true,
       status: 'published',
       updated: '2026-08-07'
@@ -125,7 +125,7 @@ export const mockDb: MockDb = {
         ru: 'Сетка кофеен прямо у пляжа Mỹкхе. Кофе 45-75 тыс. ₫, карта принимают, Wi-Fi.',
         en: 'Chain cafe right on My Khe beach. Coffee 45-75k VND, cards accepted, Wi-Fi.'
       },
-      imageUrl: null,
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Highlands_Coffee_storefront_DN.JPG',
       verified: true,
       status: 'published',
       updated: '2026-08-13'
@@ -141,7 +141,7 @@ export const mockDb: MockDb = {
         ru: 'Кофейня в ретро-стиле с видом на реку Хан и мост Дракона. Есть розетки.',
         en: 'Retro-style cafe with Han river and Dragon Bridge views. Power sockets available.'
       },
-      imageUrl: null,
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/67/C%E1%BB%99ng_C%C3%A0_Ph%C3%AA_coffee_milk.jpg',
       verified: false,
       status: 'published',
       updated: '2026-08-06'
@@ -157,7 +157,7 @@ export const mockDb: MockDb = {
         ru: 'Морепродукты с витрины: вес подтверждают при тебе. 150-400 тыс. ₫ за блюдо.',
         en: 'Seafood from the display: weight confirmed in front of you. 150-400k VND per dish.'
       },
-      imageUrl: null,
+      imageUrl: 'https://axwwgrkdco.cloudimg.io/v7/__gmpics3__/70695ae344e74b7ba42c132cca61ca84.jpeg?width=1000',
       verified: true,
       status: 'published',
       updated: '2026-08-11'
@@ -173,7 +173,7 @@ export const mockDb: MockDb = {
         ru: 'Пешеходная улица еды в двух кварталах от моря: гриль, смузи, кофе до поздна.',
         en: 'Pedestrian food street two blocks from the sea: grills, smoothies, late-night coffee.'
       },
-      imageUrl: null,
+      imageUrl: 'https://hoiandaytrip.com/wp-content/uploads/2024/11/an-thuong-tourist-street-da-nang.jpg',
       verified: false,
       status: 'published',
       updated: '2026-08-15'

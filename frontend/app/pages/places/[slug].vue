@@ -36,15 +36,9 @@ const imageBroken = shallowRef(false)
 <template>
   <UContainer class="px-0">
     <div class="mx-auto max-w-2xl space-y-6">
-      <UButton
-        to="/categories/food"
-        variant="ghost"
-        color="neutral"
-        size="sm"
-        icon="i-lucide-arrow-left"
-        :label="t('food.details.back')"
-      />
-
+      <!-- Back navigation is the Telegram native BackButton, synced to the
+           router by plugins/telegram.client.ts. No in-page back control:
+           inside the TMA it would duplicate the native one. -->
       <article
         v-if="place"
         class="space-y-5"

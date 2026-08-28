@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-08-28 - Prod deploy fixed: SSR worker entry restored
+
+### Done
+
+- Founder's Cloudflare API token verified active via `/user/tokens/verify`; local wrangler OAuth still logged in, so a manual deploy shipped the new UI without waiting for the CI secret.
+- **First deploy exposed a real prod bug**: all HTML routes returned 404 (empty body) while static assets served 200. Root cause: the `cloudflare_module` preset builds an SSR bundle with no `index.html` in `.output/public`, but `wrangler.jsonc` declared no `main` - wrangler uploaded an assets-only worker, so nothing rendered the SPA/SSR HTML. (The "static SPA" comment in nuxt.config was stale - `nuxt build` with this preset never emits `index.html`.)
+- Fix: added `main: ./.output/server/index.mjs` + `ASSETS` binding to `wrangler.jsonc` (`fix(deploy): point wrangler at the nitro server entry`, 0df0b4e). Redeployed: `/`, `/categories/food`, `/places/<slug>`, `/privacy` all 200 with the Supabase ref baked. New food list + detail page are LIVE.
+- Vault updated (this entry + resume-plan stop point).
+
+### Pending
+
+- CI Deploy job still fails on the missing `CLOUDFLARE_API_TOKEN` secret (founder blocker) - local OAuth deploys work meanwhile.
+- Photo coverage 14/23; remaining venues need founder photos via Supabase Storage.
+- Audit backlog open (mock-fallback UX, guide authoring form, review submission).
+
 ## 2026-08-28 - Food seed + photos + UI shipped: CI green, migrations applied to hosted
 
 ### Done

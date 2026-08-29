@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-29 - City dropdown: upcoming cities visible but disabled
+
+### Done
+
+- Founder: dropdown shrank to da-nang only after the DB cutover - RLS gave authenticated readers active cities only, while the old mock fallback showed all four. Migration 039 (`cities__authenticated__select_all`) lets authenticated users read every city row (public info: slug/name/flag); anon keeps active-only. The dropdown already supported `disabled: !city.active` - now it also dims disabled rows and shows a "Скоро / Coming soon" badge in the custom item slot. Hosted verified: 4 cities (da-nang active, nha-trang/pattaya/phuket inactive). Commit 5841432. Gates: 48/48, typecheck clean (the intermittent vue-tsc exit-1-on-first-run quirk noted - a second run is always clean).
+
 ## 2026-08-29 - Scan "no connection" fixed: missing CORS preflight
 
 ### Done

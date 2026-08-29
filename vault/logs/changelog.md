@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-29 - Signature algorithm VERIFIED against live client data
+
+### Done
+
+- Founder pasted the FULL raw initData + hash. Offline brute-force over algorithm variants produced exactly one match: **values URL-DECODED, sorted, ONLY `hash` excluded - the ECDSA `signature` field STAYS in the check string**. Both earlier variants (decoded+signature-excluded = the original code; raw-encoded = the previous "fix") fail against real clients.
+- validate.ts updated to the verified algorithm; debug echo removed; test sign helper + e2e script aligned (initData suite 12/12, frontend 48/48).
+- Proof against hosted: a fresh real-shape initData for the founder's Telegram id passed bootstrap and issued a session; the full pipeline (bootstrap -> scan -> 4/4 dictionary matches) is green. Commit `fix(bootstrap): decode values, keep signature in check string` (0a5500e).
+- Founder re-open pending: the TMA should now authenticate on next launch.
+
+### Note
+
+- The signature-included detail contradicts some community snippets that exclude `signature` - if Telegram changes the contract again, the offline brute-force approach (echo raw initData + hash, test variants locally) resolves it in one iteration.
+
 ## 2026-08-29 - bad_signature ROOT CAUSE fixed: raw-pair data-check string
 
 ### Done

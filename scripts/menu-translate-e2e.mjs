@@ -10,7 +10,7 @@ const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? ''
 const BASE = 'https://tepsurbgsrivvcvizxph.supabase.co'
 const ANON = 'sb_publishable_PeO94JnLRNMiUOrZrFZk5Q_sLD3w2Hp'
 const PLACE_ID = process.env.E2E_PLACE_ID ?? ''
-if (!BOT_TOKEN || !PLACE_ID) throw new Error('set TELEGRAM_BOT_TOKEN and E2E_PLACE_ID env vars first')
+if (!BOT_TOKEN) throw new Error('set TELEGRAM_BOT_TOKEN env var first')
 
 const secretKey = createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest()
 const params = new URLSearchParams({
@@ -40,7 +40,7 @@ const photo = readFileSync('/tmp/test-menu.jpg').toString('base64')
 const scan = await fetch(BASE + '/functions/v1/menu-translate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + bootBody.session.access_token },
-  body: JSON.stringify({ place_id: PLACE_ID, photo_base64: photo })
+  body: JSON.stringify({ ...(PLACE_ID ? { place_id: PLACE_ID } : {}), photo_base64: photo })
 })
 const scanBody = await scan.json()
 if (!scan.ok) {

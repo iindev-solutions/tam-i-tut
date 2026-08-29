@@ -81,7 +81,7 @@ async function compressPhoto(file: File): Promise<string> {
   return canvas.toDataURL('image/jpeg', 0.8).replace(/^data:image\/jpeg;base64,/, '')
 }
 
-export function useMenuTranslator(placeId: () => string) {
+export function useMenuTranslator(placeId: () => string | null) {
   const { locale } = useI18n()
   const client = getSupabaseClient()
   const { session } = useAuth()
@@ -137,7 +137,7 @@ export function useMenuTranslator(placeId: () => string) {
   }
 
   async function loadCached(placeId: string): Promise<boolean> {
-    if (!client) return false
+    if (!client || !placeId) return false
     const { data, error } = await client
       .from('menus')
       .select('id, status, menu_items(*)')
@@ -163,7 +163,8 @@ export function useMenuTranslator(placeId: () => string) {
     state.value = { phase: 'scanning' }
     try {
       // Cached menus skip the AI call entirely.
-      const hadCached = await loadCached(placeId())
+      const currentPlaceId = placeId()
+      const hadCached = currentPlaceId ? await loadCached(currentPlaceId) : false
       if (hadCached) {
         state.value = { phase: 'idle' }
         return
@@ -180,7 +181,7 @@ export function useMenuTranslator(placeId: () => string) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
-          place_id: placeId(),
+          ...(placeId() ? { place_id: placeId() } : {}),
           photo_base64: await compressPhoto(file)
         })
       })

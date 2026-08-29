@@ -64,27 +64,33 @@ Deno.serve(async (request: Request) => {
   } catch {
     return fail('bad_request', 'invalid JSON', 400)
   }
-  const placeId = payload.place_id ?? ''
+  const placeId = typeof payload.place_id === 'string' && /^[0-9a-f-]{36}$/.test(payload.place_id) ? payload.place_id : null
   const photoBase64 = (payload.photo_base64 ?? '').replace(/^data:image\/[a-z]+;base64,/, '')
-  if (!/^[0-9a-f-]{36}$/.test(placeId)) return fail('bad_request', 'place_id required', 400)
+
   if (photoBase64.length < 1000) return fail('bad_request', 'photo_base64 required', 400)
 
-  // 4) Venue must exist and be published (defense in depth; RLS also gates).
-  const { data: place } = await admin.from('places').select('id, slug, status').eq('id', placeId).maybeSingle()
-  if (!place || place.status !== 'published') return fail('not_found', 'venue not found', 404)
+  // 4) Venue optional: checked only when the scan is venue-bound.
+  let place: { id: string, slug: string, status: string } | null = null
+  if (placeId) {
+    const { data } = await admin.from('places').select('id, slug, status').eq('id', placeId).maybeSingle()
+    if (!data || data.status !== 'published') return fail('not_found', 'venue not found', 404)
+    place = data
+  }
 
-  // 5) Cache-first: verified menu wins; fresh AI menu is reused as-is.
-  const since = new Date(Date.now() - CACHE_DAYS * 86_400_000).toISOString()
-  const { data: cached } = await admin
-    .from('menus')
-    .select('id, status, created_at, menu_items(*)')
-    .eq('place_id', placeId)
-    .gte('created_at', since)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-  if (cached && (cached.status === 'verified' || cached.status === 'ai')) {
-    return json({ cached: true, place_id: placeId, menu: cached })
+  // 5) Cache-first (venue scans only): verified menu wins; fresh AI menu reused.
+  if (placeId) {
+    const since = new Date(Date.now() - CACHE_DAYS * 86_400_000).toISOString()
+    const { data: cached } = await admin
+      .from('menus')
+      .select('id, status, created_at, menu_items(*)')
+      .eq('place_id', placeId)
+      .gte('created_at', since)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (cached && (cached.status === 'verified' || cached.status === 'ai')) {
+      return json({ cached: true, place_id: placeId, menu: cached })
+    }
   }
 
   // 6) Dictionary for the prompt.
@@ -131,7 +137,7 @@ Deno.serve(async (request: Request) => {
   // 8) Persist: menu + items (service role writes; RLS not involved).
   const { data: menuRow, error: menuError } = await admin
     .from('menus')
-    .insert({ place_id: placeId, status: 'ai', scanned_by: userId })
+    .insert(placeId ? { place_id: placeId, status: 'ai', scanned_by: userId } : { status: 'ai', scanned_by: userId })
     .select('id, status, created_at')
     .single()
   if (menuError || !menuRow) {
@@ -167,13 +173,14 @@ Deno.serve(async (request: Request) => {
   }
 
   // 9) Photo evidence (best effort - a failed upload never blocks the answer).
+  const photoPath = `${place ? `${place.slug}/` : 'global/'}${menuRow.id}.jpg`
   try {
     const bytes = Uint8Array.from(atob(photoBase64), c => c.charCodeAt(0))
-    await admin.storage.from('menu-photos').upload(`${placeId}/${menuRow.id}.jpg`, bytes, {
+    await admin.storage.from('menu-photos').upload(photoPath, bytes, {
       contentType: 'image/jpeg',
       upsert: true
     })
-    await admin.from('menus').update({ photo_path: `${placeId}/${menuRow.id}.jpg` }).eq('id', menuRow.id)
+    await admin.from('menus').update({ photo_path: photoPath }).eq('id', menuRow.id)
   } catch (error) {
     console.error('photo upload failed', error)
   }

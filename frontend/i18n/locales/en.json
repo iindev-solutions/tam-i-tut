@@ -13,7 +13,10 @@
     "openCollection": "Open collection",
     "trustDescription": "Checked places - without random listings.",
     "footer": "For people who just arrived",
-    "inCity": "in {city}"
+    "inCity": "in {city}",
+    "scanTitle": "Menu, translated",
+    "scanDescription": "Photo a menu -> translations and dish photos in seconds. Works at any venue.",
+    "scanCta": "Scan a menu"
   },
   "housing": {
     "kicker": "Housing",
@@ -434,6 +437,8 @@
       "fried": "Fried",
       "sour": "Sour",
       "salad": "Salad"
-    }
+    },
+    "globalTitle": "Menu scan",
+    "globalDescription": "One tap: photograph any Vietnamese menu - get translations, prices, and dish photos."
   }
 }

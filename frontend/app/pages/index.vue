@@ -29,6 +29,32 @@ const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
         </div>
       </section>
 
+      <UCard class="overflow-hidden border-primary/20 bg-primary/5 shadow-sm">
+        <NuxtLink
+          to="/scan"
+          class="flex items-center gap-4"
+        >
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+            <UIcon
+              name="i-lucide-camera"
+              class="size-6 text-primary"
+            />
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-base font-semibold text-highlighted">
+              {{ t('home.scanTitle') }}
+            </span>
+            <span class="mt-0.5 block text-sm leading-5 text-muted">
+              {{ t('home.scanDescription') }}
+            </span>
+          </span>
+          <UIcon
+            name="i-lucide-arrow-right"
+            class="size-5 shrink-0 text-primary"
+          />
+        </NuxtLink>
+      </UCard>
+
       <section
         id="start"
         class="space-y-4"

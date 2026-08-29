@@ -27,39 +27,31 @@ const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
             {{ t('home.description') }}
           </p>
         </div>
-      </section>
-
-      <UCard class="overflow-hidden border-primary/20 bg-primary/5 shadow-sm">
-        <NuxtLink
-          to="/scan"
-          class="flex items-center gap-4"
-        >
-          <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-            <UIcon
-              name="i-lucide-camera"
-              class="size-6 text-primary"
-            />
-          </span>
-          <span class="min-w-0 flex-1">
-            <span class="block text-base font-semibold text-highlighted">
-              {{ t('home.scanTitle') }}
-            </span>
-            <span class="mt-0.5 block text-sm leading-5 text-muted">
-              {{ t('home.scanDescription') }}
-            </span>
-          </span>
-          <UIcon
-            name="i-lucide-arrow-right"
-            class="size-5 shrink-0 text-primary"
-          />
-        </NuxtLink>
-      </UCard>
-
       <section
         id="start"
         class="space-y-4"
       >
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <UCard class="border-primary/25 bg-primary/5 session-hover-card">
+            <NuxtLink
+              to="/scan"
+              class="block"
+            >
+              <div class="flex items-center justify-between">
+                <UIcon
+                  name="i-lucide-camera"
+                  class="size-5 text-primary"
+                />
+                <UIcon
+                  name="i-lucide-arrow-right"
+                  class="size-4 text-primary"
+                />
+              </div>
+              <p class="mt-5 text-sm font-medium text-highlighted">
+                {{ t('home.scanTitle') }}
+              </p>
+            </NuxtLink>
+          </UCard>
           <UCard
             v-for="category in categories"
             :key="category.id"

@@ -2,7 +2,7 @@
 import { computed, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const { db } = useDb()
 const { tt } = useLocalized()
@@ -28,6 +28,14 @@ const mapsUrl = computed(() => {
   if (!p) return ''
   const query = [p.name, tt(p.area), 'Da Nang'].filter(Boolean).join(', ')
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+})
+
+/** Keyless embed: Google geocodes the same query and pins it on the map. */
+const mapsEmbedUrl = computed(() => {
+  const p = place.value
+  if (!p) return ''
+  const query = [p.name, tt(p.area), 'Da Nang'].filter(Boolean).join(', ')
+  return `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed&hl=${locale.value}`
 })
 
 const imageBroken = shallowRef(false)
@@ -97,6 +105,16 @@ const imageBroken = shallowRef(false)
           <p class="text-sm text-muted">
             {{ tt(place.area) }}
           </p>
+          <div class="overflow-hidden rounded-lg border border-default">
+            <iframe
+              :src="mapsEmbedUrl"
+              class="h-56 w-full border-0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+              :title="t('food.details.location')"
+            />
+          </div>
           <UButton
             :to="mapsUrl"
             target="_blank"

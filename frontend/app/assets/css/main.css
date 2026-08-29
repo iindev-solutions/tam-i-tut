@@ -7,6 +7,13 @@ body {
   min-width: 340px;
 }
 
+/* Pages differ in height: reserving the scrollbar gutter stops the
+   horizontal width jump when the vertical scrollbar appears/disappears
+   between routes. */
+html {
+  scrollbar-gutter: stable;
+}
+
 code {
   font-family: Consolas, Monaco, monospace;
 }

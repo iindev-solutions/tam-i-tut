@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-29 - GEMINI key set; bootstrap session exchange REPAIRED; Gemini billing blocker
+
+### Done
+
+- Founder provided a Gemini API key; `supabase secrets set GEMINI_API_KEY` applied. Function now passes the not-configured gate (platform JWT check responds before it).
+- **E2E harness** (`scripts/menu-translate-e2e.mjs`, secrets from env only): builds a valid Telegram initData HMAC, bootstraps a session through the hosted function, uploads a synthetic menu photo (sharp-rendered "THUC DON" image), prints the parsed result.
+- **Sprint 5.5 blocker FIXED as a side effect**: the hosted bootstrap had never run its happy path. Three real defects found and fixed (commit e2a... c6a..: `fix(bootstrap): repair live session exchange`):
+  1. `generate_link(magiclink)` does not auto-create the user on hosted -> deterministic `tg-*` user is now created first (idempotent, 422 tolerated);
+  2. hosted GoTrue returns legacy `token` (not `token_hash`) in action_link -> both accepted;
+  3. verify failures now logged. E2E reached full session issuance (bootstrap ok, user + profile + tokens).
+- `gemini-2.0-flash` is retired by Google -> model switched to `gemini-3.6-flash`, configurable via the `GEMINI_MODEL` secret (fallback built in). Both functions redeployed clean (no debug fields, no secrets in repo - sanitized and verified).
+- E2E artifacts cleaned from hosted: synthetic scan rows, test rate-limit keys, test user 777000777 (auth.users + profiles) deleted.
+
+### Blocked (founder decision)
+
+- **Gemini API returns 429 "prepayment credits are depleted"** for every model on this key's Google project - the new AI Studio key format has no free quota on that project. Two ways forward: (a) top up credits at ai.studio/projects (~$5 covers ~5k scans) or (b) create a NEW AI Studio project/key that still has free-tier quota and re-set `supabase secrets set GEMINI_API_KEY=<new>`. Until then the scan endpoint answers `ai_unavailable`; everything else (dictionary, UI, session) works.
+
 ## 2026-08-29 - Menu translator Phase A shipped
 
 ### Done

@@ -161,6 +161,13 @@ export function useMenuTranslator(placeId: () => string | null) {
       return
     }
     state.value = { phase: 'scanning' }
+    let photoBase64: string
+    try {
+      photoBase64 = await compressPhoto(file)
+    } catch {
+      state.value = { phase: 'error', code: 'photo' }
+      return
+    }
     try {
       // Cached menus skip the AI call entirely.
       const currentPlaceId = placeId()
@@ -182,7 +189,7 @@ export function useMenuTranslator(placeId: () => string | null) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           ...(placeId() ? { place_id: placeId() } : {}),
-          photo_base64: await compressPhoto(file)
+          photo_base64: photoBase64
         })
       })
       const payload = await response.json()

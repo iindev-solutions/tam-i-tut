@@ -90,6 +90,8 @@ watch(() => props.placeId, () => {
               ? t('menu.errors.rate_limited')
               : state.code === 'not_configured'
                 ? t('menu.errors.not_configured')
+                : state.code === 'photo'
+                ? t('menu.errors.photo')
                 : state.code === 'network'
                   ? t('menu.errors.network')
                   : state.code === 'ai_unavailable' ? t('menu.errors.ai_unavailable') : t('menu.errors.other')"

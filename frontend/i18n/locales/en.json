@@ -405,7 +405,8 @@
       "not_configured": "The service is still being set up - check back soon.",
       "ai_unavailable": "The translation service is temporarily down. Try again.",
       "network": "No connection. Check the internet and retry.",
-      "other": "Something went wrong. Try again."
+      "other": "Something went wrong. Try again.",
+      "photo": "Could not process the photo. Try taking it again."
     },
     "retry": "Try again",
     "empty": "Scan the menu first - the translation will appear here.",

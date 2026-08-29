@@ -20,16 +20,24 @@ const RATE_MAX_PER_HOUR = 3
 const RATE_MAX_PER_DAY = 10
 const MAX_BODY_BYTES = 4 * 1024 * 1024
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
+}
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
   })
 
 const fail = (code: string, message: string, status: number, extra: Record<string, unknown> = {}) =>
   json({ error: { code, message, ...extra } }, status)
 
 Deno.serve(async (request: Request) => {
+  // Browser clients preflight the JSON POST - without this the WebView
+  // reports a network error before the function ever runs.
+  if (request.method === 'OPTIONS') return new Response('ok', { headers: CORS_HEADERS })
   if (request.method !== 'POST') return fail('method_not_allowed', 'POST only', 405)
   if (!GEMINI_API_KEY) return fail('not_configured', 'GEMINI_API_KEY is not set', 503)
 

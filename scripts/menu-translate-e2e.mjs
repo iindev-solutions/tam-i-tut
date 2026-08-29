@@ -6,12 +6,11 @@
 import { createHmac } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 
-if (!BOT_TOKEN || !PLACE_ID) throw new Error('set TELEGRAM_BOT_TOKEN and E2E_PLACE_ID env vars first')
-
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? ''
 const BASE = 'https://tepsurbgsrivvcvizxph.supabase.co'
 const ANON = 'sb_publishable_PeO94JnLRNMiUOrZrFZk5Q_sLD3w2Hp'
 const PLACE_ID = process.env.E2E_PLACE_ID ?? ''
+if (!BOT_TOKEN || !PLACE_ID) throw new Error('set TELEGRAM_BOT_TOKEN and E2E_PLACE_ID env vars first')
 
 const secretKey = createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest()
 const params = new URLSearchParams({

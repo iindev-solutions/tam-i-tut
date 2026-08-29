@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-08-29 - Menu translator LIVE: working Gemini key, full e2e green
+
+### Done
+
+- Founder issued a second Gemini key (fresh AI Studio project) - it has working quota (the first project's prepaid credits were depleted; AI Pro subscription does not cover API usage). New key set as `GEMINI_API_KEY`.
+- **Full e2e green** (scripts/menu-translate-e2e.mjs against hosted): synthetic "THUC DON" menu photo (Pho bo 50k, Banh xeo 40k, Ca phe sua da 25k, Goi cuon 30k) -> bootstrap session ok -> scan 200 -> 4/4 lines parsed, prices extracted, **4/4 dish_slugs matched the seeded dictionary** - cards render from our data, zero hallucination surface touched. Confidence 100 across the board.
+- E2E artifacts cleaned from hosted after the run (scan rows, rate-limit keys, test user 777000777) - pilot users will not see the synthetic menu.
+- e2e script env-guard ordering fixed (my sanitize pass put the guard before the const declarations).
+
+### Status
+
+- **The killer feature is LIVE**: dictionary (50 dishes, 46 photos) + Gemini matching + scan UI + cache. Founder should now open a venue in the TMA -> "Меню с переводом" -> photograph a real menu.
+- Note: free-tier quota applies per model/day; the per-user rate limits (3/h, 10/day) sit well under it.
+
 ## 2026-08-29 - GEMINI key set; bootstrap session exchange REPAIRED; Gemini billing blocker
 
 ### Done

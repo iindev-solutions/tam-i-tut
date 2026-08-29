@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-29 - City select flags, overlay animations restored
+
+### Done
+
+- **Invisible flags in the city dropdown**: the options rendered flag emoji, and Windows/Chrome ships no flag-emoji font, so the slot was blank in desktop browsers. Replaced with flagcdn PNG images derived from the stored emoji (pure emoji->ISO-code conversion, no schema change); trigger shows w40 in a 3.5-unit box, dropdown items 4x6 rounded. flagcdn verified 200 image/png.
+- **Slideover popped with no animation**: a global `animation-duration: 0.01ms !important` kill on `[data-slot]` overlays - an old workaround for WebViews freezing keyframe exit animations - silenced every slideover/modal transition, including the housing district slideover. Removed the kill; the `[data-state="closed"]` visibility/pointer-events guard stays and covers the original stuck-sheet failure mode. `prefers-reduced-motion` users still get near-zero durations via the existing media query.
+- Gates: lint clean, vitest 39/39, typecheck 0, deployed, housing route 200. Commit `fix(ui): flag images in city select, restore overlay animations` (68126e0).
+
 ## 2026-08-29 - Transition jump fixed, map embed on place detail
 
 ### Done

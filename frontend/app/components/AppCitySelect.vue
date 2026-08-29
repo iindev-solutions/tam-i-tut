@@ -65,7 +65,10 @@ const selectedCityOption = computed(() => cityOptions.value.find(city => city.va
       </span>
     </template>
     <template #item="{ item }">
-      <div class="flex min-w-0 items-center gap-2">
+      <div
+        class="flex min-w-0 items-center gap-2"
+        :class="item.disabled ? 'opacity-50' : ''"
+      >
         <img
           v-if="item.flagSrc"
           :src="item.flagSrc"
@@ -73,6 +76,15 @@ const selectedCityOption = computed(() => cityOptions.value.find(city => city.va
           class="h-4 w-6 shrink-0 rounded-xs object-cover"
         >
         <span class="truncate">{{ item.label }}</span>
+        <UBadge
+          v-if="item.disabled"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="ml-auto shrink-0"
+        >
+          {{ t('cities.comingSoon') }}
+        </UBadge>
       </div>
     </template>
   </USelectMenu>

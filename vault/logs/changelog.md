@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-29 - Transition jump fixed, map embed on place detail
+
+### Done
+
+- **Page-jump root causes** (founder report "подпрыгивает при переходах"): (1) the default layout rendered a back-nav strip under the header on every non-home route, shifting the whole page vertically on each transition - removed; back navigation is now the native Telegram BackButton everywhere (founder's earlier call, layout strip was missed then). (2) Pages of different heights toggled the vertical scrollbar - reserved the gutter with `html { scrollbar-gutter: stable }`. Kept the subtle 120ms opacity out-in page transition.
+- **Place detail map**: keyless Google Maps embed (`/maps?q=<name>, <area>, Da Nang&output=embed&hl=<locale>`) in the "How to find it" block - Google geocodes the query server-side, no stored coordinates. "Open in Google Maps" button kept below the embed. Verified the embed endpoint serves the map HTML.
+- Gates: lint clean, vitest 39/39, typecheck 0, build+deploy OK; live routes 200. Commit `fix(ui): stop page jump, add map embed on place detail` (b9d005f).
+
 ## 2026-08-29 - Bot texts made city-neutral
 
 ### Done

@@ -119,6 +119,18 @@ Deno.serve(async (request: Request) => {
     'Content-Type': 'application/json'
   }
 
+  // generate_link(magiclink) requires the user to exist on hosted projects -
+  // it does not auto-create. Idempotent: 422 (already registered) is fine.
+  const createResponse = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+    method: 'POST',
+    headers: adminHeaders,
+    body: JSON.stringify({ email, email_confirm: true })
+  })
+  if (!createResponse.ok && createResponse.status !== 422) {
+    console.error('admin user create failed', createResponse.status, await createResponse.text())
+    return json({ error: 'user_sync_failed' }, 503)
+  }
+
   const linkResponse = await fetch(`${supabaseUrl}/auth/v1/admin/generate_link`, {
     method: 'POST',
     headers: adminHeaders,
@@ -128,22 +140,46 @@ Deno.serve(async (request: Request) => {
   if (linkResponse.status === 400) {
     // User exists? generate_link still returns action_link for existing users,
     // a 400 here means bad request shape - surface it.
+    const detail = await linkResponse.text()
+    console.error('generate_link 400', detail)
     return json({ error: 'link_generation_failed' }, 503)
   }
-  if (!linkResponse.ok) return json({ error: 'link_generation_failed' }, 503)
+  if (!linkResponse.ok) {
+    const detail = await linkResponse.text()
+    console.error('generate_link failed', linkResponse.status, detail)
+    return json({ error: 'link_generation_failed' }, 503)
+  }
 
-  const { action_link: actionLink } = (await linkResponse.json()) as { action_link?: string }
-  if (!actionLink) return json({ error: 'link_generation_failed' }, 503)
+  const linkBody = await linkResponse.json() as { action_link?: string, properties?: { action_link?: string } }
+  const actionLink = linkBody.action_link ?? linkBody.properties?.action_link
+  if (!actionLink) {
+    console.error('generate_link body missing action_link', JSON.stringify(linkBody).slice(0, 400))
+    return json({ error: 'link_generation_failed' }, 503)
+  }
 
-  const tokenHash = new URL(actionLink).searchParams.get('token_hash')
-  if (!tokenHash) return json({ error: 'link_generation_failed' }, 503)
+  // GoTrue versions differ: hashed-link deployments put `token_hash` in the
+  // action link, older ones put the plain `token`. Verify with whichever we
+  // got - POST /auth/v1/verify accepts either field.
+  const linkUrl = new URL(actionLink)
+  const tokenHash = linkUrl.searchParams.get('token_hash')
+  const plainToken = linkUrl.searchParams.get('token')
+  if (!tokenHash && !plainToken) {
+    console.error('action_link has no token', actionLink.slice(0, 200))
+    return json({ error: 'link_generation_failed' }, 503)
+  }
 
   const verifyResponse = await fetch(`${supabaseUrl}/auth/v1/verify`, {
     method: 'POST',
     headers: { ...adminHeaders, 'X-Client-Info': 'telegram-bootstrap' },
-    body: JSON.stringify({ type: 'magiclink', token_hash: tokenHash })
+    body: JSON.stringify(tokenHash
+      ? { type: 'magiclink', token_hash: tokenHash }
+      : { type: 'magiclink', token_hash: plainToken })
   })
-  if (!verifyResponse.ok) return json({ error: 'session_exchange_failed' }, 503)
+  if (!verifyResponse.ok) {
+    const verifyDetail = await verifyResponse.text().catch(() => '')
+    console.error('verify failed', verifyResponse.status, verifyDetail)
+    return json({ error: 'session_exchange_failed' }, 503)
+  }
 
   const session = (await verifyResponse.json()) as SessionResponse
 

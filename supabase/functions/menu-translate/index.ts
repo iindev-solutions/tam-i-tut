@@ -14,7 +14,7 @@
 import { buildPrompt, parseMenuResponse, type DictionaryEntry } from './contract.ts'
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') ?? ''
-const GEMINI_MODEL = 'gemini-2.0-flash'
+const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.6-flash'
 const CACHE_DAYS = 7
 const RATE_MAX_PER_HOUR = 3
 const RATE_MAX_PER_DAY = 10

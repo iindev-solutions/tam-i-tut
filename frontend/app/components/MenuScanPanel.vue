@@ -2,7 +2,6 @@
 import { shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useDishGallery } from '~/composables/useDishGallery'
 import type { MenuItemView } from '~/composables/useMenuTranslator'
 
 /**
@@ -35,17 +34,8 @@ const pickedFile = async (event: Event) => {
 const openPicker = () => fileInput.value?.click()
 
 const activeItem = shallowRef<MenuItemView | null>(null)
-const dishGallery = useDishGallery()
 watch(() => props.placeId, () => {
   activeItem.value = null
-})
-watch(activeItem, (item) => {
-  if (!item) {
-    dishGallery.reset()
-    return
-  }
-  if (item.isDictionary) void dishGallery.load(item.rawVi, item.name, item.photoUrl)
-  else dishGallery.reset()
 })
 </script>
 
@@ -259,46 +249,6 @@ watch(activeItem, (item) => {
             <p class="text-base leading-6 text-default">
               {{ activeItem.summary }}
             </p>
-          </div>
-
-          <!-- Live Commons gallery: several photos like an image search. -->
-          <div
-            v-if="activeItem.isDictionary && (dishGallery.loading.value || dishGallery.gallery.value.length > 0)"
-            class="space-y-2"
-          >
-            <p class="text-xs font-medium text-muted">
-              {{ t('menu.galleryTitle') }}
-            </p>
-            <div
-              v-if="dishGallery.loading.value"
-              class="grid grid-cols-3 gap-1.5"
-            >
-              <USkeleton
-                v-for="i in 3"
-                :key="i"
-                class="aspect-square w-full rounded-lg"
-              />
-            </div>
-            <div
-              v-else
-              class="grid grid-cols-3 gap-1.5"
-            >
-              <a
-                v-for="url in dishGallery.gallery.value"
-                :key="url"
-                :href="url"
-                target="_blank"
-                rel="noopener"
-                class="block overflow-hidden rounded-lg bg-elevated"
-              >
-                <img
-                  :src="url"
-                  :alt="activeItem.name"
-                  class="aspect-square h-full w-full object-cover transition-transform hover:scale-105"
-                  loading="lazy"
-                >
-              </a>
-            </div>
           </div>
 
           <div

@@ -18,6 +18,7 @@ export interface MenuItemView {
   name: string
   summary: string
   photoUrl: string | null
+  galleryUrls: string[]
   tags: string[]
   isDictionary: boolean
   status: 'ai' | 'verified' | 'rejected'
@@ -56,6 +57,7 @@ interface DishRow {
   slug: string
   photo_url: string | null
   tags: string[] | null
+  gallery_urls: string[] | null
 }
 
 interface DishLocalizationRow {
@@ -99,7 +101,7 @@ export function useMenuTranslator(placeId: () => string | null) {
     if (!client || dishIds.length === 0) return map
 
     const [dishRes, locRes] = await Promise.all([
-      client.from('dishes').select('id,slug,photo_url,tags').in('id', dishIds),
+      client.from('dishes').select('id,slug,photo_url,tags,gallery_urls').in('id', dishIds),
       client.from('dish_localizations').select('dish_id,language,name,summary').in('dish_id', dishIds).in('language', ['ru', 'en'])
     ])
     for (const row of (dishRes.data ?? []) as DishRow[]) {
@@ -128,6 +130,7 @@ export function useMenuTranslator(placeId: () => string | null) {
           name: (loc?.name ?? (lang === 'en' ? item.ai_name_en : item.ai_name_ru)) ?? item.raw_text_vi,
           summary: loc?.summary ?? ((lang === 'en' ? item.ai_summary_en : item.ai_summary_ru) ?? ''),
           photoUrl: entry?.row.photo_url ?? null,
+          galleryUrls: entry?.row.gallery_urls ?? [],
           tags: entry?.row.tags ?? [],
           isDictionary: Boolean(loc),
           status: item.status

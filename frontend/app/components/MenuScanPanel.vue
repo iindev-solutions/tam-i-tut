@@ -251,6 +251,33 @@ watch(() => props.placeId, () => {
             </p>
           </div>
 
+          <!-- Curated gallery from the dish dictionary (verified photos). -->
+          <div
+            v-if="activeItem.galleryUrls.length"
+            class="space-y-2"
+          >
+            <p class="text-xs font-medium text-muted">
+              {{ t('menu.galleryTitle') }}
+            </p>
+            <div class="grid grid-cols-3 gap-1.5">
+              <a
+                v-for="url in activeItem.galleryUrls"
+                :key="url"
+                :href="url"
+                target="_blank"
+                rel="noopener"
+                class="block overflow-hidden rounded-lg bg-elevated"
+              >
+                <img
+                  :src="url"
+                  :alt="activeItem.name"
+                  class="aspect-square h-full w-full object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                >
+              </a>
+            </div>
+          </div>
+
           <div
             v-if="activeItem.tags.length"
             class="flex flex-wrap gap-1.5"

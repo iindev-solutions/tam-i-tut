@@ -39,8 +39,9 @@ Phase 3 production hardening DONE in code and verified live (rate limiting, gran
 
 1. founder: set `CLOUDFLARE_API_TOKEN` repo secret (auto-deploy) and `SUPABASE_DB_URL` + R2 secrets (backups); rotate the Telegram bot token that was shared in chat
 2. founder: live Telegram test of the full session exchange (5.5)
-3. Phase 4: sourced food expansion (~15 venues), closed pilot with metrics
-4. Optional follow-ups: guide authoring form, R2 restore drill
+3. Menu translator: spec drafted (`vault/wiki/architecture/menu-translator-spec.md`) - founder review, then Phase A (dictionary + function + scan UI)
+4. Phase 4: sourced food expansion DONE (23 places, 23 photos); closed pilot with metrics next
+5. Optional follow-ups: R2 restore drill
 
 ## Notes
 - 2026-08-22: Phase 3 hardening completed (rate limiting live + locked down, migration 032 grants, CI fully green for the first time, deploy root cause fixed at the source). Details: vault/logs/changelog.md.

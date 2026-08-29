@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-29 - Menu translator: killer-feature spec drafted (no code)
+
+### Done
+
+- Founder pitched the feature: real-time menu translation for tourists (menus are Vietnamese-only, no photos) - photo -> translated lines -> tap for dish card with photo/description. Chose "spec first" at the scope question.
+- Wrote `vault/wiki/architecture/menu-translator-spec.md`: dish-dictionary insight (~300-500 canonical dishes cover most menus; AI maps lines onto it and translates the residue), full data model (`dishes`/`dish_localizations`/`menus`/`menu_items` + RLS posture + pgTAP plan), Gemini 2.0 Flash pipeline with a strict JSON contract (slug constrained to the provided dictionary, verbatim prices, confidence gate), trust model (machine-translation badge -> curated -> verified, reusing house patterns), abuse controls (auth + per-user rate limit via the existing RPC + cache-first), Storage plan (first real bucket, 90-day cron purge), costs (~$1-2/mo at pilot scale), explicit pitfalls table, phases A/B/C, and 4 open questions for the founder.
+- No implementation started - Phase A (dictionary seed + function + scan UI) begins after founder review.
+
 ## 2026-08-29 - City select flags, overlay animations restored
 
 ### Done

@@ -19,6 +19,9 @@ export default defineConfig({
       ),
       '#telegram-rate-limit': fileURLToPath(
         new URL('../supabase/functions/telegram-bootstrap/rate-limit.ts', import.meta.url)
+      ),
+      '#menu-contract': fileURLToPath(
+        new URL('../supabase/functions/menu-translate/contract.ts', import.meta.url)
       )
     }
   }

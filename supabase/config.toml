@@ -424,3 +424,9 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+[functions.menu-translate]
+enabled = true
+# Platform JWT verification stays ON: the caller sends the TMA session
+# access_token in the Authorization header and the function resolves the user
+# with auth.getUser before anything else.

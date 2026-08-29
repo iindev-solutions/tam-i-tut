@@ -127,6 +127,17 @@ const imageBroken = shallowRef(false)
             class="mt-1"
           />
         </section>
+
+        <UButton
+          :to="`/places/${place.slug}/menu`"
+          color="primary"
+          variant="soft"
+          size="lg"
+          icon="i-lucide-camera"
+          :label="t('menu.open')"
+          class="w-full"
+          block
+        />
       </article>
 
       <p

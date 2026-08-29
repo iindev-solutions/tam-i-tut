@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-30 - Curated dish galleries shipped (live search idea retired)
+
+### Done
+
+- Live Commons search shipped and failed the same day: full-text file search matched maps/temples/people (founder screenshot: "Лау га" card with a building, a region map, a stranger's face). Pulled from prod (commit eda29b7).
+- Deterministic replacement shipped: **curated galleries in the DB**. Agent sourced 3-5 verified Wikimedia shots per dish (48/50 dishes with extras, ga-xao-sa-ot 2); scripts/dish-galleries.json + scripts/gen-dish-galleries.mjs generate migration 041 (`dishes.gallery_urls text[]`) and a seed.sql mirror block. Hosted applied and verified (pho-bo 5, lau-ga 3, tra-chanh 3). Dish sheet renders "Как это выглядит" as a 3-column grid from the DB - zero runtime lookups, search-noise impossible by construction.
+- Also: scan entry button on home became a compact category-grid tile (founder: the banner was oversized); a hero-section closing tag my edit had swallowed was caught by the build and fixed; agent temp files leaked into a commit - removed, `.tmp_*` gitignored.
+- Commits: eda29b7, 6862f0d, 32459fb, c7b83fd, 229f61e. Gates: 48/48 tests, lint, typecheck, build.
+
 ## 2026-08-29 - Dish cards: live Commons photo gallery
 
 ### Done

@@ -27,6 +27,8 @@ const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
             {{ t('home.description') }}
           </p>
         </div>
+      </section>
+
       <section
         id="start"
         class="space-y-4"

@@ -12,10 +12,21 @@ const { t, locale } = useI18n()
 const { db } = useDb()
 const selectedCity = useState<string>('selectedCity', () => 'da-nang')
 
+/** Windows/Chrome renders no flag emoji - use flagcdn images keyed off the emoji. */
+const flagImage = (flagEmoji: string | undefined) => {
+  if (!flagEmoji) return ''
+  const code = [...flagEmoji]
+    .map(ch => String.fromCodePoint(ch.codePointAt(0)! - 0x1f1e6 + 65))
+    .join('')
+    .toLowerCase()
+  return `https://flagcdn.com/w40/${code}.png`
+}
+
 const cityOptions = computed(() =>
   db.value.cities.map(city => ({
     label: (locale.value === 'en' ? city.nameEn : city.nameRu) ?? t(city.labelKey),
     flag: city.flag,
+    flagSrc: flagImage(city.flag),
     description: city.active
       ? t(city.countryKey)
       : `${t(city.countryKey)} · ${t('cities.comingSoon')}`,
@@ -40,7 +51,12 @@ const selectedCityOption = computed(() => cityOptions.value.find(city => city.va
   >
     <template #default>
       <span class="flex min-w-0 items-center gap-1.5">
-        <span class="shrink-0 text-base leading-none">{{ selectedCityOption?.flag }}</span>
+        <img
+          v-if="selectedCityOption?.flagSrc"
+          :src="selectedCityOption.flagSrc"
+          alt=""
+          class="h-3.5 w-5 shrink-0 rounded-xs object-cover"
+        >
         <span class="truncate text-sm font-medium">{{ selectedCityOption?.label }}</span>
         <UIcon
           name="i-lucide-chevrons-up-down"
@@ -50,7 +66,12 @@ const selectedCityOption = computed(() => cityOptions.value.find(city => city.va
     </template>
     <template #item="{ item }">
       <div class="flex min-w-0 items-center gap-2">
-        <span class="shrink-0 text-base leading-none">{{ item.flag }}</span>
+        <img
+          v-if="item.flagSrc"
+          :src="item.flagSrc"
+          alt=""
+          class="h-4 w-6 shrink-0 rounded-xs object-cover"
+        >
         <span class="truncate">{{ item.label }}</span>
       </div>
     </template>

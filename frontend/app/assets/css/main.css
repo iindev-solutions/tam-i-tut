@@ -53,14 +53,10 @@ code {
   pointer-events: none;
 }
 
-/* Overlays appear/disappear instantly: some WebView guests freeze CSS keyframe
-   animations on the first frame, leaving an open sheet translated off-screen
-   (looks like a dead click) or a closed sheet stuck on screen. A near-zero
-   duration still fires animationend, so mount/unmount lifecycle stays intact. */
-[data-slot="content"],
-[data-slot="overlay"] {
-  animation-duration: 0.01ms !important;
-}
+/* Overlay animations run normally again (the global 0.01ms kill made the
+   city slideover and modals pop in with no transition). The closed-state
+   visibility guard above covers the frozen-exit-frame WebView bug the kill
+   used to work around. */
 
 @media (prefers-reduced-motion: reduce) {
   *,

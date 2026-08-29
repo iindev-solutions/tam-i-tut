@@ -39,7 +39,7 @@ Phase 3 production hardening DONE in code and verified live (rate limiting, gran
 
 1. founder: set `CLOUDFLARE_API_TOKEN` repo secret (auto-deploy) and `SUPABASE_DB_URL` + R2 secrets (backups); rotate the Telegram bot token that was shared in chat
 2. founder: live Telegram test of the full session exchange (5.5)
-3. Menu translator Phase A SHIPPED (spec -> dictionary 50 dishes + function + scan UI; CI green). Founder: set GEMINI_API_KEY to switch it on. Phase B (curation admin) next
+3. Menu translator LIVE end-to-end (global one-tap /scan + venue-bound cache; Gemini key set, e2e green). Phase B (curation admin) next
 4. Phase 4: sourced food expansion DONE (23 places, 23 photos); closed pilot with metrics next
 5. Optional follow-ups: R2 restore drill
 

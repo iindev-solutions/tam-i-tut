@@ -3,7 +3,7 @@
 ## Stop Point
 
 - Phases 0-3 DONE. Phase 4 content shipped (23 venues/23 photos). Menu translator Phase A shipped per vault/wiki/architecture/menu-translator-spec.md: dictionary (50 dishes, 46 sourced photos), menu-translate Edge Function (Gemini 2.0 Flash, rate-limited, cache-first), scan page, pgTAP 014, contract tests (47 frontend tests). CI green on d757f3a (db + frontend); hosted has migrations + function. Feature is OFF until GEMINI_API_KEY secret is set (graceful not_configured today).
-- Live UI: food list (23 photo cards) + /places/[slug] detail (map embed) + /places/[slug]/menu; back navigation is the native Telegram BackButton everywhere; slideover/modal animations restored; city select uses flagcdn images.
+- Live UI: home with global one-tap menu scan card (/scan), food list (23 photo cards), /places/[slug] detail (map embed + menu button), /places/[slug]/menu; back navigation is the native Telegram BackButton everywhere; slideover/modal animations restored; city select uses flagcdn images. Menu translator fully live (Gemini key set, e2e 4/4 dictionary match, venue-bound AND global scans).
 
 ## Next Step
 

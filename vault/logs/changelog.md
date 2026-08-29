@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-29 - Global one-tap scan (founder UX change)
+
+### Done
+
+- Founder: scanning must not require navigating into a venue - "one button, tap, photograph, get the menu". Implemented:
+  - Migration 038: `menus.place_id` nullable; venue-less scans are readable by any authenticated user (RLS rewritten with a left join to places).
+  - `menu-translate`: place_id optional. Venue check / cache lookup / per-venue photo path apply only to venue-bound scans; global photos land under `global/`.
+  - `MenuScanPanel.vue` component extracted (shared scan UI: camera -> skeleton -> list -> dish sheet); used by the venue page (`/places/[slug]/menu`, still caches into the venue) and the new global `/scan` page.
+  - Home screen: prominent camera card between hero and category grid -> `/scan`.
+- Global e2e (no place_id) against hosted: scan 200, 4/4 dictionary matches. Artifacts cleaned (DB rows + test user; one orphaned private photo object left - harmless, Storage API delete needs creds the CLI does not expose).
+
 ## 2026-08-29 - Menu translator LIVE: working Gemini key, full e2e green
 
 ### Done

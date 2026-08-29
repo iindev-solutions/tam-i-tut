@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-29 - Dish dictionary 50/50 with photos (representative-photo rule)
+
+### Done
+
+- Founder decision: for the dish dictionary a representative photo beats an empty placeholder - newcomers want to know how a dish roughly looks. The four remaining nulls filled (migration 040): banh-canh-cha-ca -> bánh canh bowl, thit-nuong -> bún thịt nướng bowl (grilled pork prominent), mi-xao -> Vietnamese wok-fried noodles street shot, tra-chanh -> iced lime tea. All Wikimedia Commons, hotlink-verified (206 image/jpeg, spaced requests - Wikimedia 429s bursts). Hosted verified: 50 dishes / 50 photos.
+- Generator PHOTOS map + seed.sql mirror updated; migration 037 (already applied) untouched per immutability rule. Commit `feat(dishes): representative photos for the last 4 gaps` (1b47485).
+
+### Rule change
+
+- Dictionary dish photos: representative family shots are acceptable (founder-approved). The no-fabrication rule stays for venue data, prices, and hours.
+
 ## 2026-08-29 - City dropdown: upcoming cities visible but disabled
 
 ### Done

@@ -89,18 +89,7 @@ Deno.serve(async (request: Request) => {
 
   const result = await validateInitData(initData, botToken)
   if (!result.ok || !result.user || !result.initDataHash) {
-    return json({ error: result.error ?? 'invalid' }, 401)
-  }
-
-  // Replay protection: unique insert fails when this initData was already used.
-  const nonceResponse = await fetch(`${supabaseUrl}/rest/v1/telegram_bootstrap_nonces`, {
-    method: 'POST',
-    headers: {
-      apikey: serviceRoleKey,
-      Authorization: `Bearer ${serviceRoleKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal'
-    },
+    return json({ error: result.error ?? 'invalid' }, 401),
     body: JSON.stringify({
       init_data_hash: result.initDataHash,
       telegram_user_id: result.user.id

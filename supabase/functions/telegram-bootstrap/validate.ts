@@ -55,6 +55,10 @@ export async function deriveSecret(botToken: string): Promise<Uint8Array> {
 /**
  * Validates raw Telegram.WebApp.initData against the bot token.
  * Checks: structure, HMAC-SHA256 signature, auth_date freshness window.
+ *
+ * Data-check string (verified against a live client, 2026-08-29): values are
+ * URL-DECODED, all fields except `hash` participate - the ECDSA `signature`
+ * field STAYS in the check string despite what some drafts claim.
  */
 export async function validateInitData(
   initData: string,
@@ -64,22 +68,13 @@ export async function validateInitData(
 ): Promise<ValidationResult> {
   if (!initData || !initData.includes('=')) return { ok: false, error: 'malformed' }
 
-  // The data-check string is built from the RAW pairs exactly as received
-  // (Telegram does not URL-decode values before signing). Splitting manually
-  // (not via URLSearchParams) preserves the encoded form; only the `user`
-  // value is decoded afterwards to read the identity object.
-  const rawPairs = initData
-    .split('&')
-    .map((pair) => {
-      const eq = pair.indexOf('=')
-      return eq === -1 ? [pair, ''] : [pair.slice(0, eq), pair.slice(eq + 1)]
-    })
-    .filter(([key]) => key !== 'hash' && key !== 'signature')
-
-  const received = params_get(initData, 'hash') ?? params_get(initData, 'signature')
+  const params = new URLSearchParams(initData)
+  const received = params.get('hash')
   if (!received) return { ok: false, error: 'malformed' }
 
-  const checkString = rawPairs
+  params.delete('hash')
+
+  const checkString = [...params.entries()]
     .map(([key, value]) => `${key}=${value}`)
     .sort()
     .join('\n')
@@ -97,7 +92,7 @@ export async function validateInitData(
     return { ok: false, error: 'bad_signature' }
   }
 
-  const authDate = Number(params_get(initData, 'auth_date') ?? 0)
+  const authDate = Number(params.get('auth_date') ?? 0)
   const age = nowSeconds - authDate
   if (!authDate || age > maxAgeSeconds || age < -MAX_FUTURE_SKEW_SECONDS) {
     return { ok: false, error: 'expired' }
@@ -105,7 +100,7 @@ export async function validateInitData(
 
   let user: TelegramInitUser | undefined
   try {
-    const rawUser = params_get(initData, 'user')
+    const rawUser = params.get('user')
     if (rawUser) user = JSON.parse(rawUser) as TelegramInitUser
   } catch {
     return { ok: false, error: 'malformed' }
@@ -113,15 +108,4 @@ export async function validateInitData(
   if (!user?.id) return { ok: false, error: 'missing_user' }
 
   return { ok: true, user, authDate, initDataHash: computed }
-}
-
-/** Single-value query getter that decodes percent-encoding (no side effects). */
-function params_get(initData: string, key: string): string | null {
-  const pair = initData.split('&').find(part => part.startsWith(`${key}=`))
-  if (!pair) return null
-  try {
-    return decodeURIComponent(pair.slice(key.length + 1)).replace(/\+/g, ' ')
-  } catch {
-    return pair.slice(key.length + 1)
-  }
 }

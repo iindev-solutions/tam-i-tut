@@ -7,17 +7,12 @@ import { MAX_AGE_SECONDS, MAX_FUTURE_SKEW_SECONDS, deriveSecret, validateInitDat
 const BOT_TOKEN = '123456:TEST-TOKEN'
 const NOW = 1_800_000_000
 
-// Telegram signs over the RAW (still URL-encoded) k=v pairs sorted by key.
+// Verified against a live client: values are URL-DECODED, only hash is excluded -
+// the ECDSA signature field stays in the check string.
 const sign = (initData: string, token: string): string => {
-  const checkString = initData
-    .split('&')
-    .map((pair) => {
-      const eq = pair.indexOf('=')
-      return eq === -1 ? pair : pair.slice(0, eq) + '=' + pair.slice(eq + 1)
-    })
-    .filter(pair => !pair.startsWith('hash=') && !pair.startsWith('signature='))
-    .sort()
-    .join('\n')
+  const params = new URLSearchParams(initData)
+  params.delete('hash')
+  const checkString = [...params.entries()].map(([k, v]) => `${k}=${v}`).sort().join('\n')
   const secret = createHmac('sha256', 'WebAppData').update(token).digest()
   return createHmac('sha256', secret).update(checkString).digest('hex')
 }
@@ -40,7 +35,7 @@ describe('telegram initData validation', () => {
   // (and user.photo_url with escaped slashes) - the raw-pair signature must
   // verify, which the old decoded-check-string implementation rejected.
   it('verifies a percent-encoded Telegram-style initData', async () => {
-    const raw = 'query_id=AAFjUEFUAgAAAGNQ&user=%7B%22id%22%3A5708533859%2C%22first_name%22%3A%22ssslava%22%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Fpic.svg%22%7D&auth_date=1788000000'
+    const raw = 'query_id=AAFjUEFUAgAAAGNQ&user=%7B%22id%22%3A5708533859%2C%22first_name%22%3A%22ssslava%22%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Fpic.svg%22%7D&auth_date=1788000000&signature=LLA7Hammx4Tc3kufADUPQJ3pMMpx5hYt_LXILw1lVFBjnEcZa7nE6HXcrkoh4L8ZHwpTgYi5wjwAn0MjY2ZjCw'
     const hash = sign(raw, BOT_TOKEN)
     const result = await validateInitData(raw + '&hash=' + hash, BOT_TOKEN, 1788000600)
     expect(result.ok).toBe(true)

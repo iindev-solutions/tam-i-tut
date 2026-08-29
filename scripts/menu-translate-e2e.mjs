@@ -17,11 +17,9 @@ const params = new URLSearchParams({
   auth_date: String(Math.floor(Date.now() / 1000)),
   user: JSON.stringify({ id: 777000777, first_name: 'E2E', language_code: 'ru' })
 })
-// Real WebApp initData is an &-separated query string; the signing
-// data_check_string is the raw (still encoded) k=v pairs sorted and joined
-// with newlines (no hash) - exactly what the server-side validator rebuilds.
-params.sort()
-const dataCheckString = params.toString().split('&').sort().join('\n')
+// Verified algorithm: values are URL-DECODED, only hash is excluded (the
+// ECDSA signature field, when present, stays in the check string).
+const dataCheckString = [...params.entries()].map(([k, v]) => `${k}=${v}`).sort().join('\n')
 const hash = createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
 const initData = `${params.toString()}&hash=${hash}`
 

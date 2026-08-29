@@ -96,7 +96,7 @@ export default defineNuxtPlugin(() => {
       })
       if (!response.ok) {
         const body = await response.json().catch(() => ({}))
-        const raw = body?.debug_raw ? ':' + String(body.debug_raw).slice(0, 400) : ''
+        const raw = body?.debug_raw ? ':' + String(body.debug_raw) + '|computed=' + (body?.debug_computed ?? '') : ''
         bootstrapError.value = (body?.error ?? String(response.status)) + raw
         return
       }

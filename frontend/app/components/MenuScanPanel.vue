@@ -12,6 +12,15 @@ import type { MenuItemView } from '~/composables/useMenuTranslator'
 const props = defineProps<{ placeId: string | null }>()
 
 const { t } = useI18n()
+const { authenticated, bootstrapError } = useAuth()
+const nuxtApp = useNuxtApp()
+const reconnecting = shallowRef(false)
+const reconnect = async () => {
+  reconnecting.value = true
+  const reconnectFn = nuxtApp.$tmaReconnect as (() => Promise<void>) | undefined
+  if (reconnectFn) await reconnectFn()
+  reconnecting.value = false
+}
 const { state, sections, menuStatus, hasSession, scan } = useMenuTranslator(() => props.placeId)
 const fileInput = shallowRef<HTMLInputElement | null>(null)
 
@@ -32,9 +41,30 @@ watch(() => props.placeId, () => {
 
 <template>
   <div class="space-y-6">
-    <!-- No session (plain browser): scanning is TMA-only. -->
+    <!-- No session: scanning needs the TMA bootstrap. Shows the exact
+         bootstrap failure code so a stuck session is diagnosable. -->
     <UAlert
-      v-if="!hasSession"
+      v-if="!authenticated && bootstrapError"
+      icon="i-lucide-unplug"
+      color="warning"
+      variant="soft"
+      :title="t('menu.unauthorizedTitle')"
+      :description="`${t('menu.bootstrapFailed')} [${bootstrapError}]`"
+    >
+      <template #actions>
+        <UButton
+          size="xs"
+          color="neutral"
+          variant="outline"
+          :loading="reconnecting"
+          :label="t('menu.reconnect')"
+          @click="reconnect"
+        />
+      </template>
+    </UAlert>
+
+    <UAlert
+      v-else-if="!hasSession"
       icon="i-lucide-lock"
       color="warning"
       variant="soft"

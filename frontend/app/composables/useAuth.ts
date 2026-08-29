@@ -13,9 +13,11 @@ export interface TmaSessionState {
  */
 export function useAuth() {
   const session = useState<TmaSessionState | null>('tma-session', () => null)
+  /** Last bootstrap failure code from the telegram plugin (null = none). */
+  const bootstrapError = useState<string | null>('tma-bootstrap-error', () => null)
 
   const authenticated = computed(() => session.value?.authenticated === true)
   const telegramId = computed(() => session.value?.telegramId ?? null)
 
-  return { session, authenticated, telegramId }
+  return { session, authenticated, telegramId, bootstrapError }
 }

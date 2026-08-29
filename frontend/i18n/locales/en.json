@@ -439,6 +439,8 @@
       "salad": "Salad"
     },
     "globalTitle": "Menu scan",
-    "globalDescription": "One tap: photograph any Vietnamese menu - get translations, prices, and dish photos."
+    "globalDescription": "One tap: photograph any Vietnamese menu - get translations, prices, and dish photos.",
+    "bootstrapFailed": "Could not connect the session. Tap Reconnect or reopen the app from the bot.",
+    "reconnect": "Reconnect"
   }
 }

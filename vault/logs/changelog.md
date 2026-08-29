@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-29 - bad_signature ROOT CAUSE fixed: raw-pair data-check string
+
+### Done
+
+- Founder pasted the on-screen debug (`query_id=...&user=%7B%22id%22...` percent-encoded) - **root cause**: real initData values arrive URL-ENCODED, and the old validator built the data-check string from URLSearchParams, i.e. from DECODED values. Telegram signs the RAW encoded pairs, so every real client failed HMAC while the synthetic e2e passed (it decoded identically on both sides - blind spot).
+- `validate.ts` rebuilt: data-check string from the raw k=v pairs exactly as received (manual split, URLSearchParams gone); only `user` is decoded afterwards. `signature` still excluded with `hash`.
+- Regression test with the real-client shape (percent-encoded user, escaped slashes in photo_url) added; 12 initData tests green, frontend 48/48. e2e script now signs over raw pairs too; full e2e green against hosted; temp debug echo removed and redeployed. Commit `fix(bootstrap): sign check string over raw initData pairs` (65250c7).
+
+### Lesson
+
+- When a validator passes synthetic tests but fails real clients, compare the EXACT byte shape of real input early - the debug echo of raw initData pinpointed it in one iteration.
+
 ## 2026-08-29 - TMA stuck session: hardened bootstrap + on-screen diagnostics
 
 ### Done

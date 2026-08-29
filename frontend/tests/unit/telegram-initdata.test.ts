@@ -7,11 +7,17 @@ import { MAX_AGE_SECONDS, MAX_FUTURE_SKEW_SECONDS, deriveSecret, validateInitDat
 const BOT_TOKEN = '123456:TEST-TOKEN'
 const NOW = 1_800_000_000
 
+// Telegram signs over the RAW (still URL-encoded) k=v pairs sorted by key.
 const sign = (initData: string, token: string): string => {
-  const params = new URLSearchParams(initData)
-  params.delete('hash')
-  params.delete('signature')
-  const checkString = [...params.entries()].map(([k, v]) => `${k}=${v}`).sort().join('\n')
+  const checkString = initData
+    .split('&')
+    .map((pair) => {
+      const eq = pair.indexOf('=')
+      return eq === -1 ? pair : pair.slice(0, eq) + '=' + pair.slice(eq + 1)
+    })
+    .filter(pair => !pair.startsWith('hash=') && !pair.startsWith('signature='))
+    .sort()
+    .join('\n')
   const secret = createHmac('sha256', 'WebAppData').update(token).digest()
   return createHmac('sha256', secret).update(checkString).digest('hex')
 }
@@ -30,6 +36,17 @@ const buildInitData = (user: object, authDate: number, extra: Record<string, str
 const user = { id: 8815351798, first_name: 'Slava', username: 'slava', language_code: 'ru' }
 
 describe('telegram initData validation', () => {
+  // Regression for the real-client bug: Telegram sends values percent-encoded
+  // (and user.photo_url with escaped slashes) - the raw-pair signature must
+  // verify, which the old decoded-check-string implementation rejected.
+  it('verifies a percent-encoded Telegram-style initData', async () => {
+    const raw = 'query_id=AAFjUEFUAgAAAGNQ&user=%7B%22id%22%3A5708533859%2C%22first_name%22%3A%22ssslava%22%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Fpic.svg%22%7D&auth_date=1788000000'
+    const hash = sign(raw, BOT_TOKEN)
+    const result = await validateInitData(raw + '&hash=' + hash, BOT_TOKEN, 1788000600)
+    expect(result.ok).toBe(true)
+    expect(result.user?.id).toBe(5708533859)
+  })
+
   it('accepts fresh correctly signed initData and extracts the user', async () => {
     const initData = buildInitData(user, NOW - 100)
     const result = await validateInitData(initData, BOT_TOKEN, NOW)

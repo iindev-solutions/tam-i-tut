@@ -18,9 +18,10 @@ const params = new URLSearchParams({
   user: JSON.stringify({ id: 777000777, first_name: 'E2E', language_code: 'ru' })
 })
 // Real WebApp initData is an &-separated query string; the signing
-// data_check_string is the sorted k=v list joined with newlines (no hash).
+// data_check_string is the raw (still encoded) k=v pairs sorted and joined
+// with newlines (no hash) - exactly what the server-side validator rebuilds.
 params.sort()
-const dataCheckString = [...params.entries()].map(([k, v]) => `${k}=${v}`).join('\n')
+const dataCheckString = params.toString().split('&').sort().join('\n')
 const hash = createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
 const initData = `${params.toString()}&hash=${hash}`
 

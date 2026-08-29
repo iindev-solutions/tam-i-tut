@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-29 - Dish cards: live Commons photo gallery
+
+### Done
+
+- Founder idea: dish card works like an image search - description on top, several photos below. Implemented via `useDishGallery` composable: Wikimedia Commons API search (no key, `origin=*` CORS; Vietnamese dish name first, English fallback, 640px thumbs, jpeg/png only), cached in sessionStorage per dish - Commons is queried once per dish per app session, not per click.
+- UI: "Как это выглядит" grid (3-column thumbnails, skeleton while loading) under the description in the dish sheet; dictionary dishes only (AI free-text names are search noise); curated dictionary photo stays the hero. Commons probe verified server-side (6 results for "Pho bo Vietnam").
+- Gates: lint, vitest 48/48, typecheck, build, deployed. Commit `feat(menu): live photo gallery on dish cards` (b78b68d).
+
+### Note
+
+- Commons search relevance is imperfect (e.g. "Pho Lai" temple pages can leak in for pho queries) - acceptable for the pilot; a relevance pass (filter by dish-family keywords, or Google CSE as a second source) is the follow-up if it bothers users.
+
 ## 2026-08-29 - Dish dictionary 50/50 with photos (representative-photo rule)
 
 ### Done

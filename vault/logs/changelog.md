@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-29 - TMA stuck session: hardened bootstrap + on-screen diagnostics
+
+### Done
+
+- Founder report: opened via Telegram, scan page still says a Telegram session is required. Server evidence: zero nonce rows for a real user -> the bootstrap request never completed, and the plugin swallowed every failure silently (one-shot, no retry, empty initData possible right after ready()).
+- Plugin hardened: polls for initData up to ~3s, logs each failure path, records the failure code in `tma-bootstrap-error`; exposes `$tmaReconnect`. Scan panel shows the exact failure code with a Reconnect button (commit c3c7933). Deployed.
+
+### Diagnose-next
+
+- If the user reopens and still fails, the alert now carries the code (`no_init_data`, `bad_signature`, `rate_limited`, `replay`, ...) - that pins the cause. Fallback suspects: rotated bot token vs the deployed secret (token confirmed still valid today), or a Telegram client that injects initData later than the plugin's window.
+
 ## 2026-08-29 - Global one-tap scan (founder UX change)
 
 ### Done

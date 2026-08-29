@@ -15,3 +15,4 @@ skills/
 bot-token.txt
 .wrangler/
 .zcode/
+.tmp_*

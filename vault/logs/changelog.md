@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-29 - Scan "no connection" fixed: missing CORS preflight
+
+### Done
+
+- Founder in the real TMA: scan died with the network-error message. Root cause: `menu-translate` had no OPTIONS handler and no Access-Control headers - the WebView's preflight for the `Content-Type: application/json` POST failed before the function ran. Node e2e never performs preflight, which is why it passed while the real client failed. Fixed with the standard CORS/OPTIONS handling (same shape as telegram-bootstrap); OPTIONS probe now returns 200 + ACAO.
+- Client: photo-processing failures are now their own state (`menu.errors.photo`) instead of masking as network errors. Commit `fix(menu): CORS preflight + separated photo-error state` (90841e5). Full e2e re-run green after the change; artifacts cleaned.
+
+### Lesson
+
+- Any new Edge Function called from the browser needs CORS/OPTIONS from day one - node-level e2e cannot catch its absence. Bootstrap had it, menu-translate did not.
+
 ## 2026-08-29 - Signature algorithm VERIFIED against live client data
 
 ### Done

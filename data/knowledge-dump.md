@@ -45,3 +45,10 @@
 # Pass #3 (source: Inside Danang analog) — скам-схемы (обмен/крипта/онлайн-работа/девушки/жильё/виза/посылки/сети), симки и операторы, закон о правах, цены аренды байков
 
 (в миграции 045 переработано: safety-scam-exchange/jobs/classifieds, money-sim-internet, transport-license, transport-bike update)
+
+
+---
+
+# Pass #4 (founder task) — визаран через Лао-Бао (самостоятельный + Щелкун/Innam/Lynn Visa), коворкинги (HI4, Coworking Danang, Seaview, Ace, Beans-нет), рабочие кафе (Good Folks, Nu Arrows)
+
+(миграция 046: гайд transport-visarun + 6 places; Beans исключён по вердикту founder: «ужасно скучно»)

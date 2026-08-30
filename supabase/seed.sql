@@ -595,3 +595,39 @@ update public.dishes set gallery_urls = '{https://upload.wikimedia.org/wikipedia
 update public.dishes set gallery_urls = '{https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Orange_juice_1_edit1.jpg/960px-Orange_juice_1_edit1.jpg,https://upload.wikimedia.org/wikipedia/commons/8/8b/Orange_juice_in_a_glass.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cocktail_of_passion_fruit_juice_and_watermelon_juice_in_a_glass.jpg/960px-Cocktail_of_passion_fruit_juice_and_watermelon_juice_in_a_glass.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Pineapple_Juice_fruits-465832.jpg/960px-Pineapple_Juice_fruits-465832.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Mango_juice_at_Agasi%2C_Lajpat_Nagar%2C_Delhi_%282025-10-04%29.jpg/960px-Mango_juice_at_Agasi%2C_Lajpat_Nagar%2C_Delhi_%282025-10-04%29.jpg}' where slug = 'nuoc-ep';
 update public.dishes set gallery_urls = '{https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ch%E1%BA%A3_c%C3%A1_L%C3%A3_V%E1%BB%8Dng_H%C3%A0_N%E1%BB%99i.jpg/960px-Ch%E1%BA%A3_c%C3%A1_L%C3%A3_V%E1%BB%8Dng_H%C3%A0_N%E1%BB%99i.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ch%E1%BA%A3_c%C3%A1_t%E1%BA%A1i_Ph%E1%BB%91_ch%E1%BA%A3_c%C3%A1_H%C3%A0_N%E1%BB%99i.jpg/960px-Ch%E1%BA%A3_c%C3%A1_t%E1%BA%A1i_Ph%E1%BB%91_ch%E1%BA%A3_c%C3%A1_H%C3%A0_N%E1%BB%99i.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Grilled_fish_%40_Cha_Ca_La_Vong.jpg/960px-Grilled_fish_%40_Cha_Ca_La_Vong.jpg,https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Ch%E1%BA%A3_c%C3%A1_L%C3%A3_V%E1%BB%8Dng_H%C3%A0_N%E1%BB%99i_th%C3%A1ng_2_n%C4%83m_2018_%281%29.jpg/960px-Ch%E1%BA%A3_c%C3%A1_L%C3%A3_V%E1%BB%8Dng_H%C3%A0_N%E1%BB%99i_th%C3%A1ng_2_n%C4%83m_2018_%281%29.jpg}' where slug = 'cha-ca';
 -- END dish gallery mirror
+
+-- BEGIN district enrichment mirror (migration 044)
+-------------------------------------------------------
+
+update public.district_localizations set best_for = '{beach,expat,family}' where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f02';
+
+update public.district_localizations set
+	summary = 'Внутри - My An, самый популярный у экспатов район: всё близко пешком, сотни кафе и ресторанов мировых кухонь, коворкинги, спа, персонал говорит по-английски. Апартаментов много, но цены выше. Khue My и Hoa Hai тише: резорты у моря, местные кафе, несколько выходов к пляжу. FPT City - новые дома вокруг кампуса FPT, заметно спокойнее и дешевле, лучше с байком.',
+	area = 'My An - Khue My - Hoa Hai - FPT City'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f02' and language = 'ru';
+
+update public.district_localizations set
+	summary = 'Home to My An - the most popular expat area: everything walkable, hundreds of cafes and world-cuisine restaurants, coworkings and spas, English-speaking staff. Plenty of apartments, but prices run higher. Khue My and Hoa Hai are quieter: seaside resorts, local cafes, several beach access points. FPT City - new housing around the FPT campus, notably calmer and cheaper, best with a bike.',
+	area = 'My An - Khue My - Hoa Hai - FPT City'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f02' and language = 'en';
+
+update public.district_localizations set
+	summary = 'Пляжный район от My An до Леди Будды: туристические кварталы плавно переходят в местную жизнь. Кафе, бары и спа у моря; рынки, Vincom Plaza, супермаркеты Coopmart и VinMart. Апартаментов много. Чем дальше к горе - тем меньше иностранцев и туристической инфраструктуры. Удобен и для отпуска, и для долгой жизни, особенно с байком.',
+	area = 'Побережье Mỹ Khê - Sơn Trà'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f01' and language = 'ru';
+
+update public.district_localizations set
+	summary = 'Beach district from My An up to the Lady Buddha: tourist blocks fade into local life. Seaside cafes, bars and spas; markets, Vincom Plaza, Coopmart and VinMart supermarkets. Plenty of apartments. The closer to the mountain, the fewer foreigners and tourist infrastructure. Works both for a holiday and long-term living, especially with a bike.',
+	area = 'My Khe coast - Son Tra'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f01' and language = 'en';
+
+update public.district_localizations set
+	summary = 'Центр за рекой Хан: офисы, музеи, консульства, аэропорт и ж/д вокзал. Настоящий местный Дананг - суетно и много байков, поэтому новожилам бывает непривычно; чаще выбирают те, кто уже пожил в городе. Супермаркеты GO! (Big C), Lotte Mart, MM Mega Market.',
+	area = 'Центр за рекой Хан'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f03' and language = 'ru';
+
+update public.district_localizations set
+	summary = 'The center across the Han river: offices, museums, consulates, the airport and train station. Real local Da Nang - busy and bike-heavy, which can overwhelm newcomers; usually picked by those who have already lived here a while. Supermarkets: GO! (Big C), Lotte Mart, MM Mega Market.',
+	area = 'Center across the Han river'
+where district_id = 'b937c18f-2b7e-4a5a-8f3d-9a1c5d6e8f03' and language = 'en';
+-- END district enrichment mirror

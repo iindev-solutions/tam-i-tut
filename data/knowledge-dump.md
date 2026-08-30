@@ -31,3 +31,10 @@
 - 🌐 до Лао Бао (пограничный пункт для визарана)
 
 📍 Автовокзал на карте (https://maps.app.goo.gl/xbDUbdLbGpc2pLyDA)
+
+
+---
+
+# Pass #2 (source: Inside Danang analog) — districts My An/SonTra/KhueMy-HoaHai/HaiChau/FPT, menu decoder, drinks, health
+
+(исходник заархивирован в истории чата; в миграции 044 переработан)

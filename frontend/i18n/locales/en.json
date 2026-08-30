@@ -444,5 +444,8 @@
     "bootstrapFailed": "Could not connect the session. Tap Reconnect or reopen the app from the bot.",
     "reconnect": "Reconnect",
     "galleryTitle": "What it looks like"
+  },
+  "common": {
+    "demoBanner": "Demo data. Open the app from the bot to see live content."
   }
 }

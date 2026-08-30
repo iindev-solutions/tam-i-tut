@@ -42,11 +42,35 @@ export function useDb() {
   const loading = useState<boolean>('content-db-loading', () => false)
   const source = ref<'mock' | 'supabase'>('mock')
 
+  // Raw PostgREST rows kept between refreshes: a locale switch re-maps them
+  // instantly instead of re-fetching six tables (mappers hold both languages).
+  const raw = useState('content-db-raw', () => null as {
+    cities: CityRow[]
+    categories: CategoryRow[]
+    places: PlaceRow[]
+    localizations: PlaceLocalizationRow[]
+    reviews: ReviewRow[]
+    guides: GuideRow[]
+  } | null)
+
   const applyMock = () => {
     // Same reference as the mock store: admin publish/moderate mutations keep
     // flowing to user pages in prototype mode.
     db.value = mock.db.value
     source.value = 'mock'
+  }
+
+  const remapFromRaw = () => {
+    // Supabase mode only: the mock store handles its own reactivity.
+    if (source.value !== 'supabase' || !raw.value) return
+    db.value = {
+      ...db.value,
+      cities: mapCities(raw.value.cities),
+      categories: mapCategories(raw.value.categories),
+      places: mapPlaces(raw.value.places, raw.value.localizations, locale.value),
+      reviews: mapReviews(raw.value.reviews),
+      guides: mapGuides(raw.value.guides)
+    }
   }
 
   const refresh = async () => {
@@ -86,14 +110,15 @@ export function useDb() {
         if (result.error) throw result.error
       }
 
-      db.value = {
-        ...db.value,
-        cities: mapCities(cities.data as CityRow[]),
-        categories: mapCategories(categories.data as CategoryRow[]),
-        places: mapPlaces(places.data as PlaceRow[], localizations.data as PlaceLocalizationRow[], locale.value),
-        reviews: mapReviews(reviews.data as ReviewRow[]),
-        guides: mapGuides(guides.data as GuideRow[])
+      raw.value = {
+        cities: cities.data as CityRow[],
+        categories: categories.data as CategoryRow[],
+        places: places.data as PlaceRow[],
+        localizations: localizations.data as PlaceLocalizationRow[],
+        reviews: reviews.data as ReviewRow[],
+        guides: guides.data as GuideRow[]
       }
+      remapFromRaw()
       source.value = 'supabase'
     } catch (error) {
       // RLS read failed (e.g. stale session, network): keep the app usable.
@@ -104,9 +129,11 @@ export function useDb() {
     }
   }
 
-  // Re-read when the TMA session lands (telegram plugin) or the locale changes.
+  // Session lands (telegram plugin) -> fetch; locale changes -> instant re-map.
   const { session: tmaSession } = useAuth()
-  watch([tmaSession, locale], refresh, { immediate: true })
+  watch(tmaSession, refresh)
+  watch(locale, remapFromRaw)
+  void refresh()
 
   return { db, loading, source, refresh }
 }

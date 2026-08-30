@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-30 - Knowledge-dump pipeline; transport pass #1
+
+### Done
+
+- New workflow per founder: raw knowledge blocks (sourced e.g. from the Inside Danang analog bot) go into `data/knowledge-dump.md` (--- separated); the agent rewrites them into TAMITUT voice - never verbatim, facts kept, wording ours, bilingual ru/en - and distributes them to the right tables. Founder does zero distribution work.
+- Pass #1 shipped (migration 043, applied to hosted): NEW guide `transport-traffic` (traffic etiquette); `transport-airport` updated (airport + train station in the center, taxi 120-160k to the beach, Google Maps links in notes); `transport-bus` updated (city routes + intercity from the remote bus station: Hue, Lao Bao visa run). All published + under_review. Transport category now has 5 guides.
+- Founder-side action for competitor research: open the bot on the phone, screenshot the main screens, drop them in chat - faster than any automation.
+
 ## 2026-08-30 - Curated dish galleries shipped (live search idea retired)
 
 ### Done

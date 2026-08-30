@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-30 - Knowledge pass #4: visa run + work spots
+
+### Done
+
+- **transport-visarun** (new guide, ru/en): Da Nang -> Lao Bao one-day run. DIY: morning bus from the central station gate 1 (~250k VND), ~5h ride, ~1 km to the crossing (bike taxi 30k), both checkpoints ~1h; Russians need no Lao visa; $40-120 total depending on the new visa. Services: Lynn Visa (14 Mac Cuu office, bus Tue/Fri 7:00, transfer 750-850k VND, with 90-day e-visa from ~2.75M VND), plus Щелкун and Innam - RU-community services living in Telegram chats (not web-indexed). Cross-ref to the prepayment-scam guide. Facts from WebSearch (lynnvisa.com, za7gorami.ru, vietnam-visa.ru, VC.ru).
+- **6 new work places** (places table, cafe type, ru/en, addresses from maps research): HI4 Coffee & Workspace (24/7, free entry, huge - founder verdict "лучше всех"; 2 locations: Mai Thuc Lan + Nguyen Van Troi), Coworking Danang (My An, intimate format, location via GMaps), Seaview Coworking (Son Tra, 9th floor Waikiki hotel, ocean view, 24/7), ACE Coworking (Bac My An, 3 floors, wellness), Good Folks Cafe (84 Hoang Ke Viem, 4.7 Tripadvisor) and Nu Arrows Cafe (51 Duong Tu Quan). Beans excluded per founder verdict. All published - visible in food/cafe pages and scanner.
+- Migration 046 applied to hosted and verified (visarun 2 rows, 6 places, 12 localizations). Learned: place_localizations has no note column - extra info goes into summary.
+
 ## 2026-08-30 - Knowledge pass #3: scam guides, SIM/internet, license law
 
 ### Done

@@ -123,6 +123,13 @@ export const CATEGORY_UI: Record<string, CategoryUi> = {
     countKind: 'guides',
     guideCategory: 'safety'
   },
+  health: {
+    labelKey: 'home.health',
+    icon: 'i-lucide-heart-pulse',
+    to: '/categories/health',
+    countKind: 'guides',
+    guideCategory: 'health'
+  },
   culture: { labelKey: 'home.culture', icon: 'i-lucide-book-open', to: '/categories/culture', countKind: 'none' }
 }
 

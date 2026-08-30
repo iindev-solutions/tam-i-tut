@@ -16,7 +16,8 @@
     "inCity": "in {city}",
     "scanTitle": "Menu, translated",
     "scanDescription": "Photo a menu -> translations and dish photos in seconds. Works at any venue.",
-    "scanCta": "Scan a menu"
+    "scanCta": "Scan a menu",
+    "health": "Health"
   },
   "housing": {
     "kicker": "Housing",
@@ -447,5 +448,12 @@
   },
   "common": {
     "demoBanner": "Demo data. Open the app from the bot to see live content."
+  },
+  "health": {
+    "kicker": "Health",
+    "title": "Healthcare in Da Nang",
+    "description": "Hospitals, pharmacies, insurance and dentists - verified info for foreigners.",
+    "tipsTitle": "Guides",
+    "empty": "Guides are coming soon."
   }
 }

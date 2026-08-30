@@ -7,7 +7,7 @@ export type ContentStatus = 'published' | 'draft'
 export type ReviewStatus = 'pending' | 'approved' | 'rejected'
 export type PlaceType = 'cafe' | 'street' | 'market' | 'restaurant'
 export type PriceLevel = 'budget' | 'average' | 'above'
-export type GuideCategory = 'transport' | 'money' | 'safety'
+export type GuideCategory = 'transport' | 'money' | 'safety' | 'health'
 
 export interface CityEntry {
   id: string

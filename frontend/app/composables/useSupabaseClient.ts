@@ -12,8 +12,8 @@ let cached: SupabaseClient | null | undefined
 export function getSupabaseClient(): SupabaseClient | null {
   if (cached !== undefined) return cached
   const config = useRuntimeConfig()
-  const url = config.public.supabaseUrl
-  const anonKey = config.public.supabaseAnonKey
+  const url = (config.public as Record<string, string | undefined>).supabaseUrl ?? ''
+  const anonKey = (config.public as Record<string, string | undefined>).supabaseAnonKey
   cached = url && anonKey ? createClient(url, anonKey) : null
   return cached
 }

@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import logo from '~/assets/brand/logo.svg'
 
 const { t } = useI18n()
+const buildTime = String((useRuntimeConfig().public as Record<string, string | undefined>).buildTime ?? '')
 const { db } = useDb()
 
 const categories = computed(() => db.value.categories)
@@ -120,7 +121,7 @@ const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
           >
             {{ t('privacy.link') }}
           </NuxtLink>
-          <span>{{ t('home.footer') }}</span>
+          <span>build {{ buildTime.slice(0, 16).replace('T', ' ') }} UTC · {{ t('home.footer') }}</span>
         </span>
       </footer>
     </div>

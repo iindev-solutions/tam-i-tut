@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-31 - Health as its own category
+
+### Done
+
+- Founder call: medicine is its own category, not a Safety subtopic.
+- DB (two pushes - PG forbids using a just-added enum value in the same transaction, FK triggers count as usage): 047 `ALTER TYPE category_slug ADD VALUE 'health'`; 048 categories row (`health`, sort 7, events -> 8) + moved the four medical guides to `category_slug='health'` with `health-*` slugs (health-hospitals/pharmacies/insurance/dentist). Safety back to its 6 core guides.
+- Frontend: `GuideCategory` + `health`, CATEGORY_UI tile (heart-pulse icon, guides count), new `/categories/health` page (header + guide cards, same pattern as safety), ru/en i18n. Home grid renders the tile straight from the categories table.
+- Hosted verified: categories health/7 active, 8 health guide rows. Gates: lint, 48/48, typecheck, build, deployed.
+
+### Gotchas
+
+- `ALTER TYPE ... ADD VALUE` + FK triggers: the categories INSERT (text column) still tripped 55P04 in the same transaction - the RI check casts the value to the enum. Always split enum-value migrations into their own push.
+
 ## 2026-08-31 - Build stamp in footer; prod freshness verified
 
 ### Done

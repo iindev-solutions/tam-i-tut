@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-31 - Build stamp in footer; prod freshness verified
+
+### Done
+
+- Founder reported medicine guides missing on prod. Server side verified correct end-to-end: a real bootstrap session sees all 10 safety guides through the exact RLS query the app uses. The gap is client-side (mock mode or stale WebView bundle).
+- Added a **build stamp to the home footer** (`build YYYY-MM-DD HH:MM UTC` from `runtimeConfig.public.buildTime`, evaluated at build time) - anyone can now verify they run the fresh bundle. Prod confirmed serving today's stamp.
+- Fixed the type fallout: `runtimeConfig.public` reads (buildTime, supabaseUrl/anonKey) need explicit casts now that public has a typed key; a missing `const buildTime` (patch had half-applied due to CRLF line endings) briefly broke SSR render - caught, fixed, deployed clean. Commit cf03090.
+
+### Founder check
+
+- Fully close and reopen the mini app -> footer must show today's build time; safety page must show 10 guides (hospitals, pharmacies, insurance, dentist, scams...). If footer shows an old time, the WebView cached the old bundle - reopen again / clear the mini app.
+
 ## 2026-08-31 - Improvement pass: demo-banner, instant locale switch
 
 ### Done

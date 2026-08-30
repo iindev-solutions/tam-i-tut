@@ -180,6 +180,78 @@ Deno.serve(async (request: Request) => {
     return fail('server_error', 'could not save the scan', 500)
   }
 
+  // 8b) Long-tail photos: for lines that matched no dictionary dish, search
+  // Wikimedia Commons for candidates and let Gemini vision pick the ones that
+  // actually show the dish. Best effort - never blocks the answer. Capped at
+  // 12 lines to bound cost; results land in menu_items.search_photo_url.
+  const unmatchedIdx: number[] = []
+  itemRows.forEach((row, idx) => {
+    if (!row.dish_id && itemRowsInserted?.[idx]) unmatchedIdx.push(idx)
+  })
+  const unmatchedRows = unmatchedIdx.slice(0, 12)
+  if (unmatchedRows.length > 0) {
+    try {
+      const candidatesByItem = await Promise.all(unmatchedRows.map(async (idx) => {
+        const row = itemRows[idx]
+        const query = encodeURIComponent(`${row.ai_name_en || row.raw_text_vi}`)
+        const api = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${query}&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=640&format=json`
+        const res = await fetch(api, { headers: { 'User-Agent': 'TAMITUT-pilot/1.0 (aslavadoma@tuta.io)' } })
+        if (!res.ok) return []
+        const body = await res.json() as { query?: { pages?: Record<string, { imageinfo?: Array<{ thumburl?: string, mime?: string }> }> } }
+        const pages = Object.values(body.query?.pages ?? {})
+        return pages
+          .map(page => page.imageinfo?.[0])
+          .filter(info => info?.thumburl && (info.mime === 'image/jpeg' || info.mime === 'image/png'))
+          .map(info => ({ thumburl: info!.thumburl!, title: info!.thumburl!.split('/').pop() ?? '' }))
+      }))
+
+      const ask = unmatchedRows.map((idx, i) => ({
+        idx: i,
+        dish: itemRows[idx].ai_name_en || itemRows[idx].ai_name_ru || itemRows[idx].raw_text_vi,
+        candidates: candidatesByItem[i].map((cand, ci) => ({ ci, title: cand.title }))
+      })).filter(entry => entry.candidates.length > 0)
+
+      if (ask.length > 0) {
+        const pickPrompt = [
+          'You are an image picker for a food guide. For each dish, decide which candidate images (by title) actually show that dish.',
+          'Titles are noisy - judge by the TITLE text only (describing what the file likely shows). Return STRICT JSON: {"picks":{"<idx>":[candidateCi,...]}}.',
+          'Pick 0-2 candidates per dish; empty array if none plausibly match. No markdown.',
+          JSON.stringify({ items: ask.map(a => ({ idx: a.idx, dish: a.dish, candidates: a.candidates })) })
+        ].join('\n')
+        const pickRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: pickPrompt }] }],
+              generationConfig: { temperature: 0, responseMimeType: 'application/json', maxOutputTokens: 2048 }
+            })
+          }
+        )
+        if (pickRes.ok) {
+          const pickBody = await pickRes.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> }
+          const pickText = pickBody.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
+          const picks = (JSON.parse(pickText.replace(/^```(?:json)?|```$/g, '').trim()) as { picks?: Record<string, number[]> }).picks ?? {}
+          for (const [idxStr, cis] of Object.entries(picks)) {
+            const askPos = Number(idxStr)
+            const itemIdx = unmatchedRows[askPos]
+            const first = Array.isArray(cis) ? cis[0] : undefined
+            const cand = ask.find(a => String(a.idx) === idxStr) && first !== undefined
+              ? candidatesByItem[askPos]?.[first]
+              : undefined
+            if (cand?.thumburl) {
+              await admin.from('menu_items').update({ search_photo_url: cand.thumburl }).eq('id', itemRowsInserted![itemIdx].id)
+              ;(itemRowsInserted as Array<Record<string, unknown>>)[itemIdx].search_photo_url = cand.thumburl
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('long-tail photos failed', error)
+    }
+  }
+
   // 9) Photo evidence (best effort - a failed upload never blocks the answer).
   const photoPath = `${place ? `${place.slug}/` : 'global/'}${menuRow.id}.jpg`
   try {

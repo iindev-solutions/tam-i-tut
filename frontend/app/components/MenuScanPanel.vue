@@ -214,8 +214,8 @@ watch(() => props.placeId, () => {
         >
           <div class="relative h-48 w-full overflow-hidden rounded-xl bg-elevated">
             <img
-              v-if="activeItem.photoUrl"
-              :src="activeItem.photoUrl"
+              v-if="activeItem.photoUrl || activeItem.searchPhotoUrl"
+              :src="activeItem.photoUrl || activeItem.searchPhotoUrl"
               :alt="activeItem.name"
               class="h-full w-full object-cover"
             >

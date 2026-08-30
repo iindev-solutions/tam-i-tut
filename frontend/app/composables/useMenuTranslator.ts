@@ -18,6 +18,7 @@ export interface MenuItemView {
   name: string
   summary: string
   photoUrl: string | null
+  searchPhotoUrl: string | null
   galleryUrls: string[]
   tags: string[]
   isDictionary: boolean
@@ -43,6 +44,7 @@ interface RawMenuItemRow {
   ai_name_en: string | null
   ai_summary_ru: string | null
   ai_summary_en: string | null
+  search_photo_url: string | null
   status: 'ai' | 'verified' | 'rejected'
 }
 
@@ -130,6 +132,7 @@ export function useMenuTranslator(placeId: () => string | null) {
           name: (loc?.name ?? (lang === 'en' ? item.ai_name_en : item.ai_name_ru)) ?? item.raw_text_vi,
           summary: loc?.summary ?? ((lang === 'en' ? item.ai_summary_en : item.ai_summary_ru) ?? ''),
           photoUrl: entry?.row.photo_url ?? null,
+          searchPhotoUrl: item.search_photo_url,
           galleryUrls: entry?.row.gallery_urls ?? [],
           tags: entry?.row.tags ?? [],
           isDictionary: Boolean(loc),

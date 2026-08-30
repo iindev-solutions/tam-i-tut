@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-08-30 - Knowledge pass #2: districts enriched, health + food-vocabulary guides
+
+### Done
+
+- Founder pasted the Inside Danang districts + health + menu-vocabulary dump; all rewritten in TAMITUT voice (facts kept, wording ours), ru/en, migration 044 applied to hosted:
+  - **Districts**: ngu-hanh-son summary now covers My An (expat hub) + Khue My/Hoa Hai + FPT City, best_for gained `expat`; son-tra enriched (markets, Vincom Plaza, Coopmart/VinMart); hai-chau enriched (center across the river, museums/consulates, GO!/Lotte Mart/MM Mega). Mirror block in seed.sql - fresh stacks keep enrichment despite seed running after migrations.
+  - **Safety page (now 7 guides)**: new safety-hospitals (Family/199/Vinmec, prices, 24/7 ER, 115), safety-pharmacies (Pharmacity/FPT Long Chau, per-piece pills, active-ingredient tip), safety-insurance (expat recommendations), safety-dentist (Dr. Bão/Dana Dental + price ballparks). Map links live in notes.
+  - **Food guides** (category food exists in enum; UI slot lands with the scanner): food-menu-decoder (ingredients + cooking methods + chay) and food-drinks (sign vocabulary).
+- Bumps fixed along the way: best_for lives on district_localizations (not districts), district_localizations has no updated_at column, dangling commas after the bulk edit - each caught by db push errors and fixed before apply. Seed mirror: 7 update statements.
+
 ## 2026-08-30 - Knowledge-dump pipeline; transport pass #1
 
 ### Done

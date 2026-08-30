@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-30 - Knowledge pass #3: scam guides, SIM/internet, license law
+
+### Done
+
+- Migration 045 applied to hosted, all rewritten in TAMITUT voice:
+  - **safety-scam-exchange**: DM-exchanger scenarios, honest-exchanger checklist (live chats, in-person, filled profile), VPBank no-fee ATM, crypto P2P rule
+  - **safety-scam-jobs**: crypto-job smart-contract drain, Instagram/TikTok ads, "pretty girl" prepayment plays
+  - **safety-scam-classifieds**: housing-deposit, visa-service, parcel-carry, "services network" scams - general no-prepayment rule
+  - **money-sim-internet**: SIM at phone stores vs airport, e-SIM, Viettel/Mobifone/Vinaphone vs Vietnamobile, ~150k VND tariff, home internet via building manager
+  - **transport-license**: >50cc / >4kW needs IDP; legal no-license options (<50cc scooters, VinFast e-bikes)
+  - **transport-bike updated**: Cho Thue Xe May/Morobike search, model prices, 100-180k/day, expat-chat rental links
+- Safety now 10 guides, money 5, transport 6. Source archived in data/knowledge-dump.md (pass #3).
+
 ## 2026-08-30 - Knowledge pass #2: districts enriched, health + food-vocabulary guides
 
 ### Done

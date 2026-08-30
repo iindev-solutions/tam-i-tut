@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-31 - Improvement pass: demo-banner, instant locale switch
+
+### Done
+
+- **Demo-banner**: mock fallback was silent - pilot users in a plain browser (or with a dead bootstrap) saw prototype data with zero signal. Layout now shows an honest strip ("Демо-данные. Открой приложение из бота...") whenever content comes from mocks. Closes audit item #1 (silent mock-fallback UX).
+- **Instant locale switch**: `useDb` refetched six tables on every locale change although mappers hold both languages. Raw PostgREST rows now live in state; locale change re-maps instantly, fetch only on session landing. Mock mode untouched (admin live-demo mutations still flow).
+- **zod** removed (declared, never imported) - package-lock slimmed.
+- Gates: lint, vitest 48/48, typecheck, build, deployed (home 200). Commit 589a58a.
+
 ## 2026-08-30 - Knowledge pass #4: visa run + work spots
 
 ### Done

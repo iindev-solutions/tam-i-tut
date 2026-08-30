@@ -38,3 +38,10 @@
 # Pass #2 (source: Inside Danang analog) — districts My An/SonTra/KhueMy-HoaHai/HaiChau/FPT, menu decoder, drinks, health
 
 (исходник заархивирован в истории чата; в миграции 044 переработан)
+
+
+---
+
+# Pass #3 (source: Inside Danang analog) — скам-схемы (обмен/крипта/онлайн-работа/девушки/жильё/виза/посылки/сети), симки и операторы, закон о правах, цены аренды байков
+
+(в миграции 045 переработано: safety-scam-exchange/jobs/classifieds, money-sim-internet, transport-license, transport-bike update)

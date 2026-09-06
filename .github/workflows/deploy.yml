@@ -68,12 +68,16 @@ jobs:
       # Migrations + functions deploy only with a SUPABASE_ACCESS_TOKEN repo
       # secret; until then they stay manual (db push / functions deploy from a
       # linked CLI) - visible here as skipped steps, not silent drift.
+      # The job default working-directory is frontend/ - the Supabase CLI must
+      # run from the repo root where supabase/ lives.
       - name: Apply database migrations
         if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        working-directory: .
         run: npx -y supabase db push --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Deploy Edge Functions
         if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        working-directory: .
         run: |
           npx -y supabase functions deploy telegram-bootstrap --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
           npx -y supabase functions deploy menu-translate --project-ref "$SUPABASE_PROJECT_REF"

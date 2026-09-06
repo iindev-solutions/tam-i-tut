@@ -87,7 +87,7 @@ async function compressPhoto(file: File): Promise<string> {
 }
 
 export function useMenuTranslator(placeId: () => string | null) {
-  const { locale } = useI18n()
+  const { locale, t } = useI18n()
   const client = getSupabaseClient()
   const { session } = useAuth()
   const supabaseUrl = useRuntimeConfig().public.supabaseUrl
@@ -122,7 +122,6 @@ export function useMenuTranslator(placeId: () => string | null) {
     // the model's section title on each row (migration 051). Rebuild grouped
     // sections from consecutive title runs; pre-051 scans (null titles) fall
     // back to one unnamed section.
-    const { t } = useI18n()
     const lang = locale.value === 'en' ? 'en' : 'ru'
     const items: Array<MenuItemView & { sectionTitle: string | null }> = rawItems
       .filter(item => item.status !== 'rejected')

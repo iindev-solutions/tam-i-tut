@@ -79,9 +79,11 @@ select throws_like(
 );
 
 -- Metrics: own events insertable, foreign identity not, reads blocked.
+-- Unique event name: the real app_events table carries live traffic, so
+-- every count in this suite must scope to this fixture.
 select lives_ok(
 	$$
-	insert into public.app_events (event, metadata) values ('place_view', '{"slug":"test-curation-pub"}'::jsonb)
+	insert into public.app_events (event, metadata) values ('test_event_probe', '{"slug":"test-curation-pub"}'::jsonb)
 	$$,
 	'authenticated user can log an event (user_id defaults to self)'
 );
@@ -139,9 +141,9 @@ select lives_ok(
 );
 
 select is(
-	(select count(*) from public.app_events),
+	(select count(*) from public.app_events where event = 'test_event_probe'),
 	1::bigint,
-	'admin can read the event log'
+	'admin can read the event log (fixture-scoped)'
 );
 
 select * from finish();

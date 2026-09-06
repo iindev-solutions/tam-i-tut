@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-09-07 (audit re-run) - two self-introduced bugs caught and fixed
+
+### Found + fixed
+
+- **useI18n() inside buildSections** (menu sections change): useI18n must be
+  called in setup context; inside the scan-time function it throws, which
+  would have broken every menu scan. Hoisted `t` to the composable scope.
+  Frontend redeployed (version 2fdbc08f) - the broken bundle lived on prod
+  for ~an hour.
+- **deploy.yml working-directory**: job default `frontend/` also applied to
+  the supabase CLI steps (db push / functions deploy) - the CLI looks for
+  supabase/ relative to cwd and would fail. Steps pinned to repo root.
+- **pgTAP 015 data pollution** (same class as 007): its app_events count
+  assumed an empty table; live traffic already broke it. Counts now scope to
+  a unique `test_event_probe` fixture event. All 15 suites PASS on hosted
+  after the re-run.
+
+### Audit sweep results (everything else checked clean)
+
+- seed.sql is non-destructive (no deletes/truncates; guides come from
+  migrations) - fresh stacks get all content.
+- telegram-bot function verify_jwt=false is intentional (signed Telegram
+  webhook payload, no Supabase JWT); deploy.yml deploys it correctly.
+- useHousingDb still has an internal mock fallback, but it is unreachable on
+  prod browsers (layout bot-gate hides content) and only reachable as an
+  error-path fallback inside Telegram with a live session - accepted.
+- No other consumers of the useDb `source` state besides the layout gate.
+
 ## 2026-09-07 (later) - Audit fixes shipped
 
 ### Scope (from the full-audit findings)

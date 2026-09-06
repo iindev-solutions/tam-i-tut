@@ -65,22 +65,13 @@ const refreshLabels = () => {
   })
 }
 
-onMounted(() => {
-  if (!mapEl.value) return
-
-  map = L.map(mapEl.value, {
-    center: [16.055, 108.2],
-    zoom: 12,
-    scrollWheelZoom: false,
-    zoomControl: true,
-    attributionControl: false
-  })
-
-  tileLayer = L.tileLayer(colorMode.value === 'dark' ? TILE_URLS.dark : TILE_URLS.light, {
-    subdomains: TILE_SUBDOMAINS,
-    maxZoom: 19
-  }).addTo(map)
-
+const buildLayer = () => {
+  if (!map) return
+  if (geoLayer) {
+    geoLayer.remove()
+    geoLayer = null
+  }
+  if (!props.districts.length) return
   const collection = { type: 'FeatureCollection', features: props.districts } as FeatureCollection
 
   geoLayer = L.geoJSON(collection, {
@@ -104,7 +95,33 @@ onMounted(() => {
 
   map.fitBounds(geoLayer.getBounds().pad(0.08))
   applySelection()
+}
+
+onMounted(() => {
+  if (!mapEl.value) return
+
+  map = L.map(mapEl.value, {
+    center: [16.055, 108.2],
+    zoom: 12,
+    scrollWheelZoom: false,
+    zoomControl: true,
+    attributionControl: false
+  })
+
+  tileLayer = L.tileLayer(colorMode.value === 'dark' ? TILE_URLS.dark : TILE_URLS.light, {
+    subdomains: TILE_SUBDOMAINS,
+    maxZoom: 19
+  }).addTo(map)
+
+  buildLayer()
 })
+
+// Districts load asynchronously from Supabase - rebuild the overlay when they
+// land (mount can easily win the race on a cold WebView).
+watch(
+  () => props.districts,
+  () => buildLayer()
+)
 
 watch(
   () => props.selectedId,

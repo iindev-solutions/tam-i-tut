@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-07 (founder pass 4) - map race fix; FPT City prices
+
+### Found + fixed
+
+- **"No polygons on the map"**: HousingTileMap built its overlay ONCE at mount
+  while districts load asynchronously - a cold WebView could lose that race
+  and the map stayed empty forever (no watch on the prop). The overlay now
+  rebuilds whenever the districts prop changes, with fitBounds + selection
+  reapplied. Verified the data path separately: with a real TMA session the
+  API returns all 8 districts as proper MultiPolygon GeoJSON.
+- **FPT City prices corrected** (migration 057, founder fact-check): studios
+  and duplexes from ~4M VND (was 6-12M), summary updated to match; ru/en.
+
+### Verified
+
+- lint / typecheck / vitest 49/49 / build PASS; config grep guard OK;
+  deployed (version 03542044); prod 200. Session-based API probe: 8/8
+  districts incl. fpt-city.
+
 ## 2026-09-07 (founder pass 3) - compact Lien Chieu / Hoa Vang; FPT City back
 
 ### Done (migration 056, applied to hosted; seed mirrored)

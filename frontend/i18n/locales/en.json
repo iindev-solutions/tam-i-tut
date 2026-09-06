@@ -208,24 +208,24 @@
     "openCategory": "Open section",
     "steps": {
       "sim": {
-        "label": "Connectivity",
-        "hint": "Viettel and Vinaphone desks at the airport: passport + about 100,000 VND for a data package"
+        "label": "Buy a local SIM",
+        "hint": "Viettel and Vinaphone counters right at the airport: passport plus about 100,000 VND for a data package"
       },
       "cash": {
-        "label": "Cash",
-        "hint": "Vietcombank and Techcombank ATMs are at the airport - withdraw dong right away"
+        "label": "Withdraw dong",
+        "hint": "Vietcombank and Techcombank ATMs are at the airport - cash solves everything from breakfast to bike taxis"
       },
       "ride": {
-        "label": "First ride",
-        "hint": "Grab to the center: 100,000-150,000 VND, a 10-15 minute drive"
+        "label": "Get into the city",
+        "hint": "Grab to the center: 100-150k VND and 10-15 minutes - it works right at the terminal"
       },
       "housing": {
-        "label": "Temporary stay",
-        "hint": "Book 2-3 days first, then pick a district on the Housing map"
+        "label": "Book a place",
+        "hint": "For the first 2-3 days; pick the area on our map in the Housing section, not by pretty photos"
       },
       "food": {
-        "label": "Food nearby",
-        "hint": "Breakfast with the locals: soup is 30-50k VND, cash only"
+        "label": "Eat something",
+        "hint": "Local breakfast: soup or rice with meat for 30-50k VND, cash only"
       }
     }
   },

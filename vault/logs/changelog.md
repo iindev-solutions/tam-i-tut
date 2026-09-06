@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-06 (late) - First-day guide redesign; demo banner diagnostics
+
+### Done
+
+- **First-day (24h) guide redesigned**: header now shows a real progress bar next to the counter; steps are numbered circles (number -> filled check when done, card border highlights when done); slimmer cards. Copy sharpened to action verbs (Buy a SIM / Withdraw dong / Get into the city / Book a place / Eat) with more concrete hints, ru + en.
+- **Demo banner now explains itself**: when the mock fallback shows, a failing TMA bootstrap appends its error code to the banner (`... [error_code]`) - distinguishes "plain browser, no session (expected)" from "Telegram client with a dead bootstrap" without devtools.
+
+### Why no medicine on PC (founder question)
+
+- Not cache. Real content is RLS-gated to authenticated sessions; a plain
+  browser has no Telegram session, so the app falls back to the prototype
+  mocks - which predate the health category, hence no medicine there. Inside
+  Telegram (phone or desktop) the bootstrap exchanges initData for a session
+  and real content loads. If the banner ever shows with an error code inside
+  Telegram, that code is the bug report.
+
+### Verified
+
+- lint, typecheck, vitest 48/48, build PASS. Deployed (version 09f60e84), prod 200.
+
 ## 2026-09-06 (night) - Guide rendering: clickable links; visa-run rewrite
 
 ### Done

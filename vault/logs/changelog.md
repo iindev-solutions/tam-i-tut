@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-06 (night) - Guide rendering: clickable links; visa-run rewrite
+
+### Done
+
+- **GuideText component** (`app/components/GuideText.vue`): guide pages rendered `summary`/`note` as dead plain text, so the Google Maps links living inside notes were not tappable. Now:
+  - `note` variant: "row | row" format becomes bullet rows; rows containing a URL become tappable link chips (map-pin icon + label + external-link icon). Emoji markers and trailing colons are stripped from labels.
+  - `summary` variant: inline prose with clickable URLs (primary underline).
+  - Applied on health / safety / transport / money guide pages (culture is i18n-static, food has its own cards).
+  - Content contract from now on: write guide notes as "row | row" rows; put links as "Label: URL" inside a row.
+- **Visa-run rewrite** (migration 050, applied to hosted): summary is now a crisp two-option intro (DIY $40-120 vs service 750-850k VND), note is a 5-step DIY plan (bus gate 1 ~250k -> 1 km to the crossing -> two checkpoints ~1h each, no Lao visa for RF -> fresh stamp at entry -> totals), plus Lynn Visa / Shchelkun / Innam rows and a Google Maps link for the central bus station. Facts unchanged from 046; trust_badge stays under_review.
+
+### Verified
+
+- lint, typecheck, vitest 48/48, build PASS. Deployed (version 489b03b8). Visarun rows confirmed updated on hosted (ru + en).
+
 ## 2026-09-06 (evening) - Footer polish + camera/gallery scan inputs
 
 ### Done

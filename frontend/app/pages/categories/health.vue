@@ -46,15 +46,15 @@ const tips = computed(() =>
                 {{ tt(tip.title) }}
               </p>
             </div>
-            <p class="text-sm leading-6 text-muted">
-              {{ tt(tip.summary) }}
-            </p>
-            <p
-              v-if="tt(tip.note)"
-              class="break-words text-xs leading-5 text-muted"
-            >
-              {{ tt(tip.note) }}
-            </p>
+            <GuideText
+              :text="tt(tip.summary)"
+              variant="summary"
+              class="text-sm leading-6 text-muted"
+            />
+            <GuideText
+              :text="tt(tip.note)"
+              variant="note"
+            />
           </div>
         </UCard>
 

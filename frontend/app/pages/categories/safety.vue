@@ -74,12 +74,15 @@ const tips = computed<GuideEntry[]>(() =>
               <p class="text-sm font-medium text-highlighted">
                 {{ tt(tip.title) }}
               </p>
-              <p class="text-xs text-muted">
-                {{ tt(tip.note) }}
-              </p>
-              <p class="text-sm leading-6 text-muted">
-                {{ tt(tip.summary) }}
-              </p>
+              <GuideText
+                :text="tt(tip.note)"
+                variant="note"
+              />
+              <GuideText
+                :text="tt(tip.summary)"
+                variant="summary"
+                class="text-sm leading-6 text-muted"
+              />
             </div>
           </UCard>
         </div>

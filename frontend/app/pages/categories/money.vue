@@ -45,12 +45,15 @@ const entries = computed<GuideEntry[]>(() =>
                 class="size-5 shrink-0 text-muted"
               />
             </div>
-            <p class="text-xs text-muted">
-              {{ tt(entry.note) }}
-            </p>
-            <p class="text-sm leading-6 text-muted">
-              {{ tt(entry.summary) }}
-            </p>
+            <GuideText
+              :text="tt(entry.note)"
+              variant="note"
+            />
+            <GuideText
+              :text="tt(entry.summary)"
+              variant="summary"
+              class="text-sm leading-6 text-muted"
+            />
           </div>
         </UCard>
       </section>

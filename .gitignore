@@ -22,3 +22,4 @@ osm-*.json
 *-osm.json
 district-polygons.json
 poly-fix.json
+rest-districts.json

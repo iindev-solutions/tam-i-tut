@@ -21,8 +21,10 @@ const place = computed(() =>
 )
 
 const approvedReviews = computed(() =>
-  db.value.reviews.filter(r => r.status === 'approved' && r.placeId === place.value?.id).length
+  db.value.reviews.filter(r => r.status === 'approved' && r.placeId === place.value?.id)
 )
+
+const formatDate = (iso: string) => iso.slice(0, 10).split('-').reverse().join('.')
 
 /** Google Maps deep link: name + area resolve reliably without stored coordinates. */
 const mapsUrl = computed(() => {
@@ -131,8 +133,8 @@ const submitReview = async () => {
           </div>
           <p class="text-sm text-muted">
             {{ t(`food.filters.${place.type}`) }} · {{ t(`food.price.${place.priceLevel}`) }}
-            <template v-if="approvedReviews > 0">
-              · {{ approvedReviews }} {{ t('food.details.reviews') }}
+            <template v-if="approvedReviews.length > 0">
+              · {{ approvedReviews.length }} {{ t('food.details.reviews') }}
             </template>
           </p>
         </header>
@@ -185,6 +187,35 @@ const submitReview = async () => {
           class="w-full"
           block
         />
+
+        <!-- Approved reviews: the trust loop has to close visibly. -->
+        <section
+          v-if="approvedReviews.length"
+          class="space-y-3"
+        >
+          <h2 class="text-lg font-semibold text-highlighted">
+            {{ t('food.details.reviewsTitle') }}
+          </h2>
+          <div
+            v-for="review in approvedReviews"
+            :key="review.id"
+            class="space-y-1.5 rounded-xl border border-default bg-elevated/50 p-4"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <span class="truncate text-sm font-medium text-highlighted">{{ review.author }}</span>
+              <span class="shrink-0 text-xs text-dimmed tabular-nums">{{ formatDate(review.createdAt) }}</span>
+            </div>
+            <span class="block whitespace-nowrap text-sm">
+              <span class="text-primary">{{ '★'.repeat(review.rating) }}</span><span class="text-dimmed/40">{{ '★'.repeat(5 - review.rating) }}</span>
+            </span>
+            <p
+              v-if="review.body"
+              class="text-sm leading-6 text-muted"
+            >
+              {{ review.body }}
+            </p>
+          </div>
+        </section>
 
         <!-- Review submission: authenticated users, pending moderation. -->
         <section class="space-y-3 rounded-xl border border-default bg-elevated/50 p-4">

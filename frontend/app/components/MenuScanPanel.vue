@@ -179,6 +179,12 @@ watch(() => props.placeId, () => {
           :ui="{ body: 'p-0' }"
           class="overflow-hidden border-default"
         >
+          <p
+            v-if="section.title"
+            class="border-b border-default bg-elevated/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-muted"
+          >
+            {{ section.title }}
+          </p>
           <ul class="divide-y divide-default">
             <li
               v-for="item in section.items"

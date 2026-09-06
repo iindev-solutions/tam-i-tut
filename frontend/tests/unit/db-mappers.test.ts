@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import { mockDb } from '~/mocks/db'
+
 import {
   CATEGORY_UI,
   CITY_UI,
@@ -117,12 +119,12 @@ describe('mapPlaces', () => {
 
 describe('mapReviews', () => {
   const rows: ReviewRow[] = [
-    { id: 'r1', place_id: 'p1', author: 'Alice', rating: 5, status: 'approved', created_at: '2026-08-01T10:00:00Z' }
+    { id: 'r1', place_id: 'p1', author: 'Alice', rating: 5, body: 'Great place', status: 'approved', created_at: '2026-08-01T10:00:00Z' }
   ]
 
   it('maps rows to the Review UI shape with empty localized text (counts only)', () => {
     expect(mapReviews(rows)).toEqual([
-      { id: 'r1', placeId: 'p1', author: 'Alice', rating: 5, text: { ru: '', en: '' }, status: 'approved' }
+      { id: 'r1', placeId: 'p1', author: 'Alice', rating: 5, text: { ru: '', en: '' }, body: 'Great place', createdAt: '2026-08-01T10:00:00Z', status: 'approved' }
     ])
   })
 })
@@ -153,8 +155,13 @@ describe('mapGuides', () => {
 })
 
 describe('static UI maps', () => {
-  it('cover every pilot city and category used by the mock contract', () => {
-    expect(Object.keys(CITY_UI)).toEqual(['da-nang', 'nha-trang', 'pattaya', 'phuket'])
-    expect(Object.keys(CATEGORY_UI)).toEqual(['housing', 'food', 'transport', 'money', 'safety', 'health', 'culture'])
+  it('cover every category used by the mock contract (1:1, order-insensitive)', () => {
+    const mockCategories = mockDb.categories.map(category => category.id).sort()
+    expect([...Object.keys(CATEGORY_UI)].sort()).toEqual(mockCategories)
+  })
+
+  it('cover every pilot city used by the mock contract (1:1, order-insensitive)', () => {
+    const mockCities = mockDb.cities.map(city => city.id).sort()
+    expect([...Object.keys(CITY_UI)].sort()).toEqual(mockCities)
   })
 })

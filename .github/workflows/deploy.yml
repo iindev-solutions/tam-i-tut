@@ -1,13 +1,23 @@
 name: Deploy
 
+# Single delivery pipeline: push to main = build + migrations + functions + frontend.
+# Prod state must always equal git state; local deploys are a fallback, not the path.
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+env:
+  SUPABASE_PROJECT_REF: tepsurbgsrivvcvizxph
+  # Mapped to job env so steps can branch on presence (secrets are not
+  # readable in `if:` conditions directly).
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
 jobs:
   deploy:
-    name: Build + Deploy to Cloudflare
+    name: Build + Deploy (DB, Functions, Frontend)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,26 +46,35 @@ jobs:
       - name: Tests
         run: npm run test
 
-      - name: Generate static build
+      # Nitro cloudflare_module build: emits .output/server/index.mjs, which is
+      # what frontend/wrangler.jsonc points at (main). The previous `generate`
+      # + `rm -rf .output/server` dance shipped a DIFFERENT artifact (static
+      # assets) than local deploys and contradicted the wrangler config.
+      - name: Build
         env:
           NUXT_PUBLIC_SUPABASE_URL: ${{ secrets.NUXT_PUBLIC_SUPABASE_URL }}
           NUXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NUXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: npm run generate
+        run: npm run build
 
-      # `nuxt generate` (cloudflare-module preset) also emits
-      # .output/server/wrangler.json with main: index.mjs and Nitro writes a
-      # redirect to it in frontend/.wrangler/deploy/config.json - wrangler
-      # then deploys the server bundle instead of the static assets and fails
-      # with "entry-point file at index.mjs was not found" (verified on run
-      # 32357758921). Remove both so the repo-root wrangler.jsonc (static
-      # assets, SPA fallback) is the only deploy config.
-      - name: Remove Nitro server deploy state
-        run: |
-          rm -rf .output/server .wrangler/deploy
-          ls .output/public/index.html
+      - name: Verify Supabase config is baked in
+        run: grep -q "supabaseUrl:\"https://" .output/server/chunks/_/nitro.mjs
 
-      - name: Deploy to Cloudflare
+      - name: Deploy frontend to Cloudflare
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy
+
+      # Migrations + functions deploy only with a SUPABASE_ACCESS_TOKEN repo
+      # secret; until then they stay manual (db push / functions deploy from a
+      # linked CLI) - visible here as skipped steps, not silent drift.
+      - name: Apply database migrations
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        run: npx -y supabase db push --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Deploy Edge Functions
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        run: |
+          npx -y supabase functions deploy telegram-bootstrap --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+          npx -y supabase functions deploy menu-translate --project-ref "$SUPABASE_PROJECT_REF"
+          npx -y supabase functions deploy telegram-bot --project-ref "$SUPABASE_PROJECT_REF"

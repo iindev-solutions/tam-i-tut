@@ -67,6 +67,8 @@ export interface Review {
   author: string
   rating: number
   text: LocalizedText
+  body: string
+  createdAt: string
   status: ReviewStatus
 }
 

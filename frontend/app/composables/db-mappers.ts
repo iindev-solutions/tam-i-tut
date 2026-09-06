@@ -66,6 +66,7 @@ export interface ReviewRow {
   place_id: string
   author: string
   rating: number
+  body: string | null
   status: ReviewStatus
   created_at: string
 }
@@ -213,6 +214,8 @@ export function mapReviews(rows: ReviewRow[]): Review[] {
     author: row.author,
     rating: row.rating,
     text: { ru: '', en: '' },
+    body: row.body ?? '',
+    createdAt: row.created_at,
     status: row.status
   }))
 }

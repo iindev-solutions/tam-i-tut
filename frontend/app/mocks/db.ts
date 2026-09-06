@@ -14,6 +14,7 @@ export const mockDb: MockDb = {
     { id: 'transport', labelKey: 'home.transport', icon: 'i-lucide-bike', to: '/categories/transport', countKind: 'guides', guideCategory: 'transport' },
     { id: 'money', labelKey: 'home.money', icon: 'i-lucide-wallet', to: '/categories/money', countKind: 'guides', guideCategory: 'money' },
     { id: 'safety', labelKey: 'home.safety', icon: 'i-lucide-shield-check', to: '/categories/safety', countKind: 'guides', guideCategory: 'safety' },
+    { id: 'health', labelKey: 'home.health', icon: 'i-lucide-heart-pulse', to: '/categories/health', countKind: 'guides', guideCategory: 'health' },
     { id: 'culture', labelKey: 'home.culture', icon: 'i-lucide-book-open', to: '/categories/culture', countKind: 'none' }
   ],
 

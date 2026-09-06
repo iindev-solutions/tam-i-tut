@@ -158,7 +158,8 @@
       "reviewDone": "Thanks! Your review was sent for moderation.",
       "reviewLogin": "Reviews are available inside the mini app.",
       "reviewError": "Could not submit the review. Please try again.",
-      "reviewNeedRating": "Pick a rating first."
+      "reviewNeedRating": "Pick a rating first.",
+      "reviewsTitle": "Reviews"
     }
   },
   "transport": {
@@ -469,10 +470,13 @@
     "bootstrapFailed": "Could not connect the session. Tap Reconnect or reopen the app from the bot.",
     "reconnect": "Reconnect",
     "galleryTitle": "What it looks like",
-    "gallery": "Or pick a photo from the gallery"
+    "gallery": "Or pick a photo from the gallery",
+    "defaultSection": "Menu"
   },
   "common": {
-    "demoBanner": "Demo data. Open the app from the bot to see live content."
+    "demoBanner": "Demo data. Open the app from the bot to see live content.",
+    "openInBotTitle": "The content lives in the bot",
+    "openInBotDesc": "Open the mini app from the bot - data is only available inside Telegram."
   },
   "health": {
     "kicker": "Health",

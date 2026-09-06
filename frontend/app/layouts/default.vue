@@ -22,10 +22,38 @@ const bannerText = computed(() => {
     >
       {{ bannerText }}
     </div>
+    <!-- Prod builds never show prototype data: without a session the user
+         gets the honest bot-gate instead. -->
+    <div
+      v-else-if="source === 'unavailable'"
+      class="flex min-h-[60vh] items-center justify-center px-6"
+    >
+      <div class="max-w-sm space-y-3 text-center">
+        <UIcon
+          name="i-lucide-send"
+          class="mx-auto size-10 text-primary"
+        />
+        <h2 class="text-xl font-semibold text-highlighted">
+          {{ t('common.openInBotTitle') }}
+        </h2>
+        <p class="text-sm leading-6 text-muted">
+          {{ t('common.openInBotDesc') }}
+        </p>
+        <p
+          v-if="bootstrapError"
+          class="font-mono text-xs text-dimmed"
+        >
+          {{ bootstrapError }}
+        </p>
+      </div>
+    </div>
     <!-- Back navigation is the Telegram native BackButton only
          (plugins/telegram.client.ts): a per-route back strip here shifted
          the whole page down on inner routes and made transitions jump. -->
-    <main class="mx-auto max-w-4xl px-4 py-4">
+    <main
+      v-else
+      class="mx-auto max-w-4xl px-4 py-4"
+    >
       <slot />
     </main>
   </div>

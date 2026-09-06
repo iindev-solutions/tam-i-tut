@@ -84,7 +84,10 @@ export default defineNuxtPlugin(() => {
     try {
       const { data: refreshed } = await client.auth.refreshSession()
       if (refreshed?.session) {
-        session.value = { telegramId: 0, authenticated: true }
+        session.value = {
+          telegramId: Number(localStorage.getItem('tamitut-tgid')) || 0,
+          authenticated: true
+        }
         bootstrapError.value = null
         return
       }
@@ -128,6 +131,9 @@ export default defineNuxtPlugin(() => {
       }
       session.value = { telegramId: payload.telegram.id, authenticated: true }
       bootstrapError.value = null
+      try {
+        localStorage.setItem('tamitut-tgid', String(payload.telegram.id))
+      } catch { /* private mode */ }
     } catch {
       bootstrapError.value = 'network'
     }

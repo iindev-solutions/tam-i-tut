@@ -166,6 +166,7 @@ Deno.serve(async (request: Request) => {
       ai_name_en: item.ai_name_en,
       ai_summary_ru: item.ai_summary_ru,
       ai_summary_en: item.ai_summary_en,
+      section_title: section.title_vi,
       confidence: item.confidence,
       status: 'ai',
       position: sectionIndex * 1000 + itemIndex
@@ -174,7 +175,7 @@ Deno.serve(async (request: Request) => {
   const { data: itemRowsInserted, error: itemsError } = await admin
     .from('menu_items')
     .insert(itemRows)
-    .select('id, menu_id, raw_text_vi, price_vnd, dish_id, ai_name_ru, ai_name_en, ai_summary_ru, ai_summary_en, confidence, status, position')
+    .select('id, menu_id, raw_text_vi, price_vnd, dish_id, ai_name_ru, ai_name_en, ai_summary_ru, ai_summary_en, section_title, confidence, status, position')
   if (itemsError) {
     console.error('menu_items insert failed', itemsError)
     return fail('server_error', 'could not save the scan', 500)

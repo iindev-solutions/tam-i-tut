@@ -10,6 +10,8 @@
 
 - 2026-09-07: bootstrap replay flake fixed (identical initData re-opens no longer 409; nonce is now a dedupe record, HMAC+freshness stay the guards) and the function redeployed; client skips bootstrap when a stored session refreshes. Founder must re-open the mini app twice to confirm live.
 
+- 2026-09-07 (audit fixes): deploy.yml rewritten (build + migrations + functions, self-skipping on missing secrets), menu section titles stored/rendered (051), approved reviews shown on place pages, prod fallback is the bot-gate screen (mocks are dev-only), bootstrap failures logged to app_events, UI-map tests derived from mocks. Founder: add repo secrets CLOUDFLARE_API_TOKEN + SUPABASE_ACCESS_TOKEN to activate CI deploy.
+
 ## Next Step
 
 1. founder: confirm the new `iind-vps` host key (it changed; SSH validation path untouched until then), set `CLOUDFLARE_API_TOKEN` (auto-deploy is the only expected-red CI item), `SUPABASE_DB_URL` + R2 secrets for backups, rotate the Telegram bot token

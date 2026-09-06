@@ -38,9 +38,25 @@ export function useDb() {
   const { locale } = useI18n()
   const mock = useMockDb()
 
-  const db = useState<MockDb>('content-db', () => structuredClone(mockDb))
+  // Prod fallback policy: mocks are a DEV-only prototype. In a production
+  // build a missing/failed session must show the honest "open from the bot"
+  // state instead of prototype data - silent mock fallback shipped stale
+  // content to prod twice before this rule existed.
+  const mockAllowed = import.meta.dev
+
+  const emptyDb = (): MockDb => ({
+    cities: [],
+    categories: [],
+    places: [],
+    guides: [],
+    contacts: [],
+    reviews: [],
+    activity: []
+  })
+
+  const db = useState<MockDb>('content-db', () => (mockAllowed ? structuredClone(mockDb) : emptyDb()))
   const loading = useState<boolean>('content-db-loading', () => false)
-  const source = ref<'mock' | 'supabase'>('mock')
+  const source = ref<'loading' | 'mock' | 'supabase' | 'unavailable'>('loading')
 
   // Raw PostgREST rows kept between refreshes: a locale switch re-maps them
   // instantly instead of re-fetching six tables (mappers hold both languages).
@@ -54,6 +70,13 @@ export function useDb() {
   } | null)
 
   const applyMock = () => {
+    if (!mockAllowed) {
+      // Prod: no honest data to show - pages render their empty states and
+      // the layout shows the "open from the bot" screen.
+      db.value = emptyDb()
+      source.value = 'unavailable'
+      return
+    }
     // Same reference as the mock store: admin publish/moderate mutations keep
     // flowing to user pages in prototype mode.
     db.value = mock.db.value
@@ -99,7 +122,7 @@ export function useDb() {
           .select('id,city_slug,slug,place_type,price_level,verified,status,updated_at,image_url')
           .eq('status', 'published'),
         client.from('place_localizations').select('place_id,language,name,area,summary').in('language', ['ru', 'en']),
-        client.from('reviews').select('id,place_id,author,rating,status'),
+        client.from('reviews').select('id,place_id,author,rating,body,status,created_at'),
         client
           .from('guide_entries')
           .select('id,category_slug,slug,title,summary,note,icon,language,status')
@@ -121,8 +144,8 @@ export function useDb() {
       remapFromRaw()
       source.value = 'supabase'
     } catch (error) {
-      // RLS read failed (e.g. stale session, network): keep the app usable.
-      console.error('[useDb] Supabase read failed, using mock fallback', error)
+      // RLS read failed (e.g. stale session, network): stay honest about it.
+      console.error('[useDb] Supabase read failed, falling back', error)
       applyMock()
     } finally {
       loading.value = false

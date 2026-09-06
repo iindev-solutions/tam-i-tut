@@ -87,8 +87,24 @@ Deno.serve(async (request: Request) => {
   const dbRetryAfter = await dbRateLimit(ip, supabaseUrl, serviceRoleKey)
   if (dbRetryAfter !== null) return rateLimitResponse(dbRetryAfter)
 
+  // Observability: validation failures are otherwise invisible (no client
+  // session, no Sentry). Fire-and-forget service-role insert; never blocks.
+  const logEvent = (event: string, metadata: Record<string, unknown>) => {
+    void fetch(`${supabaseUrl}/rest/v1/app_events`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({ user_id: null, event, metadata })
+    }).catch(() => {})
+  }
+
   const result = await validateInitData(initData, botToken)
   if (!result.ok || !result.user || !result.initDataHash) {
+    logEvent('bootstrap_error', { error: result.error ?? 'invalid', ip })
     return json({ error: result.error ?? 'invalid' }, 401)
   }
 

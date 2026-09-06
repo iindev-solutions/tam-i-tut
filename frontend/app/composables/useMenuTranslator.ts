@@ -26,7 +26,7 @@ export interface MenuItemView {
 }
 
 export interface MenuSectionView {
-  title: string
+  title: string | null
   items: MenuItemView[]
 }
 
@@ -44,6 +44,7 @@ interface RawMenuItemRow {
   ai_name_en: string | null
   ai_summary_ru: string | null
   ai_summary_en: string | null
+  section_title: string | null
   search_photo_url: string | null
   status: 'ai' | 'verified' | 'rejected'
 }
@@ -117,11 +118,13 @@ export function useMenuTranslator(placeId: () => string | null) {
   }
 
   function buildSections(rawItems: RawMenuItemRow[], dict: Map<string, { row: DishRow, loc: Map<string, DishLocalizationRow> }>): MenuSectionView[] {
-    // The function returns flat items ordered by (section*1000 + index);
-    // rebuild a single grouped list by position order. Section titles live
-    // server-side only as positions today - Phase B adds stored titles.
+    // The function returns flat items ordered by (section*1000 + index) with
+    // the model's section title on each row (migration 051). Rebuild grouped
+    // sections from consecutive title runs; pre-051 scans (null titles) fall
+    // back to one unnamed section.
+    const { t } = useI18n()
     const lang = locale.value === 'en' ? 'en' : 'ru'
-    const items: MenuItemView[] = rawItems
+    const items: Array<MenuItemView & { sectionTitle: string | null }> = rawItems
       .filter(item => item.status !== 'rejected')
       .map((item) => {
         const entry = item.dish_id ? dict.get(item.dish_id) : undefined
@@ -137,10 +140,24 @@ export function useMenuTranslator(placeId: () => string | null) {
           galleryUrls: entry?.row.gallery_urls ?? [],
           tags: entry?.row.tags ?? [],
           isDictionary: Boolean(loc),
-          status: item.status
+          status: item.status,
+          sectionTitle: item.section_title
         }
       })
-    return [{ title: 'menu', items }]
+    const sections: MenuSectionView[] = []
+    for (const item of items) {
+      const last = sections.at(-1)
+      if (last && (last.title ?? null) === (item.sectionTitle ?? null)) {
+        last.items.push(item)
+      } else {
+        sections.push({ title: item.sectionTitle, items: [item] })
+      }
+    }
+    const single = sections.at(0)
+    if (sections.length === 1 && single && !single.title) {
+      single.title = t('menu.defaultSection')
+    }
+    return sections
   }
 
   async function loadCached(placeId: string): Promise<boolean> {

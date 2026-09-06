@@ -1,5 +1,54 @@
 # Changelog
 
+## 2026-09-07 (later) - Audit fixes shipped
+
+### Scope (from the full-audit findings)
+
+- **Deploy pipeline rewritten** (`deploy.yml`): the old job did `npm run generate`
+  (STATIC build) + deleted `.output/server`, contradicting
+  `frontend/wrangler.jsonc` (`main: .output/server/index.mjs`) - it could never
+  have succeeded, so prod was always deployed manually from laptops and drifted
+  from git. New pipeline on every push to main: lint/typecheck/test ->
+  `npm run build` (Nitro server bundle, same artifact as local deploys) ->
+  verify Supabase config is baked into the bundle (grep guard) -> deploy to
+  Cloudflare -> `db push` -> deploy all three Edge Functions. Cloudflare and
+  Supabase steps self-skip when their repo secrets are absent (mapped to job
+  env because secrets are unreadable in `if:`).
+- **Menu sections restored** (migration 051 + function + client): the Gemini
+  contract returns section titles but they were dropped at persist time; the
+  client rebuilt one flat list. `menu_items.section_title` now stores them;
+  `menu-translate` persists and returns them; the client rebuilds grouped
+  sections (consecutive-title runs; pre-051 scans fall back to one "Menu"
+  section via `menu.defaultSection`). Function redeployed.
+- **Reviews are now visible** on the place page: approved reviews render as
+  cards (author, date, stars, body) above the submission form;
+  `reviews` read path extended with `body`/`created_at`; mapper + Review type
+  updated. The count in the header now derives from the same list.
+- **Honest prod fallback**: mocks are now DEV-ONLY (`import.meta.dev`). In a
+  production build a missing/failed session renders the new bot-gate screen
+  (title + description + bootstrap error code) with EMPTY data - prototype
+  content can never masquerade as real content again (this class of incident
+  happened twice). Dev prototype/admin demo unaffected.
+- **Observability**: the bootstrap function now logs validation failures into
+  `app_events` (`bootstrap_error` + error code, service-role, fire-and-forget).
+- **Test drift fixed at the root**: the UI-map test now derives its expectations
+  from the mock contract (1:1, order-insensitive) instead of hardcoded lists -
+  adding a category can no longer silently break CI. Mocks gained the `health`
+  category (prototype was missing it).
+- telegramId now persists to localStorage so the refresh-first session path
+  keeps it (was 0).
+
+### Verified
+
+- lint, typecheck, vitest 49/49, build PASS; Supabase config grep-verified in
+  the bundle. Function telegram-bootstrap redeployed (with logging); signed
+  initData e2e 200 + session sees health data. Frontend deployed
+  (version 1f8cdec2), prod 200. app_events already carries real user events
+  (menu_scan / place_view / review_submit).
+- Founder actions for the pipeline: add repo secrets `CLOUDFLARE_API_TOKEN` +
+  `SUPABASE_ACCESS_TOKEN` (project ref tepsurbgsrivvcvizxph) to activate the
+  deploy/migrations/functions steps; until then they self-skip.
+
 ## 2026-09-07 - Bootstrap replay flake fixed; function repaired + redeployed
 
 ### Found (founder: "initData works sometimes, medicine still missing")

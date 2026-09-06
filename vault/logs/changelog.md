@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-09-06 (later) - Prod demo-data root cause: wiped runtimeConfig
+
+### Found
+
+- User saw demo data on prod. The demo banner did its job: the bundle was in
+  mock mode. Root cause: the build-stamp patch (cf03090) added a SECOND
+  `runtimeConfig` block in `nuxt.config.ts`; in a JS object literal the later
+  key wins, so `supabaseUrl`/`supabaseAnonKey`/`appName` were silently wiped
+  from EVERY build since - CI builds included. This also explains the
+  2026-08-31 "medicine guides missing on prod" report (server was fine; the
+  app ran mocks). Local `.env` additionally used the old `NEXT_PUBLIC_*`
+  names, so local deploys baked empty values even before that patch.
+
+### Fixed
+
+- Merged the two `runtimeConfig` blocks into one (eslint even auto-flags the
+  duplicate now); supabase vars fall back to the legacy `NEXT_PUBLIC_*`
+  names; `.env` renamed to `NUXT_PUBLIC_*`.
+- Deploy guard: `nuxt build` now THROWS when `NUXT_PUBLIC_SUPABASE_URL` is
+  missing in a production build - a keyless prod build can never ship
+  silently again (dev/mock mode unaffected).
+- Rebuilt + redeployed (version 8e8b88a7); prod HTML payload now carries the
+  Supabase URL; lint/typecheck/tests/build all green.
+
 ## 2026-09-06 - Menu Phase B curation, review submission, pilot metrics
 
 ### Done

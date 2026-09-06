@@ -6,6 +6,8 @@
 - CI was red on main since 2026-08-29: pgTAP 010 expected active-only cities (stale after 039) and the frontend test missed the `health` category. Both fixed; all 15 pgTAP suites verified PASS on hosted via `supabase db query --linked --file` (no-Docker method; `test db` needs Docker).
 - Frontend gates green (lint, 48/48, typecheck, build); deployed to Cloudflare 2026-09-06, prod build stamp verified.
 
+- Late addendum: prod demo data root-caused and fixed - the build-stamp patch had introduced a duplicate `runtimeConfig` key that wiped the Supabase config from every build since 2026-08-31 (also the real cause of the "missing medicine guides" report). Config merged, `.env` renamed to `NUXT_PUBLIC_*`, prod build now fails loudly without the URL; redeployed and verified the URL is in the prod payload.
+
 ## Next Step
 
 1. founder: confirm the new `iind-vps` host key (it changed; SSH validation path untouched until then), set `CLOUDFLARE_API_TOKEN` (auto-deploy is the only expected-red CI item), `SUPABASE_DB_URL` + R2 secrets for backups, rotate the Telegram bot token

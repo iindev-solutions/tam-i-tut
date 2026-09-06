@@ -24,13 +24,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appName: process.env.NUXT_PUBLIC_APP_NAME || 'TAMITUT',
-      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || '',
-      supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || ''
-    }
-  },
-
-  runtimeConfig: {
-    public: {
+      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '',
       // Evaluated at build time - shown in the footer so anyone can verify
       // they are running the freshly deployed bundle.
       buildTime: new Date().toISOString()
@@ -60,6 +55,18 @@ export default defineNuxtConfig({
       // with a missing index.mjs entry point.
       deployConfig: false,
       nodeCompat: true
+    }
+  },
+
+  // Deploy guard: a production build without the Supabase config bakes the
+  // mock fallback into prod (demo data for every user). This bit us once -
+  // a duplicated runtimeConfig key silently wiped supabaseUrl while the
+  // build stayed green. Dev and mock-mode work are unaffected.
+  hooks: {
+    'build:before'() {
+      if (process.env.NODE_ENV === 'production' && !(process.env.NUXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)) {
+        throw new Error('Production build without NUXT_PUBLIC_SUPABASE_URL - set it in .env (local) or repo secrets (CI), or every user gets demo data.')
+      }
     }
   },
 

@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-09-07 (founder pass 3) - compact Lien Chieu / Hoa Vang; FPT City back
+
+### Done (migration 056, applied to hosted; seed mirrored)
+
+- **FPT City is a district again**: a focused quarter polygon around FPT
+  University, and Ngu Hanh Son's exact boundary now has that quarter
+  SUBTRACTED (st_difference) - the two never overlap.
+- **Lien Chieu shrunk to its ward polygon** (the 2025 Hanoi-side reform wards
+  Hoa Khanh / Hai Van had dragged the shape to the Hai Van pass - dropped).
+- **Hoa Vang shrunk**: Ba Na mountain ring dropped; the district keeps the
+  Hoa Vang + Hoa Tien communes (west band + the southern coastal strip).
+- Texts follow the shapes: Lien Chieu area renamed (no Hai Van pass), Hoa
+  Vang summary no longer mentions Ba Na. Seed mirrors the final hosted
+  geometries for Lien Chieu / Ngu Hanh Son (Hoa Vang / FPT City come from
+  migrations 054->056 on fresh stacks).
+
+### Verified
+
+- Hosted: 8 districts, all st_isvalid - lien-chieu 106 pts (was 321),
+  hoa-vang 170 pts / 2 rings (was 375 / 3), fpt-city back (5 pts), ngu-hanh-
+  son 50 pts with the FPT bite. lint / typecheck / vitest 49/49 / build PASS;
+  deployed (version b26ff5d6).
+
 ## 2026-09-07 (founder pass 2) - Exact district polygons from OSM; district texts refreshed
 
 ### Done

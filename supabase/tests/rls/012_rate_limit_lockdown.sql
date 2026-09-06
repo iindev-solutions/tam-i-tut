@@ -94,7 +94,7 @@ values
 select lives_ok(
 	format(
 		'insert into public.districts (city_slug, slug, sort_order, price_level, geometry)
-		 values (%L, %L, 1, %L::public.price_level, ST_GeomFromGeoJSON(%L))',
+		 values (%L, %L, 1, %L::public.price_level, st_multi(ST_GeomFromGeoJSON(%L)))',
 		'test-active-city',
 		'valid-ring-district',
 		'budget',
@@ -106,7 +106,7 @@ select lives_ok(
 select throws_ok(
 	format(
 		'insert into public.districts (city_slug, slug, sort_order, price_level, geometry)
-		 values (%L, %L, 2, %L::public.price_level, ST_GeomFromGeoJSON(%L))',
+		 values (%L, %L, 2, %L::public.price_level, st_multi(ST_GeomFromGeoJSON(%L)))',
 		'test-active-city',
 		'bowtie-district',
 		'average',

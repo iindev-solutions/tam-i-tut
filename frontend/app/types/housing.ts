@@ -35,8 +35,8 @@ export interface HousingDistrictFeature {
   type: 'Feature'
   properties: HousingDistrictProperties
   geometry: {
-    type: 'Polygon'
-    coordinates: HousingCoordinate[][]
+    type: 'Polygon' | 'MultiPolygon'
+    coordinates: HousingCoordinate[][] | HousingCoordinate[][][]
   }
 }
 

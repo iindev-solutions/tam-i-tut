@@ -1,5 +1,44 @@
 # Changelog
 
+## 2026-09-07 (founder pass 2) - Exact district polygons from OSM; district texts refreshed
+
+### Done
+
+- **Exact administrative boundaries** (migration 055 + seed mirror): the
+  hand-drawn polygons were replaced with real OSM boundaries. Source: Overpass
+  for the Da Nang relation (1891418), 2025 ward structure (Vietnam's district
+  reform - the old quan-level relations no longer exist), aggregated back into
+  the map districts: Hai Chau / Thanh Khe / Ngu Hanh Son / Son Tra are direct
+  ward shapes (+ Phường An Hải into Son Tra), Lien Chieu = Lien Chieu + Hoa
+  Khanh + Hai Van wards, Cam Le = Cam Le + Hoa Xuan, Hoa Vang = Hoa Vang + Ba
+  Na + Hoa Tien communes. Rings stitched from OSM ways (orientation-aware),
+  Douglas-Peucker simplified (~60 m), multi-ring (column widened to
+  MULTIPOLYGON; Leaflet L.geoJSON renders it natively). fpt-city removed as a
+  pseudo-district: exact boundaries put the FPT City quarter inside Ngu Hanh
+  Son, whose text now names it.
+- **District texts refreshed** from vietnamspot.ru district research,
+  rewritten in TAMITUT voice (no copy-paste), ru/en: Hai Chau (center: Han
+  market, studios 4-6M, little English, 10 min by bike to My Khe), Lien Chieu
+  (industrial north, cheapest studios 2.5-4.5M, wild Nam O beach, trucks at
+  night), Ngu Hanh Son (new towers 25-40 floors since 2022, FPT Plaza /
+  Sunrise Bay, Non Nuoc beach, schools within 3 km, FPT City quarter, need a
+  bike), Son Tra (peninsula split: My Khe noise vs quiet green north). Seed
+  mirrored 1:1 (geometries + texts) so fresh stacks keep the exact shapes.
+
+### Debug journey (for the record)
+
+- pgTAP 012 broke by the column type change (Polygon inserts) - fixed with
+  st_multi wrappers, including a format-string paren bug the first wrapper
+  introduced. All 15 suites PASS on hosted.
+- PostGIS typmod + st_isvalid lesson: makevalid + collectionextract(3)
+  composition; parens counted wrong three times before the push went green.
+
+### Verified
+
+- Hosted: 7 districts, all st_isvalid, exact shapes (son-tra 139 pts,
+  hoa-vang 375 pts / 3 rings), fpt-city gone, localizations ru+en refreshed.
+- lint / typecheck / vitest 49/49 / build PASS; deployed (version 86b06509).
+
 ## 2026-09-07 (founder pass) - Visa run category + far districts on the map
 
 ### Done (founder-reported facts baked in)

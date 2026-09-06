@@ -29,8 +29,8 @@ values
 
 insert into public.districts (id, city_slug, slug, sort_order, price_level, geometry)
 values
-	('00000000-0000-0000-0000-000000000601', 'test-active-city', 'test-district-a', 1, 'budget', ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}')),
-	('00000000-0000-0000-0000-000000000602', 'test-inactive-city', 'test-district-b', 2, 'average', ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}'));
+	('00000000-0000-0000-0000-000000000601', 'test-active-city', 'test-district-a', 1, 'budget', st_multi(ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}'))),
+	('00000000-0000-0000-0000-000000000602', 'test-inactive-city', 'test-district-b', 2, 'average', st_multi(ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}')));
 
 insert into public.district_localizations (district_id, language, name, area, rent_range, distance_to_beach, summary, best_for)
 values
@@ -75,7 +75,7 @@ select throws_like(
 	$$
 	insert into public.districts (id, city_slug, slug, sort_order, price_level, geometry)
 	values ('00000000-0000-0000-0000-000000000603', 'test-active-city', 'test-district-c', 3, 'budget',
-		ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}'))
+		st_multi(ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}')))
 	$$,
 	'%row-level security policy%',
 	'reader cannot insert districts (no insert policy)'
@@ -120,7 +120,7 @@ select is(
 with inserted as (
 	insert into public.districts (id, city_slug, slug, sort_order, price_level, geometry)
 	values ('00000000-0000-0000-0000-000000000604', 'test-active-city', 'test-district-d', 4, 'budget',
-		ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}'))
+		st_multi(ST_GeomFromGeoJSON('{"type":"Polygon","coordinates":[[[108.2,16.05],[108.21,16.05],[108.21,16.06],[108.2,16.06],[108.2,16.05]]]}')))
 	returning 1
 )
 select is(

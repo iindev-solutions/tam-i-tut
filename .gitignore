@@ -21,3 +21,4 @@ bot-token.txt
 osm-*.json
 *-osm.json
 district-polygons.json
+poly-fix.json

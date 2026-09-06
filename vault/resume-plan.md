@@ -8,6 +8,8 @@
 
 - Late addendum: prod demo data root-caused and fixed - the build-stamp patch had introduced a duplicate `runtimeConfig` key that wiped the Supabase config from every build since 2026-08-31 (also the real cause of the "missing medicine guides" report). Config merged, `.env` renamed to `NUXT_PUBLIC_*`, prod build now fails loudly without the URL; redeployed and verified the URL is in the prod payload.
 
+- 2026-09-07: bootstrap replay flake fixed (identical initData re-opens no longer 409; nonce is now a dedupe record, HMAC+freshness stay the guards) and the function redeployed; client skips bootstrap when a stored session refreshes. Founder must re-open the mini app twice to confirm live.
+
 ## Next Step
 
 1. founder: confirm the new `iind-vps` host key (it changed; SSH validation path untouched until then), set `CLOUDFLARE_API_TOKEN` (auto-deploy is the only expected-red CI item), `SUPABASE_DB_URL` + R2 secrets for backups, rotate the Telegram bot token

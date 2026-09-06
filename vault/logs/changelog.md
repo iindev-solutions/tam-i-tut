@@ -1,5 +1,44 @@
 # Changelog
 
+## 2026-09-07 - Bootstrap replay flake fixed; function repaired + redeployed
+
+### Found (founder: "initData works sometimes, medicine still missing")
+
+- Two layered bugs:
+  1. **git main had a syntactically broken `telegram-bootstrap/index.ts`** since
+     0a5500e (2026-08-29): the nonce-POST block collided with the error return
+     (`return json(...), body: ...`) - unparseable module. The hosted function
+     was still an OLDER deploy (proven: live responses carried the debug echo
+     that 0a5500e removed), so prod kept running a stale mix.
+  2. **The hard replay gate flaked real re-opens**: Telegram clients (Desktop
+     notably) re-serve the IDENTICAL initData on mini app re-opens; the second
+     bootstrap hit the unique nonce index and returned 409 replay -> client
+     fell back to mocks. With a live stored session everything looked fine,
+     hence "sometimes works, sometimes not".
+
+### Fixed
+
+- `index.ts`: syntax repaired; the nonce insert is now
+  `resolution=ignore-duplicates` (dedupe record, not a hard gate). Security
+  posture unchanged where it matters: initData stays HMAC-verified with the
+  24h freshness window, hash is cryptographically bound to the telegram user
+  (the user field is inside the signed data, so a duplicate can only be a
+  same-user re-run), per-IP rate limits remain.
+- Client plugin: **refresh-first** - if a stored session still refreshes, the
+  bootstrap (and its nonce) is skipped entirely; bootstrap runs only when
+  there is no live session.
+
+### Verified (live, hosted)
+
+- Signed-initData e2e: bootstrap 200 + session; through that session
+  categories include `health` and 8 health guide rows are visible - the data
+  path is fully green server-side.
+- **Replay regression: 3 consecutive bootstraps with the IDENTICAL initData all
+  returned 200** (previously #2+ would 409). Function redeployed
+  (--no-verify-jwt, same as before).
+- Frontend: lint, typecheck, vitest 48/48, build PASS; deployed
+  (version 348c2b9b).
+
 ## 2026-09-06 (late) - First-day guide redesign; demo banner diagnostics
 
 ### Done

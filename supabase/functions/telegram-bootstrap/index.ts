@@ -89,14 +89,30 @@ Deno.serve(async (request: Request) => {
 
   const result = await validateInitData(initData, botToken)
   if (!result.ok || !result.user || !result.initDataHash) {
-    return json({ error: result.error ?? 'invalid' }, 401),
+    return json({ error: result.error ?? 'invalid' }, 401)
+  }
+
+  // Replay record: the unique index on init_data_hash dedupes bootstrap runs.
+  // Telegram clients (Desktop in particular) re-serve the IDENTICAL initData
+  // on mini app re-opens, so a hard 409 on duplicates broke every re-open
+  // within the 3-day purge window. The hash is cryptographically bound to the
+  // user (the user field is inside the signed data), so a duplicate can only
+  // ever be a same-user re-run; the real guards stay the HMAC signature, the
+  // 24h freshness window and the per-IP rate limits.
+  const nonceResponse = await fetch(`${supabaseUrl}/rest/v1/telegram_bootstrap_nonces`, {
+    method: 'POST',
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates'
+    },
     body: JSON.stringify({
       init_data_hash: result.initDataHash,
       telegram_user_id: result.user.id
     })
   })
   if (!nonceResponse.ok) {
-    if (nonceResponse.status === 409) return json({ error: 'replay' }, 401)
     return json({ error: 'nonce_store_unavailable' }, 503)
   }
 

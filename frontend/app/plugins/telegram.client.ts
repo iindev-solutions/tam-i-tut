@@ -78,6 +78,19 @@ export default defineNuxtPlugin(() => {
     const supabaseUrl = config.public.supabaseUrl
     const client = getSupabaseClient()
     if (!supabaseUrl || !client) return
+    // A stored session that still refreshes skips the bootstrap entirely:
+    // Telegram clients may re-serve the same initData on re-opens, and a
+    // needless bootstrap call is the only thing that can fail a re-open.
+    try {
+      const { data: refreshed } = await client.auth.refreshSession()
+      if (refreshed?.session) {
+        session.value = { telegramId: 0, authenticated: true }
+        bootstrapError.value = null
+        return
+      }
+    } catch {
+      // No stored session / dead refresh token - fall through to bootstrap.
+    }
     // Some clients populate initData right after ready(): poll briefly.
     let initData = app?.initData
     for (let attempt = 0; !initData && attempt < 8; attempt++) {

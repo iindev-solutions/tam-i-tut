@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-09-07 (founder pass) - Visa run category + far districts on the map
+
+### Done (founder-reported facts baked in)
+
+- **Visa run is its own category** (migrations 052/053, the 047 two-step enum
+  pattern): `category_slug += 'visarun'`, categories row (Визаран / Visa run,
+  sort 9), the guide moved out of transport. Frontend: `GuideCategory` +
+  CATEGORY_UI tile (plane-takeoff icon) + `/categories/visarun` page +
+  ru/en i18n + mocks entry (the 1:1 UI-map test demands it). The home tile
+  renders from the categories table automatically.
+- **Visa-run content refreshed with founder-reported prices**: the Da Nang -
+  Lao Bao bus now costs 500-600k VND (was ~250k), and every checkpoint asks
+  ~50k VND "for the stamp" (exit/entry, both sides) - ~200k VND total. DIY
+  total rewritten as "~700-800k VND transport + crossings + visa price"
+  instead of the stale $40-120 estimate. ru + en.
+- **Far districts on the housing map** (migration 054):
+  - `hoa-vang` - the rural west/south band (incl. Hoa Phuoc / Hoa Tien coastal
+    communes), budget/quiet;
+  - `fpt-city` - the FPT University quarter (Hoa Quy / Hoa Hai), budget
+    rooms/apartments near campus.
+  Polygons hand-drawn against the live bounding boxes of the existing six
+  districts - no overlaps; localizations ru/en with rent ranges.
+
+### Verified
+
+- db push applied 052-054; hosted checks: visarun category row, guide moved
+  (2 rows ru+en), 2 districts + 4 localizations. lint / typecheck / vitest
+  49/49 / build PASS; config grep guard OK; deployed (version 081a989c).
+
 ## 2026-09-07 (audit re-run) - two self-introduced bugs caught and fixed
 
 ### Found + fixed

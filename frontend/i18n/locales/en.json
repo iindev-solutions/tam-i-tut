@@ -17,7 +17,8 @@
     "scanTitle": "Menu, translated",
     "scanDescription": "Photo a menu -> translations and dish photos in seconds. Works at any venue.",
     "scanCta": "Scan a menu",
-    "health": "Health"
+    "health": "Health",
+    "visarun": "Visa run"
   },
   "housing": {
     "kicker": "Housing",
@@ -484,5 +485,12 @@
     "description": "Hospitals, pharmacies, insurance and dentists - verified info for foreigners.",
     "tipsTitle": "Guides",
     "empty": "Guides are coming soon."
+  },
+  "visarun": {
+    "kicker": "Border",
+    "title": "Visa run",
+    "description": "Extend your stamp with a one-day border run: routes, prices, services - everything to know before you go.",
+    "tipsTitle": "Step by step",
+    "empty": "Guides are on the way."
   }
 }

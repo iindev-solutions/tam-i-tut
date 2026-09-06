@@ -15,6 +15,7 @@ export const mockDb: MockDb = {
     { id: 'money', labelKey: 'home.money', icon: 'i-lucide-wallet', to: '/categories/money', countKind: 'guides', guideCategory: 'money' },
     { id: 'safety', labelKey: 'home.safety', icon: 'i-lucide-shield-check', to: '/categories/safety', countKind: 'guides', guideCategory: 'safety' },
     { id: 'health', labelKey: 'home.health', icon: 'i-lucide-heart-pulse', to: '/categories/health', countKind: 'guides', guideCategory: 'health' },
+    { id: 'visarun', labelKey: 'home.visarun', icon: 'i-lucide-plane-takeoff', to: '/categories/visarun', countKind: 'guides', guideCategory: 'visarun' },
     { id: 'culture', labelKey: 'home.culture', icon: 'i-lucide-book-open', to: '/categories/culture', countKind: 'none' }
   ],
 

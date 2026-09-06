@@ -131,6 +131,13 @@ export const CATEGORY_UI: Record<string, CategoryUi> = {
     countKind: 'guides',
     guideCategory: 'health'
   },
+  visarun: {
+    labelKey: 'home.visarun',
+    icon: 'i-lucide-plane-takeoff',
+    to: '/categories/visarun',
+    countKind: 'guides',
+    guideCategory: 'visarun'
+  },
   culture: { labelKey: 'home.culture', icon: 'i-lucide-book-open', to: '/categories/culture', countKind: 'none' }
 }
 

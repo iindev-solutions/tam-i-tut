@@ -35,6 +35,18 @@ const stats = computed(() => [
     icon: 'i-lucide-message-circle',
     value: admin.reviews.value.filter(review => review.status === 'pending').length,
     labelKey: 'admin.stats.reviews'
+  },
+  {
+    id: 'menuQueue',
+    icon: 'i-lucide-clipboard-list',
+    value: admin.menuQueue.value.length,
+    labelKey: 'admin.stats.menuQueue'
+  },
+  {
+    id: 'menuScans7d',
+    icon: 'i-lucide-scan-line',
+    value: admin.menuScanCount7d.value,
+    labelKey: 'admin.stats.menuScans7d'
   }
 ])
 
@@ -118,6 +130,16 @@ const recentPlaces = computed(() => admin.places.value.slice(0, 5))
       trailing-icon="i-lucide-arrow-right"
     >
       {{ t('admin.dashboard.pendingCta') }} ({{ pendingReviews }})
+    </UButton>
+
+    <UButton
+      v-if="admin.menuQueue.value.length > 0"
+      to="/admin/menu"
+      color="primary"
+      variant="soft"
+      trailing-icon="i-lucide-arrow-right"
+    >
+      {{ t('admin.menu.queueTitle') }} ({{ admin.menuQueue.value.length }})
     </UButton>
   </div>
 </template>

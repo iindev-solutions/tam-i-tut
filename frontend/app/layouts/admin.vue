@@ -15,6 +15,7 @@ const navItems = [
   { to: '/admin/districts', labelKey: 'admin.nav.districts' },
   { to: '/admin/places', labelKey: 'admin.nav.places' },
   { to: '/admin/guides', labelKey: 'admin.nav.guides' },
+  { to: '/admin/menu', labelKey: 'admin.nav.menu' },
   { to: '/admin/reviews', labelKey: 'admin.nav.reviews' }
 ]
 

@@ -155,6 +155,6 @@ describe('mapGuides', () => {
 describe('static UI maps', () => {
   it('cover every pilot city and category used by the mock contract', () => {
     expect(Object.keys(CITY_UI)).toEqual(['da-nang', 'nha-trang', 'pattaya', 'phuket'])
-    expect(Object.keys(CATEGORY_UI)).toEqual(['housing', 'food', 'transport', 'money', 'safety', 'culture'])
+    expect(Object.keys(CATEGORY_UI)).toEqual(['housing', 'food', 'transport', 'money', 'safety', 'health', 'culture'])
   })
 })

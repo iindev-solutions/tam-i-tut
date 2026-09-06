@@ -24,6 +24,7 @@ const rows = computed(() =>
     place: review.place_name,
     author: review.author,
     rating: review.rating,
+    body: review.body,
     status: statusMap[review.status] ?? 'pending'
   }))
 )
@@ -52,6 +53,7 @@ const rows = computed(() =>
         { key: 'place', label: t('admin.columns.place') },
         { key: 'author', label: t('admin.columns.author') },
         { key: 'rating', label: t('admin.columns.rating') },
+        { key: 'body', label: t('admin.columns.text') },
         { key: 'status', label: t('admin.columns.status') },
         { key: 'actions', label: t('admin.columns.actions'), align: 'right' as const }
       ]"
@@ -65,6 +67,9 @@ const rows = computed(() =>
         <span class="whitespace-nowrap">
           <span class="text-highlighted">{{ '★'.repeat(row.rating) }}</span><span class="text-muted/40">{{ '★'.repeat(5 - row.rating) }}</span>
         </span>
+      </template>
+      <template #cell-body="{ row }">
+        <span class="block max-w-xs text-sm text-muted">{{ row.body ?? '—' }}</span>
       </template>
       <template #cell-status="{ row }">
         <StatusBadge :status="row.status" />

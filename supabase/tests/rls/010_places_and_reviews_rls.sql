@@ -4,7 +4,7 @@
 --   places         : only published rows visible
 --   place_localizations: only rows whose parent place is published
 --   reviews        : only approved rows whose parent place is published
---   cities         : only active cities visible
+--   cities         : every city visible (inactive stays readable since 039)
 -- Includes the leak guard: an approved review on a draft/archived place is hidden.
 --
 -- This file must be safe to run after seed.sql (config.toml enables the seed),
@@ -53,11 +53,13 @@ select plan(8);
 set local role authenticated;
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000301';
 
--- Cities: only the active TEST city is read (seed cities do not affect this).
+-- Cities: since migration 039 (founder request) authenticated readers see
+-- every city; inactive rows stay visible for the "coming soon" UI. Both TEST
+-- cities must therefore be visible to the reader.
 select is(
 	(select count(*) from public.cities where slug like 'test-%'),
-	1::bigint,
-	'reader sees only the active test city'
+	2::bigint,
+	'reader sees both test cities (039: inactive cities stay visible)'
 );
 
 -- Places: only the published TEST place is read.

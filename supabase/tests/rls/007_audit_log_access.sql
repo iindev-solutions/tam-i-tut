@@ -78,8 +78,11 @@ select is(
 );
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000703';
+-- Scoped to fixture IDs: on a live database the admin policy also returns
+-- real audit rows, which must not break the assertion.
 select is(
-	(select count(*) from public.audit_logs),
+	(select count(*) from public.audit_logs
+	 where actor_profile_id in ('00000000-0000-0000-0000-000000000701', '00000000-0000-0000-0000-000000000702', '00000000-0000-0000-0000-000000000704')),
 	3::bigint,
 	'admin can read all audit logs'
 );
@@ -139,7 +142,8 @@ select throws_like(
 set local role authenticated;
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000703';
 select is(
-	(select count(*) from public.audit_logs),
+	(select count(*) from public.audit_logs
+	 where actor_profile_id in ('00000000-0000-0000-0000-000000000701', '00000000-0000-0000-0000-000000000702', '00000000-0000-0000-0000-000000000704')),
 	4::bigint,
 	'audit log row count reflects the allowed staff insert only'
 );

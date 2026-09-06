@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-09-06 - Menu Phase B curation, review submission, pilot metrics
+
+### Done
+
+- **Migration 049** (`20260906090000_049_menu_curation_reviews_events.sql`, applied to hosted):
+  - moderator/admin FOR ALL policies on `menus`, `menu_items`, `dishes`, `dish_localizations` (permissive, OR'ed with 036 reader policies - admins see rejected items and draft-venue menus, the curation queue needs both).
+  - `reviews.body` free-text column + `reviews__authenticated__insert_pending` policy (authenticated users submit pending reviews on published venues only, self-approval impossible - `with check` forces status='pending').
+  - `app_events` pilot metrics table: authenticated inserts forced to own `user_id` (`default auth.uid()` + check), moderator/admin read-only, index on (event, created_at desc).
+  - pg_cron `tamitut-menu-photos-purge` (nightly 03:30): nulls `menus.photo_path` then deletes `storage.objects` older than 90 days (spec section 8 retention).
+- **Phase B curation admin** (`/admin/menu`): queue of AI menu lines that matched no dictionary dish or confidence < 60 (join menus->places for venue names); per line: link-to-dish USelect (sets dish_id + verified - benefits every future scan) or reject. Second table lists recent scans per venue with curated/total counter and verify/reopen toggle (verified menus are served cache-first without an AI call).
+- **Review submission** on `/places/[slug]`: star rating + optional text for authenticated TMA users; author from `profiles.display_name` (Telegram first_name set by bootstrap); lands pending, moderation in the existing `/admin/reviews` (now shows the body text).
+- **Pilot metrics**: `useAnalytics` composable (fire-and-forget inserts; failures swallowed). Events logged: `menu_scan` (place_id + cached flag, both cache-hit and fresh), `place_view`, `review_submit`. Dashboard gets two tiles: menu-queue size and scans (7d) + a queue CTA.
+- No-photo dish card placeholder already existed (gradient + icon + text) - left as designed.
+
+### Fixed along the way
+
+- `db-mappers.test.ts` expected the pre-health category list - the frontend CI job had been red since the health commit (16e692c).
+- **pgTAP 010 stale assertion**: expected reader to see only the active city, but migration 039 (founder request) made all cities visible for the "coming soon" UI - this had kept the CI db job red since 2026-08-29. Assertion now expects both test cities.
+- **pgTAP 007 data pollution**: admin `count(*)` over `audit_logs` includes real prod rows on the hosted DB (fails there even though CI passed). Scoped the two admin counts to fixture IDs.
+
+### Validation
+
+- Migration applied via `supabase db push --linked`; pgTAP suites can't run via `test db` here (no Docker), so they were run with `supabase db query --linked --file` (pgTAP is enabled on hosted) - all 15 suites PASS on hosted.
+- Frontend: lint PASS, vitest 48/48 PASS, typecheck PASS, build PASS. Deployed to Cloudflare (version 5ae8c984); prod home 200 with today's build stamp.
+- CI note: `npx supabase test db --linked` requires Docker locally; the `db query` method is the no-Docker equivalent (only the final statement's rows are returned, so a clean `finish()` = no failure summary = pass).
+- VPS `iind-vps` host key changed - not touched pending founder confirmation.
+
 ## 2026-08-31 - Health as its own category
 
 ### Done

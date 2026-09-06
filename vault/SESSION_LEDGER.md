@@ -2,6 +2,13 @@
 
 Short record of durable project decisions and handoffs. Detailed history lives in `vault/logs/changelog.md`.
 
+## 2026-09-06 - Phase B + Reviews + Metrics Shipped
+
+- Migration 049 on hosted: admin write policies (menus/menu_items/dishes), review `body` + authenticated pending insert, `app_events` metrics (own-user_id enforced), nightly 90-day menu-photos Storage purge.
+- `/admin/menu` curation queue + menu verify/reopen; review submission on place pages; dashboard menu-queue/scans tiles; `useAnalytics` events.
+- Root-caused CI red-on-main since 08-29: pgTAP 010 cities assertion stale after 039 + frontend test missing `health`. Both fixed; all 15 pgTAP suites PASS on hosted (run via `db query --linked --file`, no Docker needed). Frontend gates green; deployed (build stamp verified).
+- Founder next: live Telegram walk-through (session, review, scan) + curate the queue; secrets (CLOUDFLARE_API_TOKEN, backups, bot token rotation); confirm changed `iind-vps` host key.
+
 ## 2026-08-22 - Phase 3 Hardening Complete + CI Green
 
 - Resumed the uncommitted rate-limiting WIP; finished it: migration 031 locked `check_rate_limit` to service_role, edge function returns 429 + Retry-After (two-layer: in-isolate + Postgres RPC), live burst verified (10 req then 429, window resets).

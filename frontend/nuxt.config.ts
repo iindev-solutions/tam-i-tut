@@ -29,6 +29,14 @@ export default defineNuxtConfig({
     }
   },
 
+  runtimeConfig: {
+    public: {
+      // Evaluated at build time - shown in the footer so anyone can verify
+      // they are running the freshly deployed bundle.
+      buildTime: new Date().toISOString()
+    }
+  },
+
   // No X-Frame-Options / CSP frame-ancestors: the app must stay framable for the Telegram Mini App.
   routeRules: {
     '/**': {
@@ -39,15 +47,6 @@ export default defineNuxtConfig({
       }
     }
   },
-
-  runtimeConfig: {
-    public: {
-      // Evaluated at build time - shown in the footer so anyone can verify
-      // they are running the freshly deployed bundle.
-      buildTime: new Date().toISOString()
-    }
-  },
-
   compatibilityDate: '2026-01-19',
 
   nitro: {

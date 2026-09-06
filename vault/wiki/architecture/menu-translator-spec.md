@@ -1,6 +1,6 @@
 # Menu Translator — Spec (feature: "Меню с переводом")
 
-Status: DRAFT for founder review. No code written yet.
+Status: Phase A + Phase B shipped and live (dictionary, scan, curation queue, verify/reopen, Storage purge). Phase C (offline pack, QR deep link) open.
 Author: session 2026-08-29. Stack: existing (Nuxt + Supabase Edge Functions/Postgres/Storage).
 
 ## 1. Problem

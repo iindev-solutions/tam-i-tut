@@ -150,7 +150,15 @@
     "details": {
       "openMaps": "Open in Google Maps",
       "location": "How to find it",
-      "reviews": "reviews"
+      "reviews": "reviews",
+      "reviewTitle": "Leave a review",
+      "reviewHint": "Your review appears after moderation.",
+      "reviewBody": "A few words (optional)",
+      "reviewSubmit": "Submit",
+      "reviewDone": "Thanks! Your review was sent for moderation.",
+      "reviewLogin": "Reviews are available inside the mini app.",
+      "reviewError": "Could not submit the review. Please try again.",
+      "reviewNeedRating": "Pick a rating first."
     }
   },
   "transport": {
@@ -264,7 +272,8 @@
       "districts": "Districts",
       "places": "Places",
       "guides": "Guides",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "menu": "Menus"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -276,7 +285,9 @@
       "cities": "Active cities",
       "places": "Published places",
       "guides": "Guide entries",
-      "reviews": "Awaiting moderation"
+      "reviews": "Awaiting moderation",
+      "menuQueue": "Menu queue",
+      "menuScans7d": "Scans (7d)"
     },
     "columns": {
       "city": "City",
@@ -296,7 +307,9 @@
       "status": "Status",
       "updated": "Updated",
       "items": "Items",
-      "actions": "Actions"
+      "actions": "Actions",
+      "line": "Line",
+      "confidence": "Confidence"
     },
     "actions": {
       "publish": "Publish",
@@ -304,7 +317,9 @@
       "activate": "Enable",
       "deactivate": "Disable",
       "approve": "Approve",
-      "reject": "Reject"
+      "reject": "Reject",
+      "verify": "Verify",
+      "reopen": "Reopen"
     },
     "cities": {
       "subtitle": "The pilot runs in Da Nang; other cities follow in order."
@@ -361,6 +376,15 @@
       "saveError": "Save failed",
       "newDistrict": "New district",
       "editDistrict": "Edit district"
+    },
+    "menu": {
+      "subtitle": "Menu scans: curate lines and verify menus.",
+      "queueTitle": "Curation queue",
+      "menusTitle": "Scans by venue",
+      "emptyQueue": "No lines need curation.",
+      "emptyMenus": "No scans yet.",
+      "linkDish": "Link to dish",
+      "curated": "Curated lines"
     }
   },
   "privacy": {

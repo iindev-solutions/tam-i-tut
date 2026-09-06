@@ -90,6 +90,7 @@ export function useMenuTranslator(placeId: () => string | null) {
   const client = getSupabaseClient()
   const { session } = useAuth()
   const supabaseUrl = useRuntimeConfig().public.supabaseUrl
+  const { log } = useAnalytics()
 
   const state = shallowRef<MenuScanState>({ phase: 'idle' })
   const sections = ref<MenuSectionView[]>([])
@@ -179,6 +180,7 @@ export function useMenuTranslator(placeId: () => string | null) {
       const currentPlaceId = placeId()
       const hadCached = currentPlaceId ? await loadCached(currentPlaceId) : false
       if (hadCached) {
+        log('menu_scan', { place_id: currentPlaceId, cached: true })
         state.value = { phase: 'idle' }
         return
       }
@@ -208,6 +210,7 @@ export function useMenuTranslator(placeId: () => string | null) {
       const dict = await hydrateDictionary(rawItems)
       sections.value = buildSections(rawItems, dict)
       menuStatus.value = menu.status ?? 'ai'
+      log('menu_scan', { place_id: placeId(), cached: false })
       state.value = { phase: 'idle' }
     } catch {
       state.value = { phase: 'error', code: 'network' }

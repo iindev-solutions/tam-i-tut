@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, shallowRef } from 'vue'
+import { computed, onMounted, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const { db } = useDb()
 const { tt } = useLocalized()
+const { authenticated } = useAuth()
+const { log } = useAnalytics()
 
 const typeIcons: Record<string, string> = {
   cafe: 'i-lucide-coffee',
@@ -39,6 +41,51 @@ const mapsEmbedUrl = computed(() => {
 })
 
 const imageBroken = shallowRef(false)
+
+// Review submission (migration 049): authenticated TMA users drop a pending
+// review; moderation happens in /admin/reviews.
+const reviewRating = shallowRef(0)
+const reviewBody = shallowRef('')
+const reviewState = shallowRef<'idle' | 'sending' | 'done' | 'error'>('idle')
+const reviewNeedRating = shallowRef(false)
+const authorName = shallowRef<string | null>(null)
+
+onMounted(() => {
+  log('place_view', { slug: route.params.slug })
+})
+
+onMounted(async () => {
+  const client = getSupabaseClient()
+  if (!client || !authenticated.value) return
+  const { data: { user } } = await client.auth.getUser()
+  if (!user) return
+  const { data } = await client.from('profiles').select('display_name').eq('id', user.id).maybeSingle()
+  authorName.value = (data as { display_name: string | null } | null)?.display_name ?? null
+})
+
+const submitReview = async () => {
+  const client = getSupabaseClient()
+  if (!client || !place.value || reviewState.value === 'sending') return
+  if (reviewRating.value === 0) {
+    reviewNeedRating.value = true
+    return
+  }
+  reviewNeedRating.value = false
+  reviewState.value = 'sending'
+  const { error } = await client.from('reviews').insert({
+    place_id: place.value.id,
+    author: authorName.value?.trim() || 'Гость',
+    rating: reviewRating.value,
+    body: reviewBody.value.trim() || null,
+    status: 'pending'
+  })
+  if (error) {
+    reviewState.value = 'error'
+    return
+  }
+  log('review_submit', { place_id: place.value.id })
+  reviewState.value = 'done'
+}
 </script>
 
 <template>
@@ -138,6 +185,82 @@ const imageBroken = shallowRef(false)
           class="w-full"
           block
         />
+
+        <!-- Review submission: authenticated users, pending moderation. -->
+        <section class="space-y-3 rounded-xl border border-default bg-elevated/50 p-4">
+          <p class="flex items-center gap-2 text-sm font-medium text-highlighted">
+            <UIcon
+              name="i-lucide-message-circle"
+              class="size-4 text-primary"
+            />
+            {{ t('food.details.reviewTitle') }}
+          </p>
+
+          <UAlert
+            v-if="!authenticated"
+            icon="i-lucide-lock"
+            color="neutral"
+            variant="soft"
+            :description="t('food.details.reviewLogin')"
+          />
+          <UAlert
+            v-else-if="reviewState === 'done'"
+            icon="i-lucide-circle-check"
+            color="success"
+            variant="soft"
+            :description="t('food.details.reviewDone')"
+          />
+          <template v-else>
+            <div class="flex items-center gap-1">
+              <button
+                v-for="star in 5"
+                :key="star"
+                type="button"
+                class="p-0.5 transition-colors"
+                :aria-label="`${star}`"
+                @click="reviewRating = star"
+              >
+                <UIcon
+                  name="i-lucide-star"
+                  class="size-6"
+                  :class="star <= reviewRating ? 'text-primary' : 'text-dimmed'"
+                />
+              </button>
+            </div>
+            <UTextarea
+              v-model="reviewBody"
+              :placeholder="t('food.details.reviewBody')"
+              :rows="2"
+              class="w-full"
+              variant="soft"
+            />
+            <p
+              v-if="reviewNeedRating"
+              class="text-xs text-error"
+            >
+              {{ t('food.details.reviewNeedRating') }}
+            </p>
+            <UAlert
+              v-if="reviewState === 'error'"
+              icon="i-lucide-triangle-alert"
+              color="error"
+              variant="soft"
+              :description="t('food.details.reviewError')"
+            />
+            <UButton
+              color="primary"
+              variant="soft"
+              size="sm"
+              icon="i-lucide-send"
+              :label="t('food.details.reviewSubmit')"
+              :loading="reviewState === 'sending'"
+              @click="submitReview"
+            />
+            <p class="text-xs text-muted">
+              {{ t('food.details.reviewHint') }}
+            </p>
+          </template>
+        </section>
       </article>
 
       <p

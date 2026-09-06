@@ -16,3 +16,8 @@ bot-token.txt
 .wrangler/
 .zcode/
 .tmp_*
+
+# OSM/geo intermediate artifacts
+osm-*.json
+*-osm.json
+district-polygons.json

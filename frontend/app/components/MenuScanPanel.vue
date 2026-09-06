@@ -22,16 +22,21 @@ const reconnect = async () => {
   reconnecting.value = false
 }
 const { state, sections, menuStatus, hasSession, scan } = useMenuTranslator(() => props.placeId)
-const fileInput = shallowRef<HTMLInputElement | null>(null)
+// Two inputs: the capture one forces the camera app, which is flaky inside
+// the Telegram Android WebView; the plain one opens the system picker
+// (gallery, with a camera option on Android).
+const cameraInput = shallowRef<HTMLInputElement | null>(null)
+const galleryInput = shallowRef<HTMLInputElement | null>(null)
 
-const pickedFile = async (event: Event) => {
+const pickedFile = (event: Event) => {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   input.value = ''
-  if (file) await scan(file)
+  if (file) void scan(file)
 }
 
-const openPicker = () => fileInput.value?.click()
+const openCamera = () => cameraInput.value?.click()
+const openGallery = () => galleryInput.value?.click()
 
 const activeItem = shallowRef<MenuItemView | null>(null)
 watch(() => props.placeId, () => {
@@ -101,7 +106,7 @@ watch(() => props.placeId, () => {
           v-if="state.phase !== 'scanning'"
           type="button"
           class="flex w-full flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-default bg-elevated/40 px-6 py-10 text-center transition-colors hover:bg-elevated/70"
-          @click="openPicker"
+          @click="openCamera"
         >
           <UIcon
             name="i-lucide-camera"
@@ -110,11 +115,26 @@ watch(() => props.placeId, () => {
           <span class="text-base font-medium text-highlighted">{{ t('menu.scan') }}</span>
           <span class="text-sm text-muted">{{ t('menu.scanHint') }}</span>
         </button>
+        <button
+          v-if="state.phase !== 'scanning'"
+          type="button"
+          class="w-full rounded-xl px-4 py-2 text-sm text-muted transition-colors hover:text-default"
+          @click="openGallery"
+        >
+          {{ t('menu.gallery') }}
+        </button>
         <input
-          ref="fileInput"
+          ref="cameraInput"
           type="file"
           accept="image/*"
           capture="environment"
+          class="hidden"
+          @change="pickedFile"
+        >
+        <input
+          ref="galleryInput"
+          type="file"
+          accept="image/*"
           class="hidden"
           @change="pickedFile"
         >

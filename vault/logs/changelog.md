@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-06 (evening) - Footer polish + camera/gallery scan inputs
+
+### Done
+
+- **Footer**: was one cramped line (logo | privacy + raw ISO-ish build string + tagline). Now: row 1 = logo + tagline, row 2 = privacy link left + compact mono build stamp right (`06.09 09:41 UTC`, tabular-nums, dimmed). Diagnostic purpose (bundle freshness) kept, visual noise gone.
+- **Menu scan inputs**: the single hidden input forced `capture="environment"`, which is flaky-to-dead inside the Telegram Android WebView (user reported "cannot shoot from the phone"). Now two paths: the main dashed button opens the camera input, and a quiet second button opens the system file picker without `capture` (gallery + camera option on Android). i18n `menu.gallery` ru/en.
+
+### Verified
+
+- lint, typecheck, vitest 48/48, build PASS. Deployed (version 3c59c29a); prod home 200, Supabase URL + fresh build stamp confirmed in the payload.
+
 ## 2026-09-06 (later) - Prod demo-data root cause: wiped runtimeConfig
 
 ### Found

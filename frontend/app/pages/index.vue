@@ -6,6 +6,12 @@ import logo from '~/assets/brand/logo.svg'
 
 const { t } = useI18n()
 const buildTime = String((useRuntimeConfig().public as Record<string, string | undefined>).buildTime ?? '')
+
+/** Compact stamp for the footer: "06.09 09:41 UTC" (diagnostics: bundle freshness). */
+const buildStamp = computed(() => {
+  const m = buildTime.match(/\d{4}-(\d{2})-(\d{2})T(\d{2}):(\d{2})/)
+  return m ? `${m[2]}.${m[1]} ${m[3]}:${m[4]} UTC` : ''
+})
 const { db } = useDb()
 
 const categories = computed(() => db.value.categories)
@@ -108,21 +114,27 @@ const selectedCityIn = computed(() => t(`citiesIn.${selectedCity.value}`))
         {{ t('home.trustDescription') }}
       </p>
 
-      <footer class="flex items-center justify-between gap-3 border-t border-default pt-6 text-xs text-muted">
-        <img
-          class="h-4 w-auto opacity-50 dark:invert"
-          :src="logo"
-          alt="TAMITUT"
-        >
-        <span class="flex items-center gap-3">
+      <footer class="space-y-2.5 border-t border-default pt-6 text-xs text-muted">
+        <div class="flex items-center gap-2">
+          <img
+            class="h-4 w-auto opacity-50 dark:invert"
+            :src="logo"
+            alt="TAMITUT"
+          >
+          <span>{{ t('home.footer') }}</span>
+        </div>
+        <div class="flex items-center justify-between gap-3 text-dimmed">
           <NuxtLink
             to="/privacy"
             class="hover:text-default"
           >
             {{ t('privacy.link') }}
           </NuxtLink>
-          <span>build {{ buildTime.slice(0, 16).replace('T', ' ') }} UTC · {{ t('home.footer') }}</span>
-        </span>
+          <span
+            v-if="buildStamp"
+            class="font-mono text-[11px] tracking-tight tabular-nums"
+          >{{ buildStamp }}</span>
+        </div>
       </footer>
     </div>
   </UContainer>

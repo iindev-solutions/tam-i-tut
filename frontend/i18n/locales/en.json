@@ -468,7 +468,8 @@
     "globalDescription": "One tap: photograph any Vietnamese menu - get translations, prices, and dish photos.",
     "bootstrapFailed": "Could not connect the session. Tap Reconnect or reopen the app from the bot.",
     "reconnect": "Reconnect",
-    "galleryTitle": "What it looks like"
+    "galleryTitle": "What it looks like",
+    "gallery": "Or pick a photo from the gallery"
   },
   "common": {
     "demoBanner": "Demo data. Open the app from the bot to see live content."

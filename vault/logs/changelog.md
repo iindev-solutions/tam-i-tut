@@ -1,5 +1,81 @@
 # Changelog
 
+## 2026-09-15 (6) - Admin coverage: clinics + consulates editors
+
+### What shipped
+
+Migration 062 moved consular facts into the database "so an admin can correct
+them" - and there was no admin editor, so the capability did not exist yet. Same
+for the 20 clinics from 061. Two pages close that gap:
+
+- `/admin/clinics` - list with trust level + check date, editor for the ru/en
+  name and price note, specialisation, 24/7 flag and source. Promoting to a
+  trusted level goes through the same server-side gate as places, and the editor
+  asks for the source at the same moment: a price nobody can trace is the thing
+  this directory is trying not to be.
+- `/admin/consulates` - list with both phones, editor for name/address/hours/
+  both numbers/source. This is the capability the i18n string never had, which
+  is why a wrong address survived for months.
+
+Both sit in `useAdminDb` next to the existing loaders, write through the same
+`patch` + `audit` path, and are in `loadAll()`. Nav + i18n keys added.
+
+### Fixed on the way
+
+- **`/admin/cities` had malformed markup**: `:title` sat OUTSIDE its `<UModal>`
+  tag with a stray `>`, so the modal title prop was never bound. Pre-existing; I
+  read the file while following its pattern and caught it.
+- **Accessible name bug in my own pages**: `aria-label="...editClinic"` on the
+  row button overrode the visible "Изменить"/"Edit" text, so a screen reader
+  announced the button as just the NOUN and lost the action. Removed - the
+  visible label already carries it.
+
+### Schema finding worth a founder decision
+
+The write test proved the path works end to end (two real saves, two audit
+rows), and then exposed a trap: **a staff account becomes undeletable after its
+first audited action.**
+
+`audit_logs.actor_profile_id` -> `profiles.id` -> `auth.users.id`, while
+`audit_logs` is append-only by trigger (`tamitut_prevent_audit_logs_mutation`).
+So the audit rows cannot be cleared, and the FK cannot be satisfied, and the
+account cannot be deleted - not even by the service role. Leaving an employee or
+a compromised admin account is therefore impossible to remove, only to
+neutralize.
+
+Handled now by neutralizing: profile demoted to `role='user'`,
+`is_active=false` (the `/admin` middleware requires a staff role), and the auth
+user banned (`ban_duration`) so the known password is dead - verified:
+`user_banned` on a password grant. The two audit rows were deliberately KEPT:
+they are true records of a write that really happened, and deleting them would
+falsify the log.
+
+Proposed fix, not applied because it touches a trust-critical table: make
+`actor_profile_id` `on delete set null`. The log keeps every row and its
+denormalized `actor_role`, and only the join to a deleted profile goes away.
+Someone deleting an identity would then lose the ability to attribute the action
+to a person - the standard trade, and a founder call rather than a quiet change.
+
+### Verified
+
+- Rendered `/admin/clinics` (20 rows, name + price + trust badge) and
+  `/admin/consulates` (1 row, both phones) with a real admin session.
+- Write path: edited the live consulate row twice through the UI, confirmed both
+  writes landed in the DB and produced two `consulate_update` audit rows.
+- Test value reverted and verified byte-exact against the canonical address
+  (`22 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng` + its source string) - prod
+  renders this address, so it was restored before any further work.
+- Probe account banned (`user_banned`) and demoted; the throwaway SQL removed.
+- Gates: lint / typecheck / 59 tests / build. Deployed worker `2399983b`.
+
+### Honest gap
+
+I did not manage to confirm the editor modal's visual appearance through
+automation - several probes were invalid (measured during data load, stale refs
+after re-render, and one button whose `aria-label` masked its text). The write
+path is proven by data + audit, which is the part that matters, but the modal's
+final look should be eyeballed once in a browser by a human.
+
 ## 2026-09-15 (5) - Review pass: outage risk removed, consular facts moved to data
 
 Four defects found reviewing the two slices above. Three were mine; one was a

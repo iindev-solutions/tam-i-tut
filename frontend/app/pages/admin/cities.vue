@@ -122,9 +122,8 @@ const saveNew = async () => {
 
     <UModal
       v-model:open="modalOpen"
-    >
       :title="t('admin.editor.newCity')"
-      >
+    >
       <template #body>
         <form
           class="space-y-3"

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import type { Place, Review } from '~/types/content'
+import type { ClinicKind, Place, Review, TrustLevel } from '~/types/content'
 import { getSupabaseClient } from './useSupabaseClient'
 
 /**
@@ -59,6 +59,38 @@ export interface AdminGuideRow {
   status: 'draft' | 'published' | 'archived'
   last_verified_at: string | null
   verification_due_at: string | null
+}
+
+export interface AdminClinicLocalization {
+  name: string
+  price_note: string
+}
+
+export interface AdminClinicRow {
+  id: string
+  city_slug: string
+  slug: string
+  kind: ClinicKind
+  open_24_7: boolean
+  trust_badge: TrustLevel
+  last_verified_at: string | null
+  source: string
+  sort_order: number
+  localizations: { ru?: AdminClinicLocalization, en?: AdminClinicLocalization }
+}
+
+export interface AdminConsulateRow {
+  id: string
+  city_slug: string
+  name_ru: string
+  name_en: string
+  address: string
+  hours_ru: string
+  hours_en: string
+  phone: string | null
+  emergency_phone: string | null
+  source: string
+  sort_order: number
 }
 
 export interface AdminDistrictRow {
@@ -135,6 +167,8 @@ export function useAdminDb() {
   const menuQueue = ref<AdminMenuQueueRow[]>([])
   const menus = ref<AdminMenuRow[]>([])
   const dishes = ref<AdminDishOption[]>([])
+  const clinics = ref<AdminClinicRow[]>([])
+  const consulates = ref<AdminConsulateRow[]>([])
   const menuScanCount7d = ref(0)
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -384,11 +418,103 @@ export function useAdminDb() {
     await loadMenus()
   }
 
+  const loadClinics = async () => {
+    const [clinicRows, locRows] = await Promise.all([
+      list('clinics', 'id,city_slug,slug,kind,open_24_7,trust_badge,last_verified_at,source,sort_order', 'sort_order'),
+      list('clinic_localizations', 'clinic_id,language,name,price_note')
+    ])
+    const byClinic = new Map<string, { ru?: AdminClinicLocalization, en?: AdminClinicLocalization }>()
+    for (const loc of locRows as Array<Record<string, unknown>>) {
+      const entry = byClinic.get(loc.clinic_id as string) ?? {}
+      entry[loc.language as 'ru' | 'en'] = {
+        name: loc.name as string,
+        price_note: loc.price_note as string
+      }
+      byClinic.set(loc.clinic_id as string, entry)
+    }
+    clinics.value = (clinicRows as Array<Record<string, unknown>>).map(row => ({
+      id: row.id as string,
+      city_slug: row.city_slug as string,
+      slug: row.slug as string,
+      kind: row.kind as AdminClinicRow['kind'],
+      open_24_7: row.open_24_7 as boolean,
+      trust_badge: row.trust_badge as AdminClinicRow['trust_badge'],
+      last_verified_at: (row.last_verified_at as string | null) ?? null,
+      source: row.source as string,
+      sort_order: row.sort_order as number,
+      localizations: byClinic.get(row.id as string) ?? {}
+    }))
+  }
+
+  const loadConsulates = async () => {
+    consulates.value = (await list(
+      'consulates',
+      'id,city_slug,name_ru,name_en,address,hours_ru,hours_en,phone,emergency_phone,source,sort_order',
+      'sort_order'
+    )) as unknown as AdminConsulateRow[]
+  }
+
+  /**
+   * Saves a clinic and its ru/en price notes. A trusted level must carry its
+   * check date (clinics_trust_requires_verified_at), so promoting stamps now()
+   * unless a date is already there - same rule as places.
+   */
+  const saveClinic = async (clinic: {
+    id: string
+    city_slug: string
+    kind: ClinicKind
+    open_24_7: boolean
+    trust_badge: TrustLevel
+    last_verified_at: string | null
+    source: string
+    ru: AdminClinicLocalization
+    en: AdminClinicLocalization
+  }) => {
+    const trusted = clinic.trust_badge !== 'under_review'
+    const base = {
+      kind: clinic.kind,
+      open_24_7: clinic.open_24_7,
+      trust_badge: clinic.trust_badge,
+      last_verified_at: trusted ? (clinic.last_verified_at ?? new Date().toISOString()) : null,
+      source: clinic.source
+    }
+    await patch('clinics', 'id', clinic.id, base)
+    await audit('clinic_update', 'clinics', clinic.id, base)
+    for (const lang of ['ru', 'en'] as const) {
+      const loc = clinic[lang]
+      const { error: err } = await client!
+        .from('clinic_localizations')
+        .upsert({ clinic_id: clinic.id, language: lang, name: loc.name, price_note: loc.price_note }, { onConflict: 'clinic_id,language' })
+      if (err) throw err
+    }
+    await loadClinics()
+  }
+
+  /**
+   * Saves a consular record. This is the capability that the i18n string never
+   * had: the address shipped wrong for months because nothing could edit it.
+   */
+  const saveConsulate = async (consulate: AdminConsulateRow) => {
+    const base = {
+      name_ru: consulate.name_ru,
+      name_en: consulate.name_en,
+      address: consulate.address,
+      hours_ru: consulate.hours_ru,
+      hours_en: consulate.hours_en,
+      phone: consulate.phone,
+      emergency_phone: consulate.emergency_phone,
+      source: consulate.source
+    }
+    await patch('consulates', 'id', consulate.id, base)
+    await audit('consulate_update', 'consulates', consulate.id, base)
+    await loadConsulates()
+  }
+
   const loadAll = async () => {
     loading.value = true
     error.value = null
     try {
-      await Promise.all([loadCities(), loadPlaces(), loadReviews(), loadGuides(), loadDistricts(), loadMenuQueue(), loadMenuScanCount()])
+      await Promise.all([loadCities(), loadPlaces(), loadReviews(), loadGuides(), loadDistricts(), loadClinics(), loadConsulates(), loadMenuQueue(), loadMenuScanCount()])
     } catch (e) {
       error.value = e instanceof Error ? e.message : String(e)
     } finally {
@@ -526,6 +652,8 @@ export function useAdminDb() {
     reviews,
     guides,
     districts,
+    clinics,
+    consulates,
     menuQueue,
     menus,
     dishes,
@@ -547,6 +675,10 @@ export function useAdminDb() {
     setReviewStatus,
     saveCity,
     savePlace,
+    saveClinic,
+    saveConsulate,
+    loadClinics,
+    loadConsulates,
     saveDistrict,
     deleteDistrict,
     logout

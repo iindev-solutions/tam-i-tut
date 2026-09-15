@@ -28,7 +28,7 @@
 - `app/pages/categories/health.vue` - health: clinic directory (20 Da Nang venues with prices, specialisation filters, per-row TrustBadge + source alert) above the health guides
 - `app/pages/categories/transport.vue` / `money.vue` / `safety.vue` / `culture.vue` - guide pages; transport/money/safety read DB guides, safety also renders the city-scoped emergency contacts, culture stays static copy
 - `app/pages/journey/first-day.vue` - interactive first-day checklist with progress counter
-- `app/pages/admin/*` - real admin panel (useAdminDb): dashboard (with menu-queue + scan metrics), cities, categories, districts, places, guides, reviews (incl. review text), menu curation
+- `app/pages/admin/*` - real admin panel (useAdminDb): dashboard (with menu-queue + scan metrics), cities, categories, districts, places, guides, clinics (trust level + prices + source), consulates (address/hours/both phones), reviews (incl. review text), menu curation
 - `app/composables/useMockDb.ts` - reactive mock DB store seeded from `mocks/db.ts` with admin mutations (admin prototype only)
 - `app/composables/useDb.ts` - RLS-safe Supabase reads for user routes (cities/categories/places/localizations/reviews/guides/emergency_contacts/consulates/clinics). Only cities/categories are strict; every other table degrades to an empty section instead of blanking the app. State machine: `loading | mock | supabase | unavailable | error` (`unavailable` = no session -> bot gate; `error` = session but failed read -> retry screen). One module-scoped in-flight promise serves every caller; mock fallback is dev-only
 - `app/composables/useAnalytics.ts` - pilot metrics: fire-and-forget `app_events` inserts (menu_scan/place_view/review_submit), RLS forces own user_id

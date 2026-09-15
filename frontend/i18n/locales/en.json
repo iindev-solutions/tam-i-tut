@@ -275,7 +275,9 @@
       "places": "Places",
       "guides": "Guides",
       "reviews": "Reviews",
-      "menu": "Menus"
+      "menu": "Menus",
+      "clinics": "Clinics",
+      "consulates": "Consulates"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -299,7 +301,7 @@
       "area": "Zone",
       "name": "Name",
       "type": "Type",
-      "price": "Prices",
+      "price": "Price",
       "title": "Title",
       "note": "Reference",
       "place": "Place",
@@ -311,7 +313,10 @@
       "items": "Items",
       "actions": "Actions",
       "line": "Line",
-      "confidence": "Confidence"
+      "confidence": "Confidence",
+      "address": "Address",
+      "phone": "Phone",
+      "emergency": "24/7"
     },
     "actions": {
       "publish": "Publish",
@@ -377,7 +382,13 @@
       "saveError": "Save failed",
       "newDistrict": "New district",
       "editDistrict": "Edit district",
-      "trustLevel": "Trust level"
+      "trustLevel": "Trust level",
+      "edit": "Edit",
+      "editClinic": "Clinic",
+      "editConsulate": "Consulate",
+      "priceNote": "Price per visit",
+      "source": "Source",
+      "hours": "Office hours"
     },
     "menu": {
       "subtitle": "Menu scans: curate lines and verify menus.",
@@ -387,6 +398,12 @@
       "emptyMenus": "No scans yet.",
       "linkDish": "Link to dish",
       "curated": "Curated lines"
+    },
+    "clinics": {
+      "subtitle": "Clinic directory: prices, hours and trust level. A price without a source cannot become verified - say where it came from."
+    },
+    "consulates": {
+      "subtitle": "Consular data: address, office hours and both phones. The address stays in the Vietnamese form a taxi driver reads."
     }
   },
   "privacy": {

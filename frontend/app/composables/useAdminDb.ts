@@ -32,7 +32,8 @@ export interface AdminPlaceRow {
   slug: string
   place_type: Place['type']
   price_level: Place['priceLevel']
-  verified: boolean
+  trust_badge: Place['trustLevel']
+  last_verified_at: string | null
   status: Place['status']
   updated_at: string
   localizations: { ru?: AdminLocalization, en?: AdminLocalization }
@@ -152,7 +153,7 @@ export function useAdminDb() {
 
   const loadPlaces = async () => {
     const [placeRows, locRows] = await Promise.all([
-      list('places', 'id,city_slug,slug,place_type,price_level,verified,status,updated_at', 'updated_at'),
+      list('places', 'id,city_slug,slug,place_type,price_level,trust_badge,last_verified_at,status,updated_at', 'updated_at'),
       list('place_localizations', 'place_id,language,name,area,summary')
     ])
     const byPlace = new Map<string, { ru?: AdminLocalization, en?: AdminLocalization }>()
@@ -171,7 +172,8 @@ export function useAdminDb() {
       slug: row.slug as string,
       place_type: row.place_type as AdminPlaceRow['place_type'],
       price_level: row.price_level as AdminPlaceRow['price_level'],
-      verified: row.verified as boolean,
+      trust_badge: row.trust_badge as AdminPlaceRow['trust_badge'],
+      last_verified_at: (row.last_verified_at as string | null) ?? null,
       status: row.status as AdminPlaceRow['status'],
       updated_at: row.updated_at as string,
       localizations: byPlace.get(row.id as string) ?? {}
@@ -457,17 +459,23 @@ export function useAdminDb() {
     slug: string
     place_type: Place['type']
     price_level: Place['priceLevel']
-    verified: boolean
+    trust_badge: Place['trustLevel']
+    /** ISO check date; ignored while the place stays under review. */
+    last_verified_at: string | null
     status: Place['status']
     ru: AdminLocalization
     en: AdminLocalization
   }) => {
+    // A trusted level must carry its check date (places_trust_requires_verified_at),
+    // so promoting a place stamps now() unless the editor picked a date.
+    const trusted = place.trust_badge !== 'under_review'
     const base = {
       city_slug: place.city_slug,
       slug: place.slug,
       place_type: place.place_type,
       price_level: place.price_level,
-      verified: place.verified,
+      trust_badge: place.trust_badge,
+      last_verified_at: trusted ? (place.last_verified_at ?? new Date().toISOString()) : null,
       status: place.status
     }
     let placeId = place.id

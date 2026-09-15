@@ -32,7 +32,8 @@ export const mockDb: MockDb = {
         en: 'Banh mi with fillings to pick, 25-40k VND. Opens early, expect a queue in the evening.'
       },
       imageUrl: 'https://hoiandaytrip.com/wp-content/uploads/2025/12/madam-khanh-1.jpg',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-12'
     },
@@ -48,7 +49,8 @@ export const mockDb: MockDb = {
         en: 'Mi quang - Da Nang signature rice noodle soup with shrimp. 35-60k VND.'
       },
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/df/Mi_Quang_1A_Danang.jpg',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-10'
     },
@@ -64,7 +66,8 @@ export const mockDb: MockDb = {
         en: 'Crispy banh xeo pancakes with herbs and peanut sauce. A local legend, 40-70k VND.'
       },
       imageUrl: 'https://mia.vn/media/uploads/blog-du-lich/thoa-man-voi-banh-xeo-ba-duong-ngon-nhat-da-nang-1636651211.jpg',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-14'
     },
@@ -80,7 +83,8 @@ export const mockDb: MockDb = {
         en: 'Fish cake noodle soup - a local breakfast. Go before noon, it closes after. 30-50k VND.'
       },
       imageUrl: 'https://danangbest.com/upload_content/bun-cha-ca-da-nang-3.webp',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-09'
     },
@@ -96,7 +100,8 @@ export const mockDb: MockDb = {
         en: 'The main city market: food court upstairs, fruit and goods below. Cash only.'
       },
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Con_Market_at_sunset.jpg',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-08'
     },
@@ -112,7 +117,8 @@ export const mockDb: MockDb = {
         en: 'Market by the Han river promenade. Fruit, coffee, dried fruit - cheaper than tourist spots.'
       },
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Han_Market_Da_Nang.JPG',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-07'
     },
@@ -128,7 +134,8 @@ export const mockDb: MockDb = {
         en: 'Chain cafe right on My Khe beach. Coffee 45-75k VND, cards accepted, Wi-Fi.'
       },
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Highlands_Coffee_storefront_DN.JPG',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-13'
     },
@@ -144,7 +151,8 @@ export const mockDb: MockDb = {
         en: 'Retro-style cafe with Han river and Dragon Bridge views. Power sockets available.'
       },
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/67/C%E1%BB%99ng_C%C3%A0_Ph%C3%AA_coffee_milk.jpg',
-      verified: false,
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
       status: 'published',
       updated: '2026-08-06'
     },
@@ -160,7 +168,8 @@ export const mockDb: MockDb = {
         en: 'Seafood from the display: weight confirmed in front of you. 150-400k VND per dish.'
       },
       imageUrl: 'https://axwwgrkdco.cloudimg.io/v7/__gmpics3__/70695ae344e74b7ba42c132cca61ca84.jpeg?width=1000',
-      verified: true,
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00',
       status: 'published',
       updated: '2026-08-11'
     },
@@ -176,7 +185,8 @@ export const mockDb: MockDb = {
         en: 'Pedestrian food street two blocks from the sea: grills, smoothies, late-night coffee.'
       },
       imageUrl: 'https://hoiandaytrip.com/wp-content/uploads/2024/11/an-thuong-tourist-street-da-nang.jpg',
-      verified: false,
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
       status: 'published',
       updated: '2026-08-15'
     }
@@ -193,7 +203,9 @@ export const mockDb: MockDb = {
         ru: 'Такси через приложение: цена известна заранее, оплата картой или наличными. Из аэропорта до центра 100-150 тыс. ₫.',
         en: 'App taxis: price fixed before the ride, pay by card or cash. Airport to center is 100-150k VND.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'transport-bike',
@@ -205,7 +217,9 @@ export const mockDb: MockDb = {
         ru: 'Депозит 1-3 млн ₫ или паспорт. Проверь тормоза и свет, сфотографируй царапины до подписания.',
         en: 'Deposit 1-3M VND or a passport. Check brakes and lights, photograph scratches before signing.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'transport-bus',
@@ -217,7 +231,9 @@ export const mockDb: MockDb = {
         ru: 'Маршруты идут вдоль пляжной линии и через центр. Оплата наличными при входе, кондиционер есть.',
         en: 'Routes run along the beach line and through the center. Pay cash on boarding, air-con included.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'transport-airport',
@@ -229,7 +245,9 @@ export const mockDb: MockDb = {
         ru: 'Аэропорт внутри города: до центра 10 минут на Grab. Стойка такси дороже приложения.',
         en: 'The airport sits inside the city: 10 minutes to the center by Grab. The taxi desk costs more than the app.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'money-cash',
@@ -241,7 +259,9 @@ export const mockDb: MockDb = {
         ru: 'Рынки, уличная еда и автобусы - только наличные. Держи мелкие купюры отдельно от крупных.',
         en: 'Markets, street food, and buses are cash only. Keep small bills separate from large ones.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'money-card',
@@ -253,7 +273,9 @@ export const mockDb: MockDb = {
         ru: 'Принимают в ТЦ, сетевых кафе и аптеках. В маленьких quánах и на рынках - нет.',
         en: 'Accepted in malls, chain cafes, and pharmacies. Not in small family shops or markets.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'money-qr',
@@ -265,7 +287,9 @@ export const mockDb: MockDb = {
         ru: 'В ресторанах часто принимают перевод по QR через местное банковское приложение. Туристу удобнее наличные или Grab.',
         en: 'Restaurants often take QR transfers via local bank apps. For visitors, cash or Grab is simpler.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'money-atm',
@@ -277,7 +301,9 @@ export const mockDb: MockDb = {
         ru: 'Снимай в банкоматах при отделениях Vietcombank или Techcombank: комиссия ниже, лимит выше.',
         en: 'Withdraw at Vietcombank or Techcombank branch ATMs: lower fees, higher limits.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'money-transfer',
@@ -289,7 +315,9 @@ export const mockDb: MockDb = {
         ru: 'Для оплаты аренды и крупных сумм. Курс уточняй в приложении до отправки.',
         en: 'For rent and large amounts. Check the rate in the app before sending.'
       },
-      status: 'draft'
+      status: 'draft',
+      trustLevel: 'under_review',
+      lastVerifiedAt: null
     },
     {
       id: 'safety-helmet',
@@ -301,7 +329,9 @@ export const mockDb: MockDb = {
         ru: 'Шлем обязателен для водителя и пассажира. Проверки на дорогах - обычное дело, без шлема штрафуют.',
         en: 'A helmet is required for rider and passenger. Road checks are routine; no helmet means a fine.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'safety-numbers',
@@ -313,7 +343,9 @@ export const mockDb: MockDb = {
         ru: 'Сохрани 113, 114 и 115 до первой поездки. Местные вызовы работают без интернета.',
         en: 'Save 113, 114, and 115 before your first ride. Local calls work without internet.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     },
     {
       id: 'safety-bags',
@@ -325,14 +357,16 @@ export const mockDb: MockDb = {
         ru: 'Держи сумку дальше от проезжей части: мото-кражи сумок редки, но случаются вечером.',
         en: 'Keep your bag away from the road: moto bag-snatching is rare but happens at night.'
       },
-      status: 'published'
+      status: 'published',
+      trustLevel: 'verified_team',
+      lastVerifiedAt: '2026-08-30T00:00:00+00'
     }
   ],
 
   contacts: [
-    { id: 'police', number: '113', label: { ru: 'Полиция', en: 'Police' } },
-    { id: 'fire', number: '114', label: { ru: 'Пожарная служба', en: 'Fire department' } },
-    { id: 'ambulance', number: '115', label: { ru: 'Скорая помощь', en: 'Ambulance' } }
+    { id: 'da-nang-police', citySlug: 'da-nang', number: '113', label: { ru: 'Полиция', en: 'Police' } },
+    { id: 'da-nang-fire', citySlug: 'da-nang', number: '114', label: { ru: 'Пожарная служба', en: 'Fire department' } },
+    { id: 'da-nang-ambulance', citySlug: 'da-nang', number: '115', label: { ru: 'Скорая помощь', en: 'Ambulance' } }
   ],
 
   reviews: [],

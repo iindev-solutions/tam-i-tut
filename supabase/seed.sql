@@ -22,40 +22,57 @@ set
 	is_active = excluded.is_active,
 	sort_order = excluded.sort_order;
 
--- Seed places (food slice). Canonical ids come from the accepted mock contract.
-insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
+-- Emergency contacts per city (migration 058). Numbers differ per country, so
+-- they hang off the city tenancy axis. Vietnam: 113 police, 114 fire,
+-- 115 ambulance.
+insert into public.emergency_contacts (city_slug, number, label_ru, label_en, sort_order)
 values
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f01', 'da-nang', 'banh-mi-madam-khanh', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f02', 'da-nang', 'mi-quang-1a', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f03', 'da-nang', 'banh-xeo-ba-duong', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f04', 'da-nang', 'bun-cha-ca-ba-lu', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f05', 'da-nang', 'cho-con', 'market', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f06', 'da-nang', 'cho-han', 'market', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f07', 'da-nang', 'highlands-beach', 'cafe', 'average', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f08', 'da-nang', 'cong-cafe', 'cafe', 'average', false, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f09', 'da-nang', 'be-man-seafood', 'restaurant', 'above', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'da-nang', 'an-thuong-street', 'street', 'budget', false, 'published'),
+	('da-nang', '113', 'Полиция', 'Police', 1),
+	('da-nang', '114', 'Пожарная служба', 'Fire department', 2),
+	('da-nang', '115', 'Скорая помощь', 'Ambulance', 3)
+on conflict (city_slug, sort_order) do update
+set
+	number = excluded.number,
+	label_ru = excluded.label_ru,
+	label_en = excluded.label_en;
+
+-- Seed places (food slice). Canonical ids come from the accepted mock contract.
+-- trust_badge/last_verified_at replaced the `verified` boolean in migration 058;
+-- the date is the team's sourcing pass, not the row's last edit.
+insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
+values
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f01', 'da-nang', 'banh-mi-madam-khanh', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f02', 'da-nang', 'mi-quang-1a', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f03', 'da-nang', 'banh-xeo-ba-duong', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f04', 'da-nang', 'bun-cha-ca-ba-lu', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f05', 'da-nang', 'cho-con', 'market', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f06', 'da-nang', 'cho-han', 'market', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f07', 'da-nang', 'highlands-beach', 'cafe', 'average', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f08', 'da-nang', 'cong-cafe', 'cafe', 'average', 'under_review', null, 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f09', 'da-nang', 'be-man-seafood', 'restaurant', 'above', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0a', 'da-nang', 'an-thuong-street', 'street', 'budget', 'under_review', null, 'published'),
 	-- Phase 4 sourced food expansion (migration 033; also applied to hosted)
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'da-nang', 'bun-cha-ca-ba-hoa', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0c', 'da-nang', 'mi-quang-sua-hong-van', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0d', 'da-nang', 'com-ga-lan', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0e', 'da-nang', 'bun-mam-ba-dong', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0f', 'da-nang', 'mi-quang-ech-bep-trang', 'restaurant', 'average', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f10', 'da-nang', 'nhang-nuong', 'restaurant', 'average', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f11', 'da-nang', 'be-loan', 'street', 'budget', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f12', 'da-nang', 'burger-bros', 'restaurant', 'average', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f13', 'da-nang', 'ganesh-da-nang', 'restaurant', 'average', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f14', 'da-nang', 'cardi-pizzeria', 'restaurant', 'above', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f15', 'da-nang', 'rioni-georgian', 'restaurant', 'above', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f16', 'da-nang', 'xliii-coffee', 'cafe', 'above', true, 'published'),
-	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f17', 'da-nang', 'banh-mi-co-tien', 'street', 'budget', true, 'published')
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0b', 'da-nang', 'bun-cha-ca-ba-hoa', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0c', 'da-nang', 'mi-quang-sua-hong-van', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0d', 'da-nang', 'com-ga-lan', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0e', 'da-nang', 'bun-mam-ba-dong', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f0f', 'da-nang', 'mi-quang-ech-bep-trang', 'restaurant', 'average', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f10', 'da-nang', 'nhang-nuong', 'restaurant', 'average', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f11', 'da-nang', 'be-loan', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f12', 'da-nang', 'burger-bros', 'restaurant', 'average', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f13', 'da-nang', 'ganesh-da-nang', 'restaurant', 'average', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f14', 'da-nang', 'cardi-pizzeria', 'restaurant', 'above', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f15', 'da-nang', 'rioni-georgian', 'restaurant', 'above', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f16', 'da-nang', 'xliii-coffee', 'cafe', 'above', 'verified_team', '2026-08-30T00:00:00+00', 'published'),
+	('b937c18f-2b7e-4a5a-8f3d-9a1c5d6e7f17', 'da-nang', 'banh-mi-co-tien', 'street', 'budget', 'verified_team', '2026-08-30T00:00:00+00', 'published')
 on conflict (id) do update
 set
 	city_slug = excluded.city_slug,
 	slug = excluded.slug,
 	place_type = excluded.place_type,
 	price_level = excluded.price_level,
-	verified = excluded.verified,
+	trust_badge = excluded.trust_badge,
+	last_verified_at = excluded.last_verified_at,
 	status = excluded.status;
 
 insert into public.place_localizations (place_id, language, name, area, summary)

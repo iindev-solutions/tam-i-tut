@@ -1,5 +1,66 @@
 # Changelog
 
+## 2026-09-15 - Trust layer reaches the Mini App; emergency contacts unblocked
+
+### Found + fixed
+
+- **The safety page's emergency block was empty for every live user.** The
+  numbers existed only in `app/mocks/db.ts`, and mock fallback is dev-only
+  (`useDb`), so production rendered an empty section on the most
+  trust-critical screen. New `emergency_contacts` table (city-scoped: numbers
+  are per-country), RLS (reader = active city only, moderator/admin manage),
+  seeded for Da Nang in migration 059 (seeds must ride a migration: `db push`
+  never runs `seed.sql`, so 058's table stayed empty on hosted).
+- **Layout dropped `<main>` in mock mode.** The mock banner headed the
+  `v-if`/`v-else-if`/`v-else` chain, so resolving to `mock` selected the
+  banner branch and skipped `<main>` - dev pages rendered the strip and
+  nothing else. Banner is now an independent branch. Pre-existing.
+- **A signed-in user with a failed read was told to open the app from the
+  bot.** `source` had no `error` state; every read failure silently fell back.
+  Now: no session = bot gate, session + failed read = retryable error screen.
+- **`useDb()` ran its own seven-table read per caller** (layout, city select,
+  and three pages mount 11 instances) and `source` was a local ref, so the
+  layout and pages could disagree about the state driving the gate. One
+  module-scoped in-flight promise + `useState` source.
+
+### Done
+
+- **Trust model replaces the boolean.** `places.verified` cannot express the
+  three documented levels or a check date, while the product promise is
+  "badge + verification date + evidence discipline". Migration 058 adds
+  `places.trust_badge` (the enum `guide_entries` already used) +
+  `last_verified_at`, backfills `verified = true` -> `verified_team` with the
+  row's `updated_at`, drops the column, and enforces
+  `trust_badge = 'under_review' or last_verified_at is not null`.
+- New `TrustBadge.vue` (icon + full variants) renders level and check date on
+  guide cards (transport/money/safety/health/visarun), food cards, place
+  detail, and the admin places table; the admin editor picks the level instead
+  of a checkbox. Orange stays on `verified_team` only.
+- `useDb` selects and maps the trust fields; `mapGuides` takes the newest
+  check date across the ru/en rows. The internal `under_review_note` is
+  deliberately NOT sent to the client - it is editorial process text.
+- Superseded keys removed (`food.verifiedTitle`, `admin.editor.verified`);
+  new `trust.*` block added to both locales.
+- Model fidelity: all 48 published guide entries on hosted are `under_review`
+  (knowledge-dump content), so every guide card now says so instead of
+  implying verification.
+
+### Verified
+
+- pgTAP `016_trust_layer_and_emergency_contacts` PASS 10/10 on hosted; specs
+  010 / 011 / 014 / 015 re-run PASS after the fixture cutover.
+- Reader contract probe on hosted under `role=authenticated`: cities 4,
+  categories 8, places 29, localizations 58, reviews 0, guide_entries 48,
+  emergency_contacts 3 - every select list the app issues resolves.
+- Frontend gates: lint / typecheck / vitest 53/53 / build PASS.
+- Browser (360px): safety renders 113/114/115, place detail shows "Проверено
+  командой · Проверено 30.08.2026", EN shows "Verified by the team · Checked
+  30/08/2026", no horizontal overflow. Prod bundle served via `wrangler dev`:
+  no session = bot gate; with a session and failing reads = retry screen, and
+  clicking retry re-issues exactly the 7 reads (no per-caller fan-out).
+- Migrations 058 + 059 applied to hosted; prod deployed (worker version
+  198dae93) and the live asset carries `trust_badge`.
+
 ## 2026-09-07 (founder pass 4) - map race fix; FPT City prices
 
 ### Found + fixed

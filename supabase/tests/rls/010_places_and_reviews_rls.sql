@@ -29,11 +29,11 @@ values
 	('test-active-city', 'Test Active', 'Тест активный', 'VN', '🇻🇳', true, 50),
 	('test-inactive-city', 'Test Inactive', 'Тест неактивный', 'VN', '🇻🇳', false, 51);
 
-insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
+insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
 values
-	('00000000-0000-0000-0000-000000000401', 'test-active-city', 'test-pub-place', 'street', 'budget', true, 'published'),
-	('00000000-0000-0000-0000-000000000402', 'test-active-city', 'test-draft-place', 'cafe', 'average', false, 'draft'),
-	('00000000-0000-0000-0000-000000000403', 'test-active-city', 'test-archived-place', 'market', 'budget', false, 'archived');
+	('00000000-0000-0000-0000-000000000401', 'test-active-city', 'test-pub-place', 'street', 'budget', 'verified_team', '2026-01-01T00:00:00+00', 'published'),
+	('00000000-0000-0000-0000-000000000402', 'test-active-city', 'test-draft-place', 'cafe', 'average', 'under_review', null, 'draft'),
+	('00000000-0000-0000-0000-000000000403', 'test-active-city', 'test-archived-place', 'market', 'budget', 'under_review', null, 'archived');
 
 insert into public.place_localizations (place_id, language, name, area, summary)
 values
@@ -119,8 +119,8 @@ select is(
 -- Writes are blocked under RLS (no insert policies on these tables yet).
 select throws_like(
 	$$
-	insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
-	values ('00000000-0000-0000-0000-000000000404', 'test-active-city', 'test-new-place', 'cafe', 'budget', true, 'published')
+	insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
+	values ('00000000-0000-0000-0000-000000000404', 'test-active-city', 'test-new-place', 'cafe', 'budget', 'under_review', null, 'published')
 	$$,
 	'%row-level security policy%',
 	'reader cannot insert places (no insert policy)'

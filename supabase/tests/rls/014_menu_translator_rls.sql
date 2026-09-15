@@ -23,10 +23,10 @@ insert into public.cities (slug, name_en, name_ru, country_code, flag, is_active
 values ('test-active-city', 'Test Active', 'Тест активный', 'VN', '🇻🇳', true, 50);
 
 -- Venue fixtures: one published, one draft.
-insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
+insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
 values
-	('00000000-0000-0000-0000-000000000441', 'test-active-city', 'test-menu-pub-place', 'street', 'budget', true, 'published'),
-	('00000000-0000-0000-0000-000000000442', 'test-active-city', 'test-menu-draft-place', 'cafe', 'average', false, 'draft');
+	('00000000-0000-0000-0000-000000000441', 'test-active-city', 'test-menu-pub-place', 'street', 'budget', 'verified_team', '2026-01-01T00:00:00+00', 'published'),
+	('00000000-0000-0000-0000-000000000442', 'test-active-city', 'test-menu-draft-place', 'cafe', 'average', 'under_review', null, 'draft');
 
 insert into public.dishes (id, slug, name_vi, verified, status)
 values

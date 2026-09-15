@@ -5,6 +5,12 @@ export interface LocalizedText {
 
 export type ContentStatus = 'published' | 'draft'
 export type ReviewStatus = 'pending' | 'approved' | 'rejected'
+/**
+ * Publish-confidence level, mirrored from the DB `trust_badge` enum. The
+ * product promise is "badge + verification date + evidence discipline", so a
+ * level always travels with `lastVerifiedAt`.
+ */
+export type TrustLevel = 'under_review' | 'recommended_expats' | 'verified_team'
 export type PlaceType = 'cafe' | 'street' | 'market' | 'restaurant'
 export type PriceLevel = 'budget' | 'average' | 'above'
 export type GuideCategory = 'transport' | 'money' | 'safety' | 'health' | 'visarun'
@@ -40,7 +46,9 @@ export interface Place {
   summary: LocalizedText
   /** Externally sourced photo URL; null renders the styled placeholder. */
   imageUrl: string | null
-  verified: boolean
+  trustLevel: TrustLevel
+  /** ISO timestamp of the team's last check; null only while under review. */
+  lastVerifiedAt: string | null
   status: ContentStatus
   updated: string
 }
@@ -52,11 +60,15 @@ export interface GuideEntry {
   title: LocalizedText
   note: LocalizedText
   summary: LocalizedText
+  trustLevel: TrustLevel
+  lastVerifiedAt: string | null
   status: ContentStatus
 }
 
 export interface EmergencyContact {
   id: string
+  /** Contacts are per-country facts, so they hang off the city tenancy axis. */
+  citySlug: string
   number: string
   label: LocalizedText
 }

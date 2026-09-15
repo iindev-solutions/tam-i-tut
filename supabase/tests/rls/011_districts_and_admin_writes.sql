@@ -39,9 +39,9 @@ values
 	('00000000-0000-0000-0000-000000000602', 'ru', 'Район Б', 'Район', '5-10 млн', '5 мин', 'Описание', '{quiet}');
 
 -- places fixture for admin-write tests (city-aware slice).
-insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
+insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
 values
-	('00000000-0000-0000-0000-000000000403', 'test-active-city', 'test-admin-place', 'cafe', 'average', false, 'draft');
+	('00000000-0000-0000-0000-000000000403', 'test-active-city', 'test-admin-place', 'cafe', 'average', 'under_review', null, 'draft');
 
 insert into public.place_localizations (place_id, language, name, area, summary)
 values

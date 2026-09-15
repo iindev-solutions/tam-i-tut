@@ -1,17 +1,20 @@
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { mockDb } from '~/mocks/db'
 import type { MockDb } from '~/types/content'
 import { getSupabaseClient } from './useSupabaseClient'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   mapCategories,
   mapCities,
+  mapEmergencyContacts,
   mapGuides,
   mapPlaces,
   mapReviews,
   type CategoryRow,
   type CityRow,
+  type EmergencyContactRow,
   type GuideRow,
   type PlaceLocalizationRow,
   type PlaceRow,
@@ -19,16 +22,30 @@ import {
 } from './db-mappers'
 
 /**
+ * One in-flight Supabase read per client. Eleven components call `useDb()`
+ * (layout, city select, every category page), so without this each mount ran
+ * its own seven-table query. `ssr: false`, so a module-scoped promise is safe.
+ */
+let inflight: Promise<void> | null = null
+
+/** `unavailable` = no session (bot gate); `error` = session but the read failed. */
+type SourceState = 'loading' | 'mock' | 'supabase' | 'unavailable' | 'error'
+
+/**
  * RLS-safe content reads for user-facing routes (schema v2 cutover, food slice).
  *
  * - With a configured Supabase project AND an authenticated session (from the
  *   telegram-bootstrap flow) it queries `cities`, `categories`, `places`,
- *   `place_localizations` and `reviews` through the anon key; RLS restricts
- *   reads to active cities, published places/localizations and approved
- *   reviews. Defense-in-depth filters mirror the policies in the queries.
+ *   `place_localizations`, `reviews`, `guide_entries` and `emergency_contacts`
+ *   through the anon key; RLS restricts reads to active cities, published
+ *   places/localizations, approved reviews and published guides.
+ *   Defense-in-depth filters mirror the policies in the queries.
  * - Without a project or a session (plain browser, function not deployed) it
  *   falls back to the shared mock store, so the prototype and the
  *   admin->user live demo keep working unchanged.
+ * - With a session but a FAILED read the state is `error`, never the bot
+ *   gate: a signed-in user on a broken connection was told to "open the app
+ *   from the bot" while already inside it.
  *
  * The returned `db` ref has the exact `MockDb` shape, so page components are
  * untouched. The mock admin prototype keeps using `useMockDb()` directly.
@@ -56,7 +73,9 @@ export function useDb() {
 
   const db = useState<MockDb>('content-db', () => (mockAllowed ? structuredClone(mockDb) : emptyDb()))
   const loading = useState<boolean>('content-db-loading', () => false)
-  const source = ref<'loading' | 'mock' | 'supabase' | 'unavailable'>('loading')
+  // Shared, not a local ref: the layout renders the bot gate / error screen
+  // from this value while pages render from their own useDb() instance.
+  const source = useState<SourceState>('content-db-source', () => 'loading')
 
   // Raw PostgREST rows kept between refreshes: a locale switch re-maps them
   // instantly instead of re-fetching six tables (mappers hold both languages).
@@ -67,6 +86,7 @@ export function useDb() {
     localizations: PlaceLocalizationRow[]
     reviews: ReviewRow[]
     guides: GuideRow[]
+    contacts: EmergencyContactRow[]
   } | null)
 
   const applyMock = () => {
@@ -92,7 +112,8 @@ export function useDb() {
       categories: mapCategories(raw.value.categories),
       places: mapPlaces(raw.value.places, raw.value.localizations, locale.value),
       reviews: mapReviews(raw.value.reviews),
-      guides: mapGuides(raw.value.guides)
+      guides: mapGuides(raw.value.guides),
+      contacts: mapEmergencyContacts(raw.value.contacts)
     }
   }
 
@@ -109,27 +130,41 @@ export function useDb() {
       return
     }
 
+    // Concurrent callers share one read. The slot is taken after the session
+    // check, so a no-session call can never swallow the session-triggered read.
+    if (inflight) return inflight
+    inflight = read(client).finally(() => {
+      inflight = null
+    })
+    return inflight
+  }
+
+  const read = async (sb: SupabaseClient) => {
     loading.value = true
     try {
-      const [cities, categories, places, localizations, reviews, guides] = await Promise.all([
-        client
+      const [cities, categories, places, localizations, reviews, guides, contacts] = await Promise.all([
+        sb
           .from('cities')
           .select('slug,name_en,name_ru,country_code,flag,is_active,sort_order')
           .order('sort_order'),
-        client.from('categories').select('slug,title_ru,title_en,sort_order,is_active').order('sort_order'),
-        client
+        sb.from('categories').select('slug,title_ru,title_en,sort_order,is_active').order('sort_order'),
+        sb
           .from('places')
-          .select('id,city_slug,slug,place_type,price_level,verified,status,updated_at,image_url')
+          .select('id,city_slug,slug,place_type,price_level,trust_badge,last_verified_at,status,updated_at,image_url')
           .eq('status', 'published'),
-        client.from('place_localizations').select('place_id,language,name,area,summary').in('language', ['ru', 'en']),
-        client.from('reviews').select('id,place_id,author,rating,body,status,created_at'),
-        client
+        sb.from('place_localizations').select('place_id,language,name,area,summary').in('language', ['ru', 'en']),
+        sb.from('reviews').select('id,place_id,author,rating,body,status,created_at'),
+        sb
           .from('guide_entries')
-          .select('id,category_slug,slug,title,summary,note,icon,language,status')
-          .eq('status', 'published')
+          .select('id,category_slug,slug,title,summary,note,icon,language,status,trust_badge,last_verified_at')
+          .eq('status', 'published'),
+        sb
+          .from('emergency_contacts')
+          .select('id,city_slug,number,label_ru,label_en,sort_order')
+          .order('sort_order')
       ])
 
-      for (const result of [cities, categories, places, localizations, reviews, guides]) {
+      for (const result of [cities, categories, places, localizations, reviews, guides, contacts]) {
         if (result.error) throw result.error
       }
 
@@ -139,14 +174,21 @@ export function useDb() {
         places: places.data as PlaceRow[],
         localizations: localizations.data as PlaceLocalizationRow[],
         reviews: reviews.data as ReviewRow[],
-        guides: guides.data as GuideRow[]
+        guides: guides.data as GuideRow[],
+        contacts: contacts.data as EmergencyContactRow[]
       }
       remapFromRaw()
       source.value = 'supabase'
     } catch (error) {
-      // RLS read failed (e.g. stale session, network): stay honest about it.
-      console.error('[useDb] Supabase read failed, falling back', error)
-      applyMock()
+      // A session exists here, so the user is inside the bot and a read
+      // failure is a real error - not the "open from the bot" gate.
+      console.error('[useDb] Supabase read failed', error)
+      if (mockAllowed) {
+        applyMock()
+      } else {
+        db.value = emptyDb()
+        source.value = 'error'
+      }
     } finally {
       loading.value = false
     }

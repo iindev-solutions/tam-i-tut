@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import type { BadgeStatus } from '~/components/StatusBadge.vue'
 import { useAdminDb, type AdminPlaceRow } from '~/composables/useAdminDb'
-import type { PlaceType, PriceLevel } from '~/types/content'
+import type { PlaceType, PriceLevel, TrustLevel } from '~/types/content'
 
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
@@ -27,7 +27,8 @@ const rows = computed(() =>
     type: typeLabel(place.place_type),
     area: localText(place, 'area'),
     status: (place.status === 'published' ? 'active' : place.status === 'draft' ? 'pending' : 'draft') as BadgeStatus,
-    verified: place.verified,
+    trustLevel: place.trust_badge,
+    lastVerifiedAt: place.last_verified_at,
     updated: place.updated_at.slice(0, 10)
   }))
 )
@@ -43,7 +44,8 @@ const form = ref<{
   slug: string
   place_type: PlaceType
   price_level: PriceLevel
-  verified: boolean
+  trust_badge: TrustLevel
+  last_verified_at: string | null
   status: 'draft' | 'published'
   ru: { name: string, area: string, summary: string }
   en: { name: string, area: string, summary: string }
@@ -52,7 +54,8 @@ const form = ref<{
   slug: '',
   place_type: 'cafe',
   price_level: 'average',
-  verified: false,
+  trust_badge: 'under_review',
+  last_verified_at: null,
   status: 'draft',
   ru: { ...emptyLoc },
   en: { ...emptyLoc }
@@ -66,6 +69,10 @@ const priceOptions = (['budget', 'average', 'above'] as PriceLevel[]).map(level 
   label: t(`food.price.${level}`),
   value: level
 }))
+const trustOptions = (['under_review', 'recommended_expats', 'verified_team'] as TrustLevel[]).map(level => ({
+  label: t(`trust.levels.${level}`),
+  value: level
+}))
 const cityOptions = computed(() => admin.cities.value.map(city => ({ label: city.name_en, value: city.slug })))
 
 const openNew = () => {
@@ -74,7 +81,8 @@ const openNew = () => {
     slug: '',
     place_type: 'cafe',
     price_level: 'average',
-    verified: false,
+    trust_badge: 'under_review',
+    last_verified_at: null,
     status: 'draft',
     ru: { ...emptyLoc },
     en: { ...emptyLoc }
@@ -94,7 +102,8 @@ const openEdit = (row: { id: string }) => {
     slug: place.slug,
     place_type: place.place_type,
     price_level: place.price_level,
-    verified: place.verified,
+    trust_badge: place.trust_badge,
+    last_verified_at: place.last_verified_at,
     status: place.status === 'published' ? 'published' : 'draft',
     ru: { ...ru },
     en: { ...en }
@@ -151,11 +160,9 @@ const save = async () => {
       <template #cell-name="{ row }">
         <span class="flex items-center gap-1.5 font-medium text-highlighted">
           {{ row.name }}
-          <UIcon
-            v-if="row.verified"
-            name="i-lucide-badge-check"
-            class="size-3.5 text-primary"
-            :aria-label="t('food.verifiedTitle')"
+          <TrustBadge
+            :level="row.trustLevel"
+            :verified-at="row.lastVerifiedAt"
           />
         </span>
       </template>
@@ -240,11 +247,17 @@ const save = async () => {
               />
             </UFormField>
           </div>
-          <div class="flex gap-6">
-            <UCheckbox
-              v-model="form.verified"
-              :label="t('admin.editor.verified')"
-            />
+          <div class="flex items-end gap-3">
+            <UFormField
+              :label="t('admin.editor.trustLevel')"
+              class="flex-1"
+            >
+              <USelectMenu
+                v-model="form.trust_badge"
+                :items="trustOptions"
+                value-key="value"
+              />
+            </UFormField>
             <USelectMenu
               v-model="form.status"
               :items="[

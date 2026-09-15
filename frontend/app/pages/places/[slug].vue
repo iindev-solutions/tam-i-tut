@@ -124,12 +124,6 @@ const submitReview = async () => {
             <h1 class="text-3xl font-semibold tracking-tight text-highlighted">
               {{ place.name }}
             </h1>
-            <UIcon
-              v-if="place.verified"
-              name="i-lucide-badge-check"
-              class="mt-1.5 size-6 shrink-0 text-primary"
-              :aria-label="t('food.verifiedTitle')"
-            />
           </div>
           <p class="text-sm text-muted">
             {{ t(`food.filters.${place.type}`) }} · {{ t(`food.price.${place.priceLevel}`) }}
@@ -137,6 +131,13 @@ const submitReview = async () => {
               · {{ approvedReviews.length }} {{ t('food.details.reviews') }}
             </template>
           </p>
+          <!-- Level + check date together: a badge without a date is not the
+               product's trust promise. -->
+          <TrustBadge
+            :level="place.trustLevel"
+            :verified-at="place.lastVerifiedAt"
+            variant="full"
+          />
         </header>
 
         <p class="text-base leading-7 text-default">

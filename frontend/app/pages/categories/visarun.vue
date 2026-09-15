@@ -46,6 +46,11 @@ const guides = computed(() =>
                 {{ tt(tip.title) }}
               </p>
             </div>
+            <TrustBadge
+              :level="tip.trustLevel"
+              :verified-at="tip.lastVerifiedAt"
+              variant="full"
+            />
             <GuideText
               :text="tt(tip.summary)"
               variant="summary"

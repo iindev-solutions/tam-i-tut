@@ -50,6 +50,7 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 - Separate layout (`layouts/admin.vue`): sticky header with "TAMITUT Admin" wordmark, warning-toned "prototype - mock data" badge, horizontal-scrollable pill nav, "open app" link. No user header.
 - Tables are `AdminTable.vue` (generic, cell slots): `rounded-2xl` border, uppercase muted headers, `min-w-[32rem]` with horizontal scroll on narrow screens - overflow scrolls, never squishes.
 - Status is `StatusBadge.vue`: neutral for published/active/approved, warning for draft/pending/coming-soon, error for rejected. Orange stays out of admin chrome.
+- Trust is `TrustBadge.vue`: three levels from the DB enum (`under_review` / `recommended_expats` / `verified_team`) plus the check date. Orange marks `verified_team` only - it is the one trust cue per screen; lower levels stay `text-muted`/`text-dimmed` so a card list never turns into color noise. Use the `icon` variant inside dense cards, `full` on detail surfaces. A level always ships with its date: `verified_at` renders as "Проверено 30.08.2026" (RU) / "Checked 30/08/2026" (EN), and `under_review` shows the level alone. The DB enforces this - a trusted row cannot be saved without `last_verified_at`. Never render `under_review_note` to users: it is internal editorial process text.
 - Admin actions are small ghost buttons; icon-only actions require `aria-label`.
 - Admin mutations affect user pages live within one SPA session; a full reload re-seeds the mock store.
 
@@ -59,6 +60,8 @@ Monochrome first. Orange is a rare signal, not decoration density. If a screen f
 
 ## States / behavior
 
+- `useDb` exposes one state every surface renders from: `loading`, `mock` (dev only, with the demo strip), `supabase`, `unavailable` (no session -> the bot gate takes over the screen) and `error` (a session exists but the read failed -> centered retry card, never the bot gate). A signed-in user must never be told to open the app from the bot.
+- City-scoped data (emergency contacts) filters by the header city selection and shows an explicit empty state, never an empty grid.
 - RU is default locale; EN is an explicit toggle in header (`setLocale`).
 - Light/dark both must produce correct computed background+text; test both, not only the class switch.
 - Unavailable cities: visible but `disabled`, with flag emoji and "Скоро/Coming soon".

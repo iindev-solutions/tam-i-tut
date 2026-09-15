@@ -18,32 +18,33 @@
 - `app/components/HousingTileMap.client.vue` - Leaflet tile map (CARTO light/dark) with district polygons and labels
 - `app/components/AdminTable.vue` - generic typed admin table with cell slots
 - `app/components/StatusBadge.vue` - status-to-tone badge with i18n labels
+- `app/components/TrustBadge.vue` - trust level (under_review/recommended_expats/verified_team) + check date; `icon` variant for cards, `full` for detail surfaces; orange only on `verified_team`
 - `app/layouts/default.vue` - user-facing layout with the under-header back row on subpages
 - `app/layouts/admin.vue` - admin prototype layout (sticky nav, prototype badge)
 - `app/pages/index.vue` - landing; six category cards, city line with inline city select
 - `app/pages/categories/housing.vue` - housing with Guide/Map tabs; guide cards, 12 real search-channel links, district price list opens the map tab
 - `app/pages/categories/food.vue` - DB places with filter chips and a scroll-snap photo-card rail (external `image_url` with type-icon placeholder fallback); each card links to the detail page
 - `app/pages/places/[slug].vue` - place detail: hero photo, meta, summary, "how to find" block with a Google Maps deep link (no stored coordinates - query is name + area)
-- `app/pages/categories/transport.vue` / `money.vue` / `safety.vue` / `culture.vue` - mock-driven guide pages
+- `app/pages/categories/transport.vue` / `money.vue` / `safety.vue` / `culture.vue` - guide pages; transport/money/safety read DB guides, safety also renders the city-scoped emergency contacts, culture stays static copy
 - `app/pages/journey/first-day.vue` - interactive first-day checklist with progress counter
 - `app/pages/admin/*` - real admin panel (useAdminDb): dashboard (with menu-queue + scan metrics), cities, categories, districts, places, guides, reviews (incl. review text), menu curation
 - `app/composables/useMockDb.ts` - reactive mock DB store seeded from `mocks/db.ts` with admin mutations (admin prototype only)
-- `app/composables/useDb.ts` - RLS-safe Supabase reads for user routes (schema v2: cities/categories/places/reviews) with mock fallback when unconfigured
+- `app/composables/useDb.ts` - RLS-safe Supabase reads for user routes (cities/categories/places/localizations/reviews/guides/emergency_contacts). State machine: `loading | mock | supabase | unavailable | error` (`unavailable` = no session -> bot gate; `error` = session but failed read -> retry screen). One module-scoped in-flight promise serves every caller; mock fallback is dev-only
 - `app/composables/useAnalytics.ts` - pilot metrics: fire-and-forget `app_events` inserts (menu_scan/place_view/review_submit), RLS forces own user_id
 - `app/pages/admin/menu.vue` - menu translator Phase B: curation queue (link/reject unmatched lines) + per-venue menu verify/reopen
-- `app/composables/db-mappers.ts` - pure DB-row -> UI-shape mappers + static CITY_UI/CATEGORY_UI chrome (unit-tested)
+- `app/composables/db-mappers.ts` - pure DB-row -> UI-shape mappers (cities/categories/places/reviews/guides/emergency_contacts) + static CITY_UI/CATEGORY_UI chrome (unit-tested); `mapGuides` pairs ru/en rows and takes the newest check date
 - `app/composables/useSupabaseClient.ts` - shared Supabase client factory from runtimeConfig
 - `app/composables/useAuth.ts` - read-side TMA session state (session is established by the telegram plugin)
 - `app/composables/useLocalized.ts` - renders bilingual mock fields by locale
 - `app/plugins/telegram.client.ts` - Telegram Mini App bridge: native BackButton synced with routing + single-consumer initData bootstrap that exchanges a Supabase session via `setSession`
 - `app/plugins/spa-loader.client.ts` - finishes SPA loader after app mount/suspense
 - `app/mocks/housing.ts` + `app/types/housing.ts` - production-shaped illustrative housing content contract
-- `app/mocks/db.ts` + `app/types/content.ts` - bilingual mock DB: cities, categories, places, guides, contacts, reviews, activity
+- `app/mocks/db.ts` + `app/types/content.ts` - bilingual mock DB: cities, categories, places, guides, contacts, reviews, activity; `TrustLevel` + `trustLevel`/`lastVerifiedAt` on places and guides
 - `i18n/locales/en.json` / `ru.json` - full UI copy for app and admin (parity enforced by tests)
 - `app/spa-loading-template.html` - pre-hydration curtain loader (arrow open + wordmark + panel reveal)
 - `scripts/audit-i18n.mjs` - CLI locale parity + unused-key audit
 - `tests/unit/content.test.ts` - locale parity and mock-data integrity tests (ids, references, GeoJSON rings)
-- `tests/unit/db-mappers.test.ts` - DB-row -> UI-shape mapper tests (cities/categories/places/reviews)
+- `tests/unit/db-mappers.test.ts` - DB-row -> UI-shape mapper tests (cities/categories/places/reviews/guides incl. trust fields/emergency contacts)
 - `tests/unit/telegram-initdata.test.ts` - Telegram initData HMAC/freshness validation tests (shares `validate.ts` with the edge function)
 - `tests/unit/smoke.test.ts` - baseline test runner check
 - Wiki: `vault/wiki/services/housing-map.md` - how to change districts, geometry, tiles, and map behavior
@@ -51,10 +52,10 @@
 ## Supabase (`supabase/`)
 
 - `config.toml` - local Supabase runtime config (incl. `[functions.telegram-bootstrap]` with `verify_jwt = false`)
-- `seed.sql` - local deterministic seed scaffold (23 da-nang places incl. the Phase 4 sourced food expansion)
-- `migrations/*_001..049_*.sql` - ordered schema, RLS, guard, replay, city-aware v2 (cities/places/reviews), menu translator slice (036-042), knowledge passes (043-046), health category (047-048), and 049 (menu curation policies, review insert + body, `app_events` metrics, menu-photos Storage purge cron)
+- `seed.sql` - local deterministic seed scaffold (29 da-nang places incl. the Phase 4 sourced food expansion, emergency contacts, place trust levels)
+- `migrations/*_001..059_*.sql` - ordered schema, RLS, guard, replay, city-aware v2 (cities/places/reviews), menu translator slice (036-042), knowledge passes (043-046), health category (047-048), 049 (menu curation policies, review insert + body, `app_events` metrics, menu-photos Storage purge cron), 050-057 (visarun rewrite, admin write policies, district polygons), 058 (`emergency_contacts` + `places.trust_badge`/`last_verified_at` replacing the `verified` boolean) and 059 (Da Nang emergency numbers; content seeds must ride a migration because `db push` never runs `seed.sql`)
 - `seed.sql` - mirrors the migrations' content seeds 1:1 for fresh stacks
-- `tests/rls/*.sql` - pgTAP RLS/guard regression suite (001-015; 015 covers menu curation, review submission, app_events; 007/010 scoped fixture-safe for live DBs). Run via `supabase test db` (Docker) or, without Docker, `supabase db query --linked --file <suite>` (hosted has pgTAP; a clean finish() = pass)
+- `tests/rls/*.sql` - pgTAP RLS/guard regression suite (001-016; 015 covers menu curation/review submission/app_events, 016 covers the trust cutover CHECK + emergency-contact policies; 007/010 scoped fixture-safe for live DBs). Run via `supabase test db` (Docker) or, without Docker, `supabase db query --linked --file <suite>` (hosted has pgTAP; a clean finish() = pass)
 - `functions/telegram-bootstrap/` - implemented Edge Function: `index.ts` (session exchange, nonce replay, profile upsert) + `validate.ts` (pure initData HMAC/freshness, shared with frontend tests)
 - `functions/menu-translate/` - menu translator Edge Function: `index.ts` (auth, rate limit, cache-first, Gemini call, persistence) + `contract.ts` (pure prompt/parse, shared with frontend tests)
 - `app/pages/places/[slug]/menu.vue` - menu translator scan page (photo -> translated lines -> dish sheet); dictionary seed generated by `scripts/gen-dish-seed.mjs`

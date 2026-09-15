@@ -145,7 +145,6 @@
       "average": "Average",
       "above": "Above average"
     },
-    "verifiedTitle": "Place verified",
     "reviewsLabel": "reviews",
     "empty": "Nothing here yet - places are added as they get verified.",
     "details": {
@@ -179,7 +178,8 @@
     "description": "Emergency contacts and habits that reduce risk.",
     "contactsTitle": "Emergency numbers",
     "tipsTitle": "Habits",
-    "consulateNote": "Russian Consulate General: Trần Hưng Đạo, Hải Châu - keep the address handy."
+    "consulateNote": "Russian Consulate General: Trần Hưng Đạo, Hải Châu - keep the address handy.",
+    "contactsEmpty": "No numbers have been filled in for this city yet."
   },
   "culture": {
     "kicker": "Culture",
@@ -370,14 +370,14 @@
       "sortOrder": "Sort order",
       "type": "Type",
       "priceLevel": "Price level",
-      "verified": "Editor verified",
       "status": "Status",
       "save": "Save",
       "cancel": "Cancel",
       "saved": "Saved",
       "saveError": "Save failed",
       "newDistrict": "New district",
-      "editDistrict": "Edit district"
+      "editDistrict": "Edit district",
+      "trustLevel": "Trust level"
     },
     "menu": {
       "subtitle": "Menu scans: curate lines and verify menus.",
@@ -492,5 +492,17 @@
     "description": "Extend your stamp with a one-day border run: routes, prices, services - everything to know before you go.",
     "tipsTitle": "Step by step",
     "empty": "Guides are on the way."
+  },
+  "trust": {
+    "levels": {
+      "verified_team": "Verified by the team",
+      "recommended_expats": "Recommended by expats",
+      "under_review": "Under review"
+    },
+    "checkedOn": "Checked {date}",
+    "underReviewHint": "Not yet confirmed by the editorial team",
+    "loadErrorTitle": "Could not load",
+    "loadErrorDesc": "The data did not arrive. Check your connection and try again.",
+    "retry": "Try again"
   }
 }

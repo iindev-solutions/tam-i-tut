@@ -41,6 +41,8 @@ Core records: cities, districts/localizations, typed content items, translations
 Draft -> In review -> Published -> Reverification -> Archived
 ```
 
+`trust_badge` (`under_review` / `recommended_expats` / `verified_team`) + `last_verified_at` is the single model for both `guide_entries` and `places`; the database refuses a trusted level without a check date. Emergency numbers are city-scoped rows (`emergency_contacts`), not frontend constants - they differ per country.
+
 Trust badges never come from payment. Sponsored or affiliate inventory, when eventually enabled, is explicitly labeled and cannot alter organic ranking or trust state.
 
 ## Admin boundary

@@ -2,6 +2,15 @@
 
 Short record of durable project decisions and handoffs. Detailed history lives in `vault/logs/changelog.md`.
 
+## 2026-09-15 - Trust Layer Reaches the User; Emergency Contacts Fixed
+
+- Migrations 058/059 on hosted: `emergency_contacts` (city-scoped, reader = active city only, moderator/admin manage) and the places trust cutover - `trust_badge` + `last_verified_at` replace the `verified` boolean, backfilled from `verified = true`, guarded by `places_trust_requires_verified_at`. All 48 published guides are `under_review`, so the UI now says so instead of implying verification.
+- Decision: content seeds ride a migration (059), because `db push` never runs `seed.sql` - 058's table would have stayed empty on hosted. Mirrored in `seed.sql` for fresh stacks.
+- Decision: `under_review_note` stays server-side (internal editorial text). The badge carries the user-facing meaning via i18n.
+- Two production defects fixed while wiring the state machine: the mock banner headed the layout's `v-if` chain and dropped `<main>` in mock mode (dev pages rendered the strip and nothing else), and a signed-in user with a failing read was shown the bot gate instead of a retry. `useDb` now shares one in-flight read across its 11 callers.
+- Evidence: pgTAP 016 PASS 10/10 + 010/011/014/015 re-run PASS on hosted; reader-contract probe (cities 4 / categories 8 / places 29 / localizations 58 / guide_entries 48 / emergency_contacts 3); gates lint+typecheck+53 tests+build; browser 360px RU+EN; prod bundle exercised through `wrangler dev` for the gate and the retry path (retry re-issues exactly 7 reads). Deployed worker 198dae93.
+- Founder next: live Telegram walk-through (session 5.5 + confirm badges/numbers), repo secrets, bot token rotation.
+
 ## 2026-09-06 - Phase B + Reviews + Metrics Shipped
 
 - Migration 049 on hosted: admin write policies (menus/menu_items/dishes), review `body` + authenticated pending insert, `app_events` metrics (own-user_id enforced), nightly 90-day menu-photos Storage purge.

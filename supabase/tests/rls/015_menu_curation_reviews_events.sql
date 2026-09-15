@@ -29,10 +29,10 @@ values
 insert into public.cities (slug, name_en, name_ru, country_code, flag, is_active, sort_order)
 values ('test-active-city', 'Test Active', 'Тест активный', 'VN', '🇻🇳', true, 62);
 
-insert into public.places (id, city_slug, slug, place_type, price_level, verified, status)
+insert into public.places (id, city_slug, slug, place_type, price_level, trust_badge, last_verified_at, status)
 values
-	('00000000-0000-0000-0000-000000000401', 'test-active-city', 'test-curation-pub', 'cafe', 'average', true, 'published'),
-	('00000000-0000-0000-0000-000000000402', 'test-active-city', 'test-curation-draft', 'cafe', 'average', false, 'draft');
+	('00000000-0000-0000-0000-000000000401', 'test-active-city', 'test-curation-pub', 'cafe', 'average', 'verified_team', '2026-01-01T00:00:00+00', 'published'),
+	('00000000-0000-0000-0000-000000000402', 'test-active-city', 'test-curation-draft', 'cafe', 'average', 'under_review', null, 'draft');
 
 insert into public.menus (id, place_id, status)
 values

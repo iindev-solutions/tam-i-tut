@@ -11,13 +11,15 @@ import type {
   CategoryEntry,
   CityEntry,
   ContentStatus,
+  EmergencyContact,
   GuideCategory,
   GuideEntry,
   Place,
   PlaceType,
   PriceLevel,
   Review,
-  ReviewStatus
+  ReviewStatus,
+  TrustLevel
 } from '~/types/content'
 
 export type LanguageCode = 'ru' | 'en'
@@ -47,7 +49,8 @@ export interface PlaceRow {
   slug: string
   place_type: PlaceType
   price_level: PriceLevel
-  verified: boolean
+  trust_badge: TrustLevel
+  last_verified_at: string | null
   status: ContentStatus
   updated_at: string
   image_url: string | null
@@ -81,6 +84,17 @@ export interface GuideRow {
   icon: string | null
   language: LanguageCode
   status: ContentStatus
+  trust_badge: TrustLevel
+  last_verified_at: string | null
+}
+
+export interface EmergencyContactRow {
+  id: string
+  city_slug: string
+  number: string
+  label_ru: string
+  label_en: string
+  sort_order: number
 }
 
 /** Static UI chrome for pilot city slugs (i18n keys live in the locale files). */
@@ -202,7 +216,8 @@ export function mapPlaces(rows: PlaceRow[], localizations: PlaceLocalizationRow[
         area: { ru: ru?.area ?? '', en: en?.area ?? '' },
         summary: { ru: ru?.summary ?? '', en: en?.summary ?? '' },
         imageUrl: row.image_url,
-        verified: row.verified,
+        trustLevel: row.trust_badge,
+        lastVerifiedAt: row.last_verified_at,
         status: row.status,
         updated: row.updated_at
       }
@@ -237,6 +252,8 @@ export function mapGuides(rows: GuideRow[]): GuideEntry[] {
     category: GuideCategory
     icon: string
     status: ContentStatus
+    trustLevel: TrustLevel
+    lastVerifiedAt: string | null
     ru?: { title: string, note: string, summary: string }
     en?: { title: string, note: string, summary: string }
   }>()
@@ -244,8 +261,19 @@ export function mapGuides(rows: GuideRow[]): GuideEntry[] {
   for (const row of rows) {
     if (row.status !== 'published') continue
     const key = `${row.category_slug}/${row.slug}`
-    const entry = byKey.get(key) ?? { category: row.category_slug, icon: row.icon ?? '', status: row.status }
+    const entry = byKey.get(key) ?? {
+      category: row.category_slug,
+      icon: row.icon ?? '',
+      status: row.status,
+      trustLevel: row.trust_badge,
+      lastVerifiedAt: row.last_verified_at
+    }
     entry.icon = entry.icon ?? row.icon ?? ''
+    // Both language rows are governed by the same trust transition trigger, so
+    // the first row's level wins; the date takes the newest check either way.
+    if (row.last_verified_at && (!entry.lastVerifiedAt || row.last_verified_at > entry.lastVerifiedAt)) {
+      entry.lastVerifiedAt = row.last_verified_at
+    }
     entry[row.language] = { title: row.title, note: row.note ?? '', summary: row.summary }
     byKey.set(key, entry)
   }
@@ -265,7 +293,22 @@ export function mapGuides(rows: GuideRow[]): GuideEntry[] {
       title: { ru: text('ru', 'title'), en: text('en', 'title') },
       note: { ru: text('ru', 'note'), en: text('en', 'note') },
       summary: { ru: text('ru', 'summary'), en: text('en', 'summary') },
+      trustLevel: entry.trustLevel,
+      lastVerifiedAt: entry.lastVerifiedAt,
       status: entry.status
     }
   })
+}
+
+/**
+ * Maps city-scoped emergency contacts to the UI shape. RLS already restricts
+ * rows to active cities; the page filters by the selected city.
+ */
+export function mapEmergencyContacts(rows: EmergencyContactRow[]): EmergencyContact[] {
+  return rows.map(row => ({
+    id: row.id,
+    citySlug: row.city_slug,
+    number: row.number,
+    label: { ru: row.label_ru, en: row.label_en }
+  }))
 }

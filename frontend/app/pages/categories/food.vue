@@ -122,14 +122,14 @@ const onImageError = (place: Place) => {
                 />
               </div>
               <span
-                v-if="place.verified"
+                v-if="place.trustLevel !== 'under_review'"
                 class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-default/85 px-2 py-0.5 text-[11px] font-medium text-default backdrop-blur"
               >
                 <UIcon
                   name="i-lucide-badge-check"
                   class="size-3.5 text-primary"
                 />
-                {{ t('food.verifiedTitle') }}
+                {{ t(`trust.levels.${place.trustLevel}`) }}
               </span>
             </div>
 

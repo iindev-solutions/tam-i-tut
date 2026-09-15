@@ -45,6 +45,11 @@ const entries = computed<GuideEntry[]>(() =>
                 class="size-5 shrink-0 text-muted"
               />
             </div>
+            <TrustBadge
+              :level="entry.trustLevel"
+              :verified-at="entry.lastVerifiedAt"
+              variant="full"
+            />
             <GuideText
               :text="tt(entry.note)"
               variant="note"

@@ -8,6 +8,12 @@ const { t } = useI18n()
 const { db } = useDb()
 const { tt } = useLocalized()
 
+const selectedCity = useState<string>('selectedCity', () => 'da-nang')
+
+// Emergency numbers are a per-country fact, so the block follows the header
+// city selector instead of showing every city's numbers at once.
+const contacts = computed(() => db.value.contacts.filter(contact => contact.citySlug === selectedCity.value))
+
 const tips = computed<GuideEntry[]>(() =>
   db.value.guides.filter(guide => guide.category === 'safety' && guide.status === 'published')
 )
@@ -34,7 +40,7 @@ const tips = computed<GuideEntry[]>(() =>
         </h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div
-            v-for="contact in db.contacts"
+            v-for="contact in contacts"
             :key="contact.id"
             class="rounded-2xl border border-default bg-elevated p-5 text-center shadow-sm"
           >
@@ -46,6 +52,12 @@ const tips = computed<GuideEntry[]>(() =>
             </p>
           </div>
         </div>
+        <p
+          v-if="contacts.length === 0"
+          class="rounded-xl border border-default bg-elevated/50 p-6 text-center text-sm text-muted"
+        >
+          {{ t('safety.contactsEmpty') }}
+        </p>
         <p class="flex items-center gap-2 text-xs text-muted">
           <UIcon
             name="i-lucide-landmark"
@@ -67,13 +79,15 @@ const tips = computed<GuideEntry[]>(() =>
             :ui="{ body: 'p-5' }"
           >
             <div class="space-y-3">
-              <UIcon
-                :name="tip.icon"
-                class="size-5 text-muted"
-              />
-              <p class="text-sm font-medium text-highlighted">
-                {{ tt(tip.title) }}
-              </p>
+              <div class="flex items-start justify-between gap-3">
+                <p class="text-sm font-medium text-highlighted">
+                  {{ tt(tip.title) }}
+                </p>
+                <TrustBadge
+                  :level="tip.trustLevel"
+                  :verified-at="tip.lastVerifiedAt"
+                />
+              </div>
               <GuideText
                 :text="tt(tip.note)"
                 variant="note"

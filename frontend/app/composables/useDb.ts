@@ -209,6 +209,10 @@ export function useDb() {
       // whole read into the error state - exactly how the stale-bundle
       // `places.verified` select took the live app down. The failed section
       // renders empty and the reason is logged instead of swallowed.
+      // Proven empirically 2026-09-15: with a bogus column in the clinics
+      // select this build renders the home grid (8 cards) and loses only that
+      // section, while the strict variant showed the error screen with zero
+      // cards - see vault/logs/changelog.md (5).
       const degraded: string[] = []
       const rows = <T>(result: { data: unknown, error: unknown }, label: string): T[] => {
         if (result.error) {

@@ -20,8 +20,23 @@ degrades to an empty section, logs the reason, and an aggregate
 `console.error` names every degraded section. A missing column now costs one
 section instead of the home grid.
 
-Honest scope note: the degradation branch is reasoned from the code path, not
-triggered by a forced 400 - I did not mutate live schema to prove it.
+**Proven, not reasoned (A/B on a local build, 2026-09-15).** The earlier note
+here said this branch was reasoned from the code path. It was then measured:
+a bogus column was put in the `clinics` select and the build was loaded with a
+real session, twice - once with the strict loop, once with degradation.
+
+| same 400 on `clinics` | strict (old) | degrading (this fix) |
+|---|---|---|
+| home category cards | **0** | **8** |
+| `<main>` present | no | yes |
+| error screen shown | **yes** | no |
+| clinics section | - | empty (20 -> 0) |
+| guides on that page | - | render |
+| safety page | - | unaffected (7 `tel:` links) |
+
+So the fix is load-bearing: it converts a total app outage into one missing
+section. The bogus column was reverted, the build reproduced the deployed
+assets byte for byte (76/76), and the experiment left no residue in the bundle.
 
 ### 2. A false provenance claim in copy
 
@@ -50,20 +65,28 @@ now `tel:` links. The i18n string and its key are deleted, not shadowed.
 My first version of `018_consulates_rls` asserted that a reader's UPDATE throws
 `%row-level security policy%`. It failed - and the policy was fine. Under RLS
 with no update policy, PostgreSQL does not raise: it filters the row out and the
-statement succeeds having changed 0 rows. The test now asserts 0 rows updated
-AND that the address is unchanged, which would actually catch a regression (a
-new permissive update policy added later).
+statement succeeds having changed 0 rows. The test now matches the shape already
+used by suite 011 (`with updated as (update ... returning 1) select is((select
+count(*) from updated), 0::bigint, ...)`), plus it asserts the address is
+unchanged - which would actually catch a regression if a permissive update
+policy were added later.
 
 ### Verified
 
-- pgTAP `018_consulates_rls` PASS 9/9; `017_clinics_rls` PASS 8/8 re-run.
+- pgTAP `018_consulates_rls` PASS 9/9; `017_clinics_rls` PASS 8/8 re-run. The
+  suite shape matches the existing 011 pattern for RLS-denied UPDATEs.
+- A/B degradation test on a local build with a real session: strict loop gives
+  0 home cards + error screen, degrading read gives 8 home cards and loses only
+  the clinics section (see the table above).
 - Authenticated read of `consulates` returns the row with both numbers.
 - Rendered on the deployed build at 360px: consulate from the DB (name, address,
   hours, both numbers), 7 `tel:` links on the safety page, corrected clinics
   subtitle, honest source line, no overflow.
 - Gates: lint / typecheck / 59 tests (3 new consulate mapper tests, one pinning
   that the address stays an untranslated Vietnamese string) / build.
-- Deployed worker `ef63d5fc`; probe account deleted, keys purged.
+- Deployed worker `ef63d5fc`; after the experiment the rebuilt assets matched
+  the deployed ones byte for byte (76/76), so prod was never running a broken
+  build. Probe account deleted, keys purged.
 
 ## 2026-09-15 (4) - Da Nang clinic directory (imported, explicitly unverified)
 

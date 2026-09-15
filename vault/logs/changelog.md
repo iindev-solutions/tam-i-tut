@@ -66,15 +66,30 @@ to a person - the standard trade, and a founder call rather than a quiet change.
   (`22 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng` + its source string) - prod
   renders this address, so it was restored before any further work.
 - Probe account banned (`user_banned`) and demoted; the throwaway SQL removed.
+- The read-only probe used for the modal comparison deleted cleanly (`200`),
+  because it performed no write - independent confirmation that the
+  undeletability trap only bites accounts with an audited action.
 - Gates: lint / typecheck / 59 tests / build. Deployed worker `2399983b`.
 
-### Honest gap
+### Modal rendering - settled by comparison, not by more probes
 
-I did not manage to confirm the editor modal's visual appearance through
-automation - several probes were invalid (measured during data load, stale refs
-after re-render, and one button whose `aria-label` masked its text). The write
-path is proven by data + audit, which is the part that matters, but the modal's
-final look should be eyeballed once in a browser by a human.
+The first version of this entry left the editor modal's appearance unverified,
+because automation kept reporting `[role="dialog"]` at `opacity: 0` while
+`data-state="open"`. Rather than write more probes, I compared against a
+PRE-EXISTING editor and settled it visually:
+
+| page | opens | visible on screen |
+|---|---|---|
+| `/admin/places` (pre-existing) | yes | **yes** - "Редактировать место", fields populated |
+| `/admin/clinics` (new) | yes | **yes** - "Клиника", trust level, source, both price notes |
+| `/admin/consulates` (new) | yes | **yes** - "Консульство", address, both phones, source |
+
+All three behave identically, so there is **no defect**: the `opacity: 0` reading
+was a measurement artifact (that element is a wrapper, not the painted panel).
+Recorded because it nearly produced a false bug report - and because it means
+every earlier admin check, mine and prior sessions', was DOM-based rather than
+visual. These three screenshots are the first visual confirmation of any admin
+modal in this project.
 
 ## 2026-09-15 (5) - Review pass: outage risk removed, consular facts moved to data
 

@@ -91,6 +91,20 @@ every earlier admin check, mine and prior sessions', was DOM-based rather than
 visual. These three screenshots are the first visual confirmation of any admin
 modal in this project.
 
+Account provenance, because it matters here: the DOM probes (`state: open,
+opacity: 0`) ran on the FIRST probe account, which then had to be neutralized for
+the unrelated FK reason below. The three VISUAL checks ran afterwards on a
+SEPARATE, read-only staff account created for exactly this comparison - it wrote
+nothing, so it stayed deletable and was removed cleanly (`200`). That the
+screenshots were genuinely authenticated is not an assumption: with no session,
+`/admin/places` redirects to `/admin/login` and renders no table at all
+(re-checked on the deployed build), while the screenshots show the populated
+table behind the modal.
+
+Consequence for anyone re-verifying: **no staff account exists now** (the first
+is banned, the second deleted), so repeating this needs a fresh probe. The
+comparison itself stands as taken.
+
 ## 2026-09-15 (5) - Review pass: outage risk removed, consular facts moved to data
 
 Four defects found reviewing the two slices above. Three were mine; one was a

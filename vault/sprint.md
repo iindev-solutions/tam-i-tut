@@ -28,7 +28,7 @@ Menu translator Phase A+B shipped and live (dictionary, scan, curation queue, st
 | 5.2 | Remove Laravel transitional backend from active repository path | DONE |
 | 5.3 | Align Nuxt public runtime config with Supabase | DONE |
 | 5.4 | Implement Telegram bootstrap Edge Function | DONE (code + 11 validation tests + deployed live, --no-verify-jwt) |
-| 5.5 | Validate Supabase Auth session exchange for Telegram identity | PARTIAL - RLS + live reads verified; live session test awaits founder Telegram test |
+| 5.5 | Validate Supabase Auth session exchange for Telegram identity | DONE (2026-09-15) - the empty-app report proves it live: the founder saw the app WITHOUT the bot gate, which is only reachable with a successfully exchanged session; bootstrap's admin-API user creation + the authenticated read path both verified |
 | 5.6 | Connect Nuxt client with RLS-safe Supabase queries | DONE (useDb + mappers + fallback; live-verified against hosted project) |
 | 5.7 | Validate Supabase Studio editorial workflow | BLOCKED - superseded by the admin plan (Phase 1) |
 | 5.8 | Approve city-aware schema v2 before content seeding | DONE (migrations 022/023 + RLS verified live) |
@@ -38,13 +38,14 @@ Menu translator Phase A+B shipped and live (dictionary, scan, curation queue, st
 
 ## Current Priority
 
-1. founder: live Telegram walk-through - session exchange (5.5), then confirm the trust badges render ("На проверке" on guides, badge + date on a place) and the safety numbers show
+1. founder: confirm in Telegram that the trust surfaces render ("На проверке" on guides, badge + date on a place) and the safety numbers show - session exchange (5.5) is now DONE
 2. founder: set `CLOUDFLARE_API_TOKEN` + `SUPABASE_ACCESS_TOKEN` repo secrets (auto-deploy), `SUPABASE_DB_URL` + R2 secrets (backups); rotate the Telegram bot token that was shared in chat
 3. Verification model: promote entries out of `under_review` as they are checked (admin places editor sets level + date; guides need the authoring form)
 4. Phase 4: closed pilot with metrics next - decide the metric set from `app_events` after the first pilot week
 5. Optional follow-ups: guide authoring form with per-guide verification, city search, R2 restore drill
 
 ## Notes
+- 2026-09-15 (2): fixed a live regression that rendered the app empty (no city control, no category cards) for any returning user with a session in storage - `remapFromRaw()` ran before `source = 'supabase'` and the in-flight dedupe removed the race that used to mask it. Also confirmed task 5.5 live (the empty-app report implies a successful session exchange, since the bot gate would otherwise show). Details: vault/logs/changelog.md.
 - 2026-09-15: **CI is red on runner-side steps, not on tests - investigate before trusting it again.** Evidence: the only fully green run is `d68fb8d` (2026-09-06 06:17); every push from `746b52c` (06:38) onward fails the frontend job at `npm --prefix frontend install` (fails ~24s in) and later runs also fail the database job at `supabase start`. Neither reproduces from the committed tree: a clean `git archive` checkout installed fine on Node 22 (1296 packages, exit 0) and the same command succeeds in the working tree on Node 24. Job logs need a token with repo access, so the cause is unconfirmed - suspect runner image/network or an org Actions limit at that moment. Meanwhile Deploy dies at its install step too, so the pipeline has NOT been deploying: every deploy since 09-06 was manual (`wrangler deploy` from `frontend/`).
 - 2026-09-15: trust layer live (migrations 058/059) - `places.trust_badge` + `last_verified_at` replace the boolean, `emergency_contacts` is city-scoped, `TrustBadge.vue` renders level + date, and a failed read with a live session shows a retry instead of the bot gate. Details: vault/logs/changelog.md.
 - 2026-09-06: Phase B + review submission + metrics shipped (migration 049). pgTAP suites now run on hosted via `db query --linked --file` when Docker is unavailable. CI red-on-main since 08-29 explained: stale 010 cities assertion (039) + stale health category test - both fixed.

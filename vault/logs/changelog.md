@@ -54,17 +54,48 @@ authenticated path is the one that matters and it is now exercised end to end.
 Deployed worker `643244ae`; all 76 JS assets match the built output byte for
 byte.
 
+### Telemetry blind spot found while diagnosing (documentation was wrong)
+
+`vault/resume-plan.md` claimed "bootstrap failures logged to app_events" since
+the 2026-09-07 audit fixes. That was never implemented: commit `0c9d772` says so
+in its message, but its diff only persists `telegramId` to localStorage. Checked
+the live table - `app_events` holds only 3 rows (`menu_scan` x2, `place_view`,
+`review_submit`), all from 2026-09-06, and the plugin's failure states
+(`no_init_data`, `bad_payload`, `set_session_failed`, `network`, raw HTTP
+status) go into a UI variable and are then discarded.
+
+Consequence: **a broken bootstrap or a broken read is invisible in production
+data.** The regression above could not have been found from `app_events` either
+way - the bootstrap succeeded and every read returned 200; only the mapping
+step failed - but an auth failure during the closed pilot would be equally
+invisible. Corrected in `resume-plan.md`; raising telemetry for the session
+path is recorded as a backlog item rather than fixed here, since it is
+operational scope the pilot did not ask for.
+
 ### Incident during diagnosis
 
 Creating a probe account with a raw `insert into auth.users` left GoTrue unable
 to read users at all - `/auth/v1/admin/users` returned 500 with "Database error
 finding users", and admin create/delete failed too. Since `telegram-bootstrap`
 uses that same admin API, session creation for real users was at risk while the
-row existed. Removed it with plain SQL (user + identity + profile); the admin
-API returned 200 immediately after, with all five real accounts intact. Probe
-account was then recreated through the Admin API (the supported path) and
-deleted after verification. Lesson: never hand-write `auth.users` rows on a
-live project - use the Admin API.
+row existed.
+
+Mechanism: the insert omitted GoTrue's token columns
+(`confirmation_token`, `recovery_token`, `email_change`, `email_change_token_new`,
+`email_change_token_current`, `phone_change`, `phone_change_token`,
+`reauthentication_token`), which it scans into non-nullable Go strings - so a
+partial row makes EVERY query over `auth.users` fail, not just that user.
+
+Removed it with plain SQL (user + identity + profile); the admin API returned
+200 immediately after, with all five real accounts intact. Probe account was
+then recreated through the Admin API (the supported path) and deleted after
+verification. Lesson: never hand-write `auth.users` rows on a live project -
+use the Admin API.
+
+Also confirmed no credential leak from this diagnosis: the service_role key was
+held in shell variables and a temp file only, never in a repo file, a `.env`, or
+a probe script; verified zero occurrences across the working tree and the entire
+git history (`git grep` over `git rev-list --all`), and all temp files deleted.
 
 ## 2026-09-15 - Trust layer reaches the Mini App; emergency contacts unblocked
 

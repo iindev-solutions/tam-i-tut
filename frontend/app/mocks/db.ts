@@ -366,7 +366,9 @@ export const mockDb: MockDb = {
   contacts: [
     { id: 'da-nang-police', citySlug: 'da-nang', number: '113', label: { ru: 'Полиция', en: 'Police' } },
     { id: 'da-nang-fire', citySlug: 'da-nang', number: '114', label: { ru: 'Пожарная служба', en: 'Fire department' } },
-    { id: 'da-nang-ambulance', citySlug: 'da-nang', number: '115', label: { ru: 'Скорая помощь', en: 'Ambulance' } }
+    { id: 'da-nang-ambulance', citySlug: 'da-nang', number: '115', label: { ru: 'Скорая помощь', en: 'Ambulance' } },
+    { id: 'da-nang-rescue', citySlug: 'da-nang', number: '112', label: { ru: 'Поиск и спасение', en: 'Search and rescue' } },
+    { id: 'da-nang-tourism', citySlug: 'da-nang', number: '0236 355 0111', label: { ru: 'Туристическая поддержка', en: 'Tourism support' } }
   ],
 
   reviews: [],

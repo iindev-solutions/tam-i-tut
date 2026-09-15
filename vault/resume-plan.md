@@ -16,6 +16,42 @@
   - The same commit (0c9d772) added server-side bootstrap observability: `logEvent()` in `supabase/functions/telegram-bootstrap/index.ts:92-108` posts `bootstrap_error` (with the failure reason and client IP) to `app_events` via the service role on every validation failure. Zero `bootstrap_error` rows in the table therefore means NO validation failure ever occurred - which independently confirms task 5.5.
   - Scope note (2026-09-15): logging covers SERVER-side validation failures only. The plugin's client-side failure states (`no_init_data`, `bad_payload`, `set_session_failed`, `network`, raw HTTP status - `app/plugins/telegram.client.ts:104-138`) are written to a UI variable and then discarded, so a failure before/around the request leaves no trace. That gap is a backlog item, not a documentation error.
 
+## Content gaps vs vietnamspot.ru (researched 2026-09-15; needs field verification)
+
+Ranked by value for a newcomer. None of these are imported yet - each needs a
+real verification pass (field check, official site, or phone call), because the
+project's trust rule is evidence-before-publication and a competitor page is a
+lead, not a source of record.
+
+1. **Da Nang hospital directory with prices** - the biggest gap and their
+   strongest asset (20 clinics, specialisations, Google ratings, two price
+   columns). We have one `health-hospitals` guide naming three hospitals
+   (Family, 199, Vinmec) and no prices. Their headline claim - a medical
+   translator gets you local-resident pricing (165 000 ₫ vs 350 000 ₫ for a
+   GP visit at Thiện Nhân) - is a business insight worth understanding, not
+   copying. Verification path: the two hospitals already cross-corroborated by
+   an independent source are Family Medical Practice (0236 358 2699) and
+   Vinmec; the rest need a visit or a call.
+2. **Crisis algorithms** - numbered steps for road accident, lost/stolen
+   passport, calling an ambulance, fraud, visa overstay, food poisoning, lost
+   phone, typhoon. We have scam guides (`safety-scam-*`) but no step-by-step
+   incident runbooks. Note our `safety-numbers` guide already covers
+   "numbers in advance"; this extends the same idea into procedures.
+3. **Show-on-screen phrase mode** - Vietnamese phrases + Cyrillic
+   transliteration, full-screen for showing a stranger. Highest UX value per
+   unit of work for a phone-only Mini App; fits the existing TMA back-button
+   and slide-over patterns.
+4. **Insurance guidance** - coverage floors and the motorbike clause; their
+   independent source corroborates that the motorbike clause is what catches
+   people out. We have a `health-insurance` guide; check it covers the clause.
+5. **Pharmacy chains** - we have `health-pharmacies` (Pharmacity, FPT Long
+   Chau); worth cross-checking the "what is sold without a prescription" angle.
+
+Also worth noting for strategy: their model is free guide -> paid services
+(Fast Track, visa, transfers, translator) -> partner catalogue with discounts.
+Our architecture defers monetization until after repeat usage, so this is a
+signal about what users actually pay for, not a model to copy now.
+
 ## Next Step
 
 1. founder: open the failing CI run (Actions run 34950737645) or hand over a token with repo access - the frontend job dies at `npm --prefix frontend install` and the database job at `supabase start`, neither reproducible from the committed tree, and job logs are unreadable without one. Until then Deploy dies at install too, so **all deploys are manual** (`wrangler deploy` from `frontend/`)

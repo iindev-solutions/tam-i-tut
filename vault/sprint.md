@@ -18,7 +18,7 @@ Menu translator Phase A+B shipped and live (dictionary, scan, curation queue, st
 | 1 | Content admin: auth gate, useAdminDb, places/reviews/cities/guides CRUD, audit, UI polish | DONE (guide authoring form = follow-up) |
 | 2 | Map admin: Leaflet.draw polygon editor, housing page cutover to DB | DONE |
 | 3 | Prod hardening: keep-awake worker, automated backups, CI on GitHub + auto-deploy, cleanup, privacy, rate limits | CODE DONE; CI GREEN CLAIM STALE - see Notes (jobs fail on runner-side install/stack steps, not on tests); auto-deploy/backup secrets pending founder |
-| 4 | Content & launch: pilot seed, freshness SLA, closed pilot | IN PROGRESS (content: 29 places, guides across 8 categories; trust levels now surface in the UI; closed pilot + metrics decision next) |
+| 4 | Content & launch: pilot seed, freshness SLA, closed pilot | IN PROGRESS (content: 29 places, guides across 8 categories; trust levels surface in the UI; emergency contacts verified + completed. Next: hospital directory needs field verification, then closed pilot + metrics) |
 
 ## Current Tasks
 
@@ -45,6 +45,7 @@ Menu translator Phase A+B shipped and live (dictionary, scan, curation queue, st
 5. Optional follow-ups: guide authoring form with per-guide verification, city search, R2 restore drill
 
 ## Notes
+- 2026-09-15 (3): safety page corrected and completed - consulate address was wrong (Trần Hưng Đạo -> 22 Trần Phú, verified against the official MFA site) plus its 24/7 line, emergency numbers gained 112 and the Da Nang tourism line (migration 060), and every number is now a `tel:` link. Competitor research (vietnamspot.ru) recorded in resume-plan as a ranked gap list. Details: vault/logs/changelog.md.
 - 2026-09-15 (2): fixed a live regression that rendered the app empty (no city control, no category cards) for any returning user with a session in storage - `remapFromRaw()` ran before `source = 'supabase'` and the in-flight dedupe removed the race that used to mask it. Also confirmed task 5.5 live (the empty-app report implies a successful session exchange, since the bot gate would otherwise show). Details: vault/logs/changelog.md.
 - 2026-09-15: **CI is red on runner-side steps, not on tests - investigate before trusting it again.** Evidence: the only fully green run is `d68fb8d` (2026-09-06 06:17); every push from `746b52c` (06:38) onward fails the frontend job at `npm --prefix frontend install` (fails ~24s in) and later runs also fail the database job at `supabase start`. Neither reproduces from the committed tree: a clean `git archive` checkout installed fine on Node 22 (1296 packages, exit 0) and the same command succeeds in the working tree on Node 24. Job logs need a token with repo access, so the cause is unconfirmed - suspect runner image/network or an org Actions limit at that moment. Meanwhile Deploy dies at its install step too, so the pipeline has NOT been deploying: every deploy since 09-06 was manual (`wrangler deploy` from `frontend/`).
 - 2026-09-15: trust layer live (migrations 058/059) - `places.trust_badge` + `last_verified_at` replace the boolean, `emergency_contacts` is city-scoped, `TrustBadge.vue` renders level + date, and a failed read with a live session shows a retry instead of the bot gate. Details: vault/logs/changelog.md.

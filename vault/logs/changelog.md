@@ -1,5 +1,79 @@
 # Changelog
 
+## 2026-09-15 (3) - Emergency contacts corrected + completed; competitor research
+
+### Fixed (verified against official sources)
+
+- **The safety page gave a WRONG consulate address.** It said "Trần Hưng Đạo,
+  Hải Châu"; the Russian Consulate General in Da Nang is at **22 Trần Phú,
+  Thạch Thang, Hải Châu** (official MFA site `rusconsdanang.mid.ru`). In a
+  passport-loss situation that sends a user to the wrong street. The note now
+  also carries the consulate's 24/7 line (`+84 94 720-00-94`) - previously the
+  page had no phone at all.
+- **Emergency numbers were an incomplete set** (113/114/115 only). Migration
+  060 adds 112 (search and rescue - maritime, mountain, disasters, missing
+  persons) and the Da Nang tourism support line `0236 355 0111`
+  (English-speaking, 24/7).
+- **Numbers were not tappable.** The block rendered static cards; the TMA is
+  phone-only, so a number you cannot dial is useless exactly when it matters.
+  Each card is now a `tel:` link (punctuation stripped for the dialer).
+
+### Research: vietnamspot.ru (competitor, used as a lead source)
+
+What it is: a commercial service site with a free guide as a lead magnet -
+Fast Track $21, visa support $41, transfers $16, paid medical translator, a
+partner catalogue with discounts, a community chat, and 15 PDF guides
+(184 pages). 9 guide sections, 376 blog articles, 10 cities. Da Nang is its
+deepest city (24 articles, 20 clinics with prices).
+
+**Accuracy check of their claims against independent sources - two were wrong
+or vague, which is why nothing was imported unverified:**
+
+- They present `112` as "a single SOS number that works like 911". Independent
+  sources (vietnamkb.com, vietnamvisacorp.com, entryvn.com) agree it is
+  **search and rescue**, not a catch-all. We shipped the accurate label.
+- They list `1039` as a national "tourist police" number. It could NOT be
+  corroborated: the independent source gives only city-specific tourist-police
+  numbers and never mentions 1039. **Not shipped** - publishing an unverified
+  emergency number is worse than omitting it, and that is the project's own
+  evidence rule.
+- Corrections therefore matter more than imports here: the competitor's value
+  is in *pointing at gaps*, not in being a source of record.
+
+**Genuinely strong patterns worth adopting (structure, not text):**
+
+1. **Answer-first, not story-first** - "Здесь не истории, а ответы: номера,
+   адреса, цены, сроки и порядок действий." Matches our trust positioning.
+2. **"Короткие ответы"** - short FAQ blocks that rank options and give price
+   ranges instead of one recommendation.
+3. **Crisis algorithms** - 8 scenarios (road accident, lost passport,
+   ambulance, fraud, overstay, poisoning, lost phone, typhoon) each as a
+   numbered 6-step list.
+4. **"Показать на экране"** - tap a phrase and it goes full-screen in
+   Vietnamese + Cyrillic transliteration, to show a stranger. This is the
+   single best idea on their site for a phone-only Mini App; we ship `tel:`
+   links but no such a phrase screen.
+5. City-scoped hotlines (they list Da Nang's; we now do too).
+
+### Deliberately NOT done
+
+- **No text was copied.** The repo is public and their content is
+  copyrighted; independently, the project's own content rule is "reworked,
+  not a copy" (`data/knowledge-dump.md`), and its trust model forbids
+  publishing unverified claims. Facts were extracted, cross-checked, and
+  written fresh; the hospital price list was left out entirely because it
+  cannot be verified from here.
+- **Their hospital directory is the biggest gap** but needs field
+  verification, so it is proposed rather than imported - see resume-plan.
+
+### Verified
+
+- Authenticated read (real Supabase JWT) returns all 5 contacts.
+- Rendered page at 360px on the deployed build: 5 `tel:` links
+  (`tel:113`, `tel:114`, `tel:115`, `tel:112`, `tel:02363550111`), corrected
+  consulate note, no horizontal overflow. Deployed worker `98eb5ae7`.
+- Gates: lint / typecheck / 53 tests / build.
+
 ## 2026-09-15 (2) - REGRESSION FIXED: empty app (no city select, no categories)
 
 ### What the user saw

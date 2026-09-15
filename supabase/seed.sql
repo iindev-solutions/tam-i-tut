@@ -24,12 +24,16 @@ set
 
 -- Emergency contacts per city (migration 058). Numbers differ per country, so
 -- they hang off the city tenancy axis. Vietnam: 113 police, 114 fire,
--- 115 ambulance.
+-- 115 ambulance. 112 (search and rescue) and the Da Nang tourism support line
+-- were added by migration 060 from cross-verified sources; 1039 was NOT added
+-- because it could not be corroborated.
 insert into public.emergency_contacts (city_slug, number, label_ru, label_en, sort_order)
 values
 	('da-nang', '113', 'Полиция', 'Police', 1),
 	('da-nang', '114', 'Пожарная служба', 'Fire department', 2),
-	('da-nang', '115', 'Скорая помощь', 'Ambulance', 3)
+	('da-nang', '115', 'Скорая помощь', 'Ambulance', 3),
+	('da-nang', '112', 'Поиск и спасение', 'Search and rescue', 4),
+	('da-nang', '0236 355 0111', 'Туристическая поддержка', 'Tourism support', 5)
 on conflict (city_slug, sort_order) do update
 set
 	number = excluded.number,

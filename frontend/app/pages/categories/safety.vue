@@ -38,19 +38,23 @@ const tips = computed<GuideEntry[]>(() =>
         <h2 class="text-2xl font-semibold text-highlighted">
           {{ t('safety.contactsTitle') }}
         </h2>
+        <!-- A number you cannot tap is useless in a crisis: the TMA is
+             phone-only, so every card is a tel: link. Digits are stripped
+             because tel: rejects the spaces these numbers are written with. -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div
+          <a
             v-for="contact in contacts"
             :key="contact.id"
-            class="rounded-2xl border border-default bg-elevated p-5 text-center shadow-sm"
+            :href="`tel:${contact.number.replace(/[^\d+]/g, '')}`"
+            class="rounded-2xl border border-default bg-elevated p-5 text-center shadow-sm transition-colors hover:border-primary/40 hover:bg-elevated/70"
           >
-            <p class="text-3xl font-semibold tracking-tight text-highlighted">
+            <span class="block text-3xl font-semibold tracking-tight text-highlighted">
               {{ contact.number }}
-            </p>
-            <p class="mt-1 text-sm text-muted">
+            </span>
+            <span class="mt-1 block text-sm text-muted">
               {{ tt(contact.label) }}
-            </p>
-          </div>
+            </span>
+          </a>
         </div>
         <p
           v-if="contacts.length === 0"

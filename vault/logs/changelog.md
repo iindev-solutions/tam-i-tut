@@ -1,5 +1,71 @@
 # Changelog
 
+## 2026-09-15 (2) - REGRESSION FIXED: empty app (no city select, no categories)
+
+### What the user saw
+
+"не вижу категории и города" on live prod: the header city control was empty
+and the home grid had zero category cards, while the app showed neither the
+bot gate nor an error - just a chrome-less shell.
+
+### Root cause (self-introduced, one deploy earlier)
+
+`read()` called `remapFromRaw()` and only THEN set `source.value = 'supabase'`,
+but `remapFromRaw()` early-returns unless `source === 'supabase'`
+(`useDb.ts:110`). So the first successful read always mapped nothing.
+
+It worked before only by accident: eleven components each called `useDb()`, so
+a second concurrent instance finished after the first had flipped `source` and
+its remap populated `db`. The in-flight dedupe added in this session collapsed
+those into ONE read - correctness then depended on a race that no longer
+existed, and a returning user whose session was already in storage
+deterministically got an empty app.
+
+### Fix
+
+`remapFromRaw()` is now guarded by `raw` alone - the fetched row set is the
+single source of truth and only exists when the live data is in hand - instead
+of re-checking a flag that is set afterwards. `applyMock()` and the failed-read
+branch now clear `raw`, so stale rows cannot repaint over the mock (or over an
+error state) on the next locale switch.
+
+Also fixed while verifying on real data: guides render "На проверке · 18.08.2026"
+- `last_verified_at` is stamped on `under_review` rows too (it is the "last
+touched" time), and showing it beside "under review" reads as "checked on
+18.08". The date is now rendered only for trusted levels, matching `design.md`.
+
+### Verified (the path that was never tested before)
+
+Obtained a real Supabase JWT (Admin API user + password grant) and drove the
+actual prod bundle in a browser with that session in storage:
+
+| Surface | Before | After |
+|---|---|---|
+| home city control | `MISSING` | `Дананг` |
+| home category cards | `0` | `8` (Жильё, Транспорт, Финансы, Еда и кафе, Безопасность, Медицина, Визаран, Культура) |
+| safety | empty shell | 113/114/115 |
+| food | empty shell | real DB places (An Thượng food street, ...) |
+| guide card | `На проверке · 18.08.2026` | `На проверке` |
+| place card | - | `Проверено командой · 18.08.2026` |
+
+Every earlier check in this session ran against a build with NO session
+(dev = mock fallback, prod = bot gate), which is exactly why this shipped. The
+authenticated path is the one that matters and it is now exercised end to end.
+Deployed worker `643244ae`; all 76 JS assets match the built output byte for
+byte.
+
+### Incident during diagnosis
+
+Creating a probe account with a raw `insert into auth.users` left GoTrue unable
+to read users at all - `/auth/v1/admin/users` returned 500 with "Database error
+finding users", and admin create/delete failed too. Since `telegram-bootstrap`
+uses that same admin API, session creation for real users was at risk while the
+row existed. Removed it with plain SQL (user + identity + profile); the admin
+API returned 200 immediately after, with all five real accounts intact. Probe
+account was then recreated through the Admin API (the supported path) and
+deleted after verification. Lesson: never hand-write `auth.users` rows on a
+live project - use the Admin API.
+
 ## 2026-09-15 - Trust layer reaches the Mini App; emergency contacts unblocked
 
 ### Found, not fixed (needs founder access)

@@ -90,6 +90,10 @@ export function useDb() {
   } | null)
 
   const applyMock = () => {
+    // Drop any previously fetched rows: `raw` alone now decides whether
+    // remapping happens, so a stale set would otherwise repaint over the mock
+    // on the next locale switch.
+    raw.value = null
     if (!mockAllowed) {
       // Prod: no honest data to show - pages render their empty states and
       // the layout shows the "open from the bot" screen.
@@ -104,8 +108,14 @@ export function useDb() {
   }
 
   const remapFromRaw = () => {
-    // Supabase mode only: the mock store handles its own reactivity.
-    if (source.value !== 'supabase' || !raw.value) return
+    // Guarded by the rows themselves, never by `source`: `read()` fills `raw`
+    // and only then flips `source`, so a `source`-based guard made the FIRST
+    // successful read a guaranteed no-op - the app rendered an empty db (no
+    // city select, no categories) for a returning user whose session was
+    // already in storage, because nothing ever triggered a second pass.
+    // `raw` is the single source of truth: it only exists when the fetched
+    // row set is the live Supabase data.
+    if (!raw.value) return
     db.value = {
       ...db.value,
       cities: mapCities(raw.value.cities),
@@ -186,6 +196,10 @@ export function useDb() {
       if (mockAllowed) {
         applyMock()
       } else {
+        // Same reasoning as applyMock: no fetched rows may survive a failure,
+        // or a later locale switch would repaint the app with stale content
+        // while the UI claims an error.
+        raw.value = null
         db.value = emptyDb()
         source.value = 'error'
       }

@@ -36,8 +36,14 @@ const TONE: Record<TrustLevel, string> = {
 const label = computed(() => t(`trust.levels.${props.level}`))
 const icon = computed(() => ICONS[props.level])
 
+/**
+ * The check date is only meaningful for a TRUSTED level. `last_verified_at` is
+ * also stamped on `under_review` rows (it is the "last touched" time), and
+ * rendering it there produced "На проверке · 18.08.2026" - which reads as
+ * "checked on 18.08" beside a badge that says nothing is confirmed.
+ */
 const checkedOn = computed(() => {
-  if (!props.verifiedAt) return ''
+  if (props.level === 'under_review' || !props.verifiedAt) return ''
   const [year, month, day] = props.verifiedAt.slice(0, 10).split('-')
   const date = locale.value === 'en' ? `${day}/${month}/${year}` : `${day}.${month}.${year}`
   return t('trust.checkedOn', { date })

@@ -97,6 +97,28 @@ held in shell variables and a temp file only, never in a repo file, a `.env`, or
 a probe script; verified zero occurrences across the working tree and the entire
 git history (`git grep` over `git rev-list --all`), and all temp files deleted.
 
+### Secret audit of the public repo (triggered by the above)
+
+`iindev-solutions/tam-i-tut` is **public** (`visibility: public`, anonymous API
+works). Audited accordingly:
+
+- **No secrets are committed, in the current tree or in any historical commit.**
+  No `.env`, `bot-token.txt`, `*.pem` or `credentials*` file was ever added
+  (`git log --all --diff-filter=A`); `git log --all -- '*.env'` is empty; `.env`
+  is ignored (`.gitignore:5`) and applies to both `./.env` and `frontend/.env`.
+- The only key committed in code is the Supabase **`anon`** key in
+  `workers/keepalive/wrangler.toml` (decoded payload `role = anon`) - public by
+  design, since it ships in every client bundle. The keepalive worker needs it
+  only to ping `/auth/v1/health`.
+- The root `.env` does hold a live Telegram bot token, but it is untracked and
+  ignored, matching the outstanding "rotate the bot token" item (it was shared
+  in chat, not committed).
+
+Recommendation for the founder: **enable secret scanning** on the repo
+(`security_and_analysis.secret_scanning` is currently unset, and GitHub provides
+it free for public repositories). Nothing is exposed today, but push protection
+is the cheapest guard for a public repo whose CI might later interpolate secrets.
+
 ## 2026-09-15 - Trust layer reaches the Mini App; emergency contacts unblocked
 
 ### Found, not fixed (needs founder access)

@@ -6,6 +6,7 @@
 - **The authenticated path is now actually verified.** Every earlier check this session used a build with NO session (dev = mock, prod = bot gate), which is precisely why the regression shipped. A real JWT (Admin API user + password grant) now drives the real prod bundle in a browser: home shows `Дананг` + 8 category cards, safety shows 113/114/115, food shows real venues, guides show `На проверке`, the place page shows `Проверено командой · 18.08.2026`.
 - Trust badge on `under_review` entries no longer shows a date: `last_verified_at` is also stamped on under-review rows, and "На проверке · 18.08.2026" reads as "checked on 18.08". Dates render only for trusted levels, per `design.md`.
 - Trust layer end-to-end (earlier this session): migrations 058/059 on hosted, `TrustBadge.vue` on every guide/place surface, city-scoped emergency contacts, honest `error` state instead of the bot gate for a signed-in user.
+- Review pass (2026-09-15 (5)): removed an outage risk I had just introduced (adding `clinics` to the strict read group meant one failing table blanked the whole app - now only `cities`/`categories` are strict, every other table degrades to an empty section and logs); moved consular facts out of i18n into a `consulates` table so an admin can correct them (the wrong address had been unfixable); fixed a false provenance claim in the clinics subtitle; and corrected a pgTAP assertion that assumed an RLS-denied UPDATE throws (it silently affects 0 rows).
 - Evidence: pgTAP 016 PASS 10/10 + 010/011/014/015 re-run PASS on hosted; reader-contract probe (cities 4 / categories 8 / places 29 / localizations 58 / guide_entries 48 / emergency_contacts 3); gates lint+typecheck+53 tests+build; all 76 JS assets of the deployed worker match the built output byte for byte (worker `643244ae`).
 
 - Late addendum: prod demo data root-caused and fixed - the build-stamp patch had introduced a duplicate `runtimeConfig` key that wiped the Supabase config from every build since 2026-08-31 (also the real cause of the "missing medicine guides" report). Config merged, `.env` renamed to `NUXT_PUBLIC_*`, prod build now fails loudly without the URL; redeployed and verified the URL is in the prod payload.
@@ -25,7 +26,8 @@ rather than as trusted content.
 1. ~~**Da Nang hospital directory with prices**~~ - SHIPPED 2026-09-15 (4) as
    migration 061 + `/categories/health`: 20 venues, 8 specialisations, prices,
    24/7 flags, all `under_review` with the source printed above the list.
-   **Still open:** the rows are read-only in the UI (no `/admin` editor yet) and
+   **Still open:** the rows are read-only in the UI (no `/admin` editor yet - the
+   same gap now applies to `consulates`) and
    no price has been verified on site. Verification path: Family Medical
    Practice (0236 358 2699) and Vinmec are independently corroborated as
    venues; the rest need a visit or a call. The source's headline claim - a

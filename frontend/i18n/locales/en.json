@@ -178,8 +178,8 @@
     "description": "Emergency contacts and habits that reduce risk.",
     "contactsTitle": "Emergency numbers",
     "tipsTitle": "Habits",
-    "consulateNote": "Russian Consulate General: 22 Trần Phú, Hải Châu. 24/7: +84 94 720-00-94",
-    "contactsEmpty": "No numbers have been filled in for this city yet."
+    "contactsEmpty": "No numbers have been filled in for this city yet.",
+    "emergencyLine": "24/7"
   },
   "culture": {
     "kicker": "Culture",
@@ -486,9 +486,9 @@
     "tipsTitle": "Guides",
     "empty": "Guides are coming soon.",
     "clinicsTitle": "Clinics and hospitals",
-    "clinicsSubtitle": "Visits by specialisation with a price guide. Prices are for a first visit and are as quoted by the clinics.",
+    "clinicsSubtitle": "Visits by specialisation with a price guide for a first visit.",
     "clinicsUnverified": "Prices not yet checked by us",
-    "clinicsSource": "Source: {source}. We verify and update as claims are confirmed.",
+    "clinicsSource": "Source: {source}. Prices unconfirmed - we verify and update them.",
     "openAllDay": "Open 24/7",
     "kinds": {
       "all": "All",

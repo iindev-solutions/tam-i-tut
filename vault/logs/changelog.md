@@ -1,5 +1,70 @@
 # Changelog
 
+## 2026-09-15 (5) - Review pass: outage risk removed, consular facts moved to data
+
+Four defects found reviewing the two slices above. Three were mine; one was a
+wrong assumption in a test I had just written.
+
+### 1. An outage risk I introduced (most serious)
+
+Adding `clinics` to `useDb`'s `Promise.all` also added it to the loop that
+throws on ANY error - so a single failing table blanked the whole app into the
+error state. That is precisely how the stale-bundle `places.verified` select
+took live production down earlier today, and a brand-new table is the most
+likely thing to 400 (PostgREST schema cache lag after a migration).
+
+Fix: the read is now split. `cities` and `categories` stay strict - without
+them there is no app. Every secondary table (`places`, `localizations`,
+`reviews`, `guides`, `contacts`, `consulates`, `clinics`, `clinic_localizations`)
+degrades to an empty section, logs the reason, and an aggregate
+`console.error` names every degraded section. A missing column now costs one
+section instead of the home grid.
+
+Honest scope note: the degradation branch is reasoned from the code path, not
+triggered by a forced 400 - I did not mutate live schema to prove it.
+
+### 2. A false provenance claim in copy
+
+The clinics subtitle said "Цены - за первичный приём, названы клиниками на
+месте", which attributes the prices to the clinics. They came from a single
+third-party guide that we had already caught being wrong twice on the same day.
+The clause is gone; the alert below names the actual source and states the
+prices are unconfirmed.
+
+### 3. Consular facts were structurally unfixable
+
+The address I corrected earlier still lived in `i18n/locales/*.json` - a static
+string no admin can edit, that cannot carry its source, and that shipped wrong
+for months precisely because nothing could re-check it. The emergency numbers
+directly above it are DB rows with moderator/admin write policies: same class of
+data, two different lifetimes.
+
+Migration 062 adds `consulates` (city-scoped, `source` column, reader sees
+active cities only, moderator/admin manage) and seeds the Da Nang consulate from
+the issuing authority's own site (`rusconsdanang.mid.ru`): address 22 Trần Phú
+in the Vietnamese form a taxi driver reads, office line and the 24/7 line, both
+now `tel:` links. The i18n string and its key are deleted, not shadowed.
+
+### 4. A test that would have given false confidence
+
+My first version of `018_consulates_rls` asserted that a reader's UPDATE throws
+`%row-level security policy%`. It failed - and the policy was fine. Under RLS
+with no update policy, PostgreSQL does not raise: it filters the row out and the
+statement succeeds having changed 0 rows. The test now asserts 0 rows updated
+AND that the address is unchanged, which would actually catch a regression (a
+new permissive update policy added later).
+
+### Verified
+
+- pgTAP `018_consulates_rls` PASS 9/9; `017_clinics_rls` PASS 8/8 re-run.
+- Authenticated read of `consulates` returns the row with both numbers.
+- Rendered on the deployed build at 360px: consulate from the DB (name, address,
+  hours, both numbers), 7 `tel:` links on the safety page, corrected clinics
+  subtitle, honest source line, no overflow.
+- Gates: lint / typecheck / 59 tests (3 new consulate mapper tests, one pinning
+  that the address stays an untranslated Vietnamese string) / build.
+- Deployed worker `ef63d5fc`; probe account deleted, keys purged.
+
 ## 2026-09-15 (4) - Da Nang clinic directory (imported, explicitly unverified)
 
 ### What shipped

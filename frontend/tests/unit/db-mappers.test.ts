@@ -8,6 +8,7 @@ import {
   mapCategories,
   mapCities,
   mapClinics,
+  mapConsulates,
   mapEmergencyContacts,
   mapGuides,
   mapPlaces,
@@ -16,6 +17,7 @@ import {
   type CityRow,
   type ClinicLocalizationRow,
   type ClinicRow,
+  type ConsulateRow,
   type EmergencyContactRow,
   type GuideRow,
   type PlaceLocalizationRow,
@@ -222,6 +224,48 @@ describe('mapClinics', () => {
     const [clinic] = mapClinics(rows, [])
     expect(clinic?.name).toBe('thien-nhan')
     expect(clinic?.priceNote).toEqual({ ru: '', en: '' })
+  })
+})
+
+describe('mapConsulates', () => {
+  const rows: ConsulateRow[] = [
+    {
+      id: 'cons1',
+      city_slug: 'da-nang',
+      country_code: 'RU',
+      name_ru: 'Генконсульство России',
+      name_en: 'Russian Consulate General',
+      address: '22 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng',
+      hours_ru: 'пн, вт, чт, пт 9:00-11:30',
+      hours_en: 'Mon, Tue, Thu, Fri 9:00-11:30',
+      phone: '+84 236 382 23 80',
+      emergency_phone: '+84 94 720-00-94',
+      source: 'rusconsdanang.mid.ru, 2026-09-15',
+      sort_order: 1
+    }
+  ]
+
+  it('maps a consulate with both numbers and localized name/hours', () => {
+    const [consulate] = mapConsulates(rows)
+    expect(consulate).toMatchObject({
+      citySlug: 'da-nang',
+      name: { ru: 'Генконсульство России', en: 'Russian Consulate General' },
+      hours: { ru: 'пн, вт, чт, пт 9:00-11:30', en: 'Mon, Tue, Thu, Fri 9:00-11:30' },
+      phone: '+84 236 382 23 80',
+      emergencyPhone: '+84 94 720-00-94'
+    })
+  })
+
+  // The address is deliberately NOT localized: it is the Vietnamese street form,
+  // which is what a taxi driver reads. Localizing it would be a regression.
+  it('keeps a single untranslated Vietnamese address', () => {
+    const [consulate] = mapConsulates(rows)
+    expect(consulate?.address).toBe('22 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng')
+    expect(typeof consulate?.address).toBe('string')
+  })
+
+  it('carries the source so a reader can audit the fact', () => {
+    expect(mapConsulates(rows)[0]?.source).toBe('rusconsdanang.mid.ru, 2026-09-15')
   })
 })
 

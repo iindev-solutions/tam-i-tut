@@ -73,6 +73,19 @@ export interface EmergencyContact {
   label: LocalizedText
 }
 
+export interface Consulate {
+  id: string
+  citySlug: string
+  name: LocalizedText
+  /** Vietnamese street form on purpose - what a taxi driver reads. */
+  address: string
+  hours: LocalizedText
+  phone: string | null
+  /** Round-the-clock line, distinct from the office line. */
+  emergencyPhone: string | null
+  source: string
+}
+
 /** Clinic specialisation, mirrored from the DB CHECK constraint on `clinics`. */
 export type ClinicKind
   = | 'hospital'
@@ -122,6 +135,7 @@ export interface MockDb {
   places: Place[]
   guides: GuideEntry[]
   contacts: EmergencyContact[]
+  consulates: Consulate[]
   clinics: Clinic[]
   reviews: Review[]
   activity: ActivityEvent[]

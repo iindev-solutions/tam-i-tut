@@ -371,6 +371,19 @@ export const mockDb: MockDb = {
     { id: 'da-nang-tourism', citySlug: 'da-nang', number: '0236 355 0111', label: { ru: 'Туристическая поддержка', en: 'Tourism support' } }
   ],
 
+  consulates: [
+    {
+      id: 'da-nang-ru-consulate',
+      citySlug: 'da-nang',
+      name: { ru: 'Генконсульство России', en: 'Russian Consulate General' },
+      address: '22 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng',
+      hours: { ru: 'пн, вт, чт, пт 9:00-11:30', en: 'Mon, Tue, Thu, Fri 9:00-11:30' },
+      phone: '+84 236 382 23 80',
+      emergencyPhone: '+84 94 720-00-94',
+      source: 'rusconsdanang.mid.ru, 2026-09-15'
+    }
+  ],
+
   clinics: [
     {
       id: 'clinic-thien-nhan',

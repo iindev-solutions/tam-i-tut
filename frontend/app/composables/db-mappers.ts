@@ -12,6 +12,7 @@ import type {
   CityEntry,
   Clinic,
   ClinicKind,
+  Consulate,
   ContentStatus,
   EmergencyContact,
   GuideCategory,
@@ -96,6 +97,21 @@ export interface EmergencyContactRow {
   number: string
   label_ru: string
   label_en: string
+  sort_order: number
+}
+
+export interface ConsulateRow {
+  id: string
+  city_slug: string
+  country_code: string
+  name_ru: string
+  name_en: string
+  address: string
+  hours_ru: string
+  hours_en: string
+  phone: string | null
+  emergency_phone: string | null
+  source: string
   sort_order: number
 }
 
@@ -331,6 +347,23 @@ export function mapEmergencyContacts(rows: EmergencyContactRow[]): EmergencyCont
     citySlug: row.city_slug,
     number: row.number,
     label: { ru: row.label_ru, en: row.label_en }
+  }))
+}
+
+/**
+ * Maps city-scoped consulates. `address` is intentionally not localized: it is
+ * the Vietnamese street form, which is what you show a taxi driver.
+ */
+export function mapConsulates(rows: ConsulateRow[]): Consulate[] {
+  return rows.map(row => ({
+    id: row.id,
+    citySlug: row.city_slug,
+    name: { ru: row.name_ru, en: row.name_en },
+    address: row.address,
+    hours: { ru: row.hours_ru, en: row.hours_en },
+    phone: row.phone,
+    emergencyPhone: row.emergency_phone,
+    source: row.source
   }))
 }
 

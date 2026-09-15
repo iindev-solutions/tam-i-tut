@@ -14,6 +14,13 @@ const selectedCity = useState<string>('selectedCity', () => 'da-nang')
 // city selector instead of showing every city's numbers at once.
 const contacts = computed(() => db.value.contacts.filter(contact => contact.citySlug === selectedCity.value))
 
+// Consular facts live in the database, not in i18n copy: they change, they need
+// a source, and an admin must be able to correct them (the old hardcoded string
+// shipped a wrong street for months).
+const consulates = computed(() => db.value.consulates.filter(c => c.citySlug === selectedCity.value))
+
+const dial = (number: string) => `tel:${number.replace(/[^\d+]/g, '')}`
+
 const tips = computed<GuideEntry[]>(() =>
   db.value.guides.filter(guide => guide.category === 'safety' && guide.status === 'published')
 )
@@ -62,13 +69,47 @@ const tips = computed<GuideEntry[]>(() =>
         >
           {{ t('safety.contactsEmpty') }}
         </p>
-        <p class="flex items-center gap-2 text-xs text-muted">
-          <UIcon
-            name="i-lucide-landmark"
-            class="size-3.5 shrink-0"
-          />
-          {{ t('safety.consulateNote') }}
-        </p>
+        <!-- Consular contact rendered from the DB: address in the Vietnamese
+             form for a taxi driver, both numbers tappable, updates in place. -->
+        <div
+          v-for="consulate in consulates"
+          :key="consulate.id"
+          class="space-y-2 rounded-xl border border-default bg-elevated/50 p-4"
+        >
+          <p class="flex items-center gap-2 text-sm font-medium text-highlighted">
+            <UIcon
+              name="i-lucide-landmark"
+              class="size-4 shrink-0 text-muted"
+            />
+            {{ tt(consulate.name) }}
+          </p>
+          <p class="text-sm text-muted">
+            {{ consulate.address }}
+          </p>
+          <p class="text-xs text-dimmed">
+            {{ tt(consulate.hours) }}
+          </p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <UButton
+              v-if="consulate.phone"
+              :to="dial(consulate.phone)"
+              color="neutral"
+              variant="soft"
+              size="xs"
+              icon="i-lucide-phone"
+              :label="consulate.phone"
+            />
+            <UButton
+              v-if="consulate.emergencyPhone"
+              :to="dial(consulate.emergencyPhone)"
+              color="primary"
+              variant="soft"
+              size="xs"
+              icon="i-lucide-siren"
+              :label="`${t('safety.emergencyLine')}: ${consulate.emergencyPhone}`"
+            />
+          </div>
+        </div>
       </section>
 
       <section class="space-y-4">

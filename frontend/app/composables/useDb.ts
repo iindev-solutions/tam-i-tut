@@ -9,6 +9,7 @@ import {
   mapCategories,
   mapCities,
   mapClinics,
+  mapConsulates,
   mapEmergencyContacts,
   mapGuides,
   mapPlaces,
@@ -17,6 +18,7 @@ import {
   type CityRow,
   type ClinicLocalizationRow,
   type ClinicRow,
+  type ConsulateRow,
   type EmergencyContactRow,
   type GuideRow,
   type PlaceLocalizationRow,
@@ -70,6 +72,7 @@ export function useDb() {
     places: [],
     guides: [],
     contacts: [],
+    consulates: [],
     clinics: [],
     reviews: [],
     activity: []
@@ -91,6 +94,7 @@ export function useDb() {
     reviews: ReviewRow[]
     guides: GuideRow[]
     contacts: EmergencyContactRow[]
+    consulates: ConsulateRow[]
     clinics: ClinicRow[]
     clinicLocalizations: ClinicLocalizationRow[]
   } | null)
@@ -130,6 +134,7 @@ export function useDb() {
       reviews: mapReviews(raw.value.reviews),
       guides: mapGuides(raw.value.guides),
       contacts: mapEmergencyContacts(raw.value.contacts),
+      consulates: mapConsulates(raw.value.consulates),
       clinics: mapClinics(raw.value.clinics, raw.value.clinicLocalizations)
     }
   }
@@ -159,7 +164,7 @@ export function useDb() {
   const read = async (sb: SupabaseClient) => {
     loading.value = true
     try {
-      const [cities, categories, places, localizations, reviews, guides, contacts, clinics, clinicLocalizations] = await Promise.all([
+      const [cities, categories, places, localizations, reviews, guides, contacts, consulates, clinics, clinicLocalizations] = await Promise.all([
         sb
           .from('cities')
           .select('slug,name_en,name_ru,country_code,flag,is_active,sort_order')
@@ -180,6 +185,10 @@ export function useDb() {
           .select('id,city_slug,number,label_ru,label_en,sort_order')
           .order('sort_order'),
         sb
+          .from('consulates')
+          .select('id,city_slug,country_code,name_ru,name_en,address,hours_ru,hours_en,phone,emergency_phone,source,sort_order')
+          .order('sort_order'),
+        sb
           .from('clinics')
           .select('id,city_slug,slug,kind,open_24_7,trust_badge,last_verified_at,source,sort_order')
           .order('sort_order'),
@@ -189,21 +198,40 @@ export function useDb() {
           .in('language', ['ru', 'en'])
       ])
 
-      for (const result of [cities, categories, places, localizations, reviews, guides, contacts, clinics, clinicLocalizations]) {
+      for (const result of [cities, categories]) {
         if (result.error) throw result.error
+      }
+
+      // Secondary reads degrade independently. Without cities/categories there
+      // is no app at all, but a single failing table here must NOT blank the
+      // home grid: one 400 on any of these (a dropped column, PostgREST schema
+      // cache lag after a migration, a policy change) otherwise throws the
+      // whole read into the error state - exactly how the stale-bundle
+      // `places.verified` select took the live app down. The failed section
+      // renders empty and the reason is logged instead of swallowed.
+      const degraded: string[] = []
+      const rows = <T>(result: { data: unknown, error: unknown }, label: string): T[] => {
+        if (result.error) {
+          degraded.push(label)
+          console.warn(`[useDb] ${label} read failed, section degrades to empty`, result.error)
+          return []
+        }
+        return (result.data ?? []) as T[]
       }
 
       raw.value = {
         cities: cities.data as CityRow[],
         categories: categories.data as CategoryRow[],
-        places: places.data as PlaceRow[],
-        localizations: localizations.data as PlaceLocalizationRow[],
-        reviews: reviews.data as ReviewRow[],
-        guides: guides.data as GuideRow[],
-        contacts: contacts.data as EmergencyContactRow[],
-        clinics: clinics.data as ClinicRow[],
-        clinicLocalizations: clinicLocalizations.data as ClinicLocalizationRow[]
+        places: rows<PlaceRow>(places, 'places'),
+        localizations: rows<PlaceLocalizationRow>(localizations, 'place_localizations'),
+        reviews: rows<ReviewRow>(reviews, 'reviews'),
+        guides: rows<GuideRow>(guides, 'guide_entries'),
+        contacts: rows<EmergencyContactRow>(contacts, 'emergency_contacts'),
+        consulates: rows<ConsulateRow>(consulates, 'consulates'),
+        clinics: rows<ClinicRow>(clinics, 'clinics'),
+        clinicLocalizations: rows<ClinicLocalizationRow>(clinicLocalizations, 'clinic_localizations')
       }
+      if (degraded.length > 0) console.error('[useDb] degraded sections:', degraded.join(', '))
       remapFromRaw()
       source.value = 'supabase'
     } catch (error) {

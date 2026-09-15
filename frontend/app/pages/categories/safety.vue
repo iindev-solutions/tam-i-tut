@@ -79,15 +79,22 @@ const tips = computed<GuideEntry[]>(() =>
             :ui="{ body: 'p-5' }"
           >
             <div class="space-y-3">
+              <!-- Level + date on their own line, matching the other guide
+                   pages: inline with the title it squeezes at 340px. -->
               <div class="flex items-start justify-between gap-3">
                 <p class="text-sm font-medium text-highlighted">
                   {{ tt(tip.title) }}
                 </p>
-                <TrustBadge
-                  :level="tip.trustLevel"
-                  :verified-at="tip.lastVerifiedAt"
+                <UIcon
+                  :name="tip.icon || 'i-lucide-shield-check'"
+                  class="size-5 shrink-0 text-muted"
                 />
               </div>
+              <TrustBadge
+                :level="tip.trustLevel"
+                :verified-at="tip.lastVerifiedAt"
+                variant="full"
+              />
               <GuideText
                 :text="tt(tip.note)"
                 variant="note"

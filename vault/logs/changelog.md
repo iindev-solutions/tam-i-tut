@@ -14,6 +14,30 @@
   tree. Job logs require a token with repo access, so the cause stays
   unconfirmed - runner image/network or an org Actions limit are the likely
   candidates. The vault's earlier "CI GREEN" claim is corrected in `sprint.md`.
+  The `build:before` deploy guard was ruled out: a clean checkout with
+  `NODE_ENV=production`, no `.env` and no `NUXT_PUBLIC_SUPABASE_URL` still
+  exits 0 through `postinstall`/`nuxt prepare`. CI's own toolchain does not
+  reproduce it either - Node 22.22.3 + npm 10.9.x on a fresh
+  `git archive HEAD` tree installs 1046 packages, exit 0 (npm 11 / Node 24
+  too). `frontend/package-lock.json` is untouched in git; the last commit
+  touching it is `589a58a`.
+
+### Audited
+
+- **Live RLS coverage has no gaps.** Queried the hosted catalogue for tables
+  with RLS disabled or zero policies: only `spatial_ref_sys` (PostGIS system
+  table) and `telegram_bootstrap_nonces` / `telegram_rate_limits` (deliberate -
+  service_role only, documented in migrations 021 and 030). Every application
+  table is both RLS-enabled and reachable by exactly the roles it should be.
+  Note for future audits: migrations declare `create policy <name>` and its
+  `on public.<table>` on separate lines, so single-line regexes silently
+  return nothing - query `pg_policies` instead of grepping the SQL.
+
+- Two UI defects fixed after review: the safety card used the icon-only
+  `TrustBadge` variant, whose meaning lives only in `title`/`aria-label` -
+  tooltips never render on touch, which is the entire TMA, so the badge was
+  meaningless there; and the full badge read "Проверено командой · Проверено
+  30.08.2026", repeating the verb. `trust.checkedOn` is now just the date.
 
 ### Found + fixed
 
@@ -71,8 +95,10 @@
   30/08/2026", no horizontal overflow. Prod bundle served via `wrangler dev`:
   no session = bot gate; with a session and failing reads = retry screen, and
   clicking retry re-issues exactly the 7 reads (no per-caller fan-out).
-- Migrations 058 + 059 applied to hosted; prod deployed (worker version
-  198dae93) and the live asset carries `trust_badge`.
+- Migrations 058 + 059 applied to hosted; prod deployed: worker `59dc53f2`
+  (buildTime 2026-09-15T09:21:33Z), live assets carry `trust_badge` and no
+  `under_review_note`. Sequence respected - frontend first, migration second -
+  so no live bundle ever selected the dropped `places.verified` column.
 
 ## 2026-09-07 (founder pass 4) - map race fix; FPT City prices
 

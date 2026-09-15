@@ -499,7 +499,7 @@
       "recommended_expats": "Рекомендуют местные",
       "under_review": "На проверке"
     },
-    "checkedOn": "Проверено {date}",
+    "checkedOn": "{date}",
     "underReviewHint": "Данные ещё не подтверждены редакцией",
     "loadErrorTitle": "Не получилось загрузить",
     "loadErrorDesc": "Данные не пришли. Проверь связь и попробуй ещё раз.",

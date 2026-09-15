@@ -499,7 +499,7 @@
       "recommended_expats": "Recommended by expats",
       "under_review": "Under review"
     },
-    "checkedOn": "Checked {date}",
+    "checkedOn": "{date}",
     "underReviewHint": "Not yet confirmed by the editorial team",
     "loadErrorTitle": "Could not load",
     "loadErrorDesc": "The data did not arrive. Check your connection and try again.",

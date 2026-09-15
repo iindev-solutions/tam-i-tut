@@ -1,5 +1,63 @@
 # Changelog
 
+## 2026-09-15 (4) - Da Nang clinic directory (imported, explicitly unverified)
+
+### What shipped
+
+The health category read "Больницы, аптеки, страховка и стоматолог" while its
+only hospital guide named three venues with no prices - the largest content gap
+against the competitor researched earlier the same day. Migration 061 adds a
+city-scoped `clinics` + `clinic_localizations` pair with **20 Da Nang venues**
+across 8 specialisations (hospital, dental, ophthalmology, dermatology,
+diagnostics, oncology, ENT, veterinary), a 24/7 flag and the quoted price for a
+reference visit. `/categories/health` renders them with specialisation filters.
+
+### How the "unverified" mark is enforced, not just written
+
+Founder's call was to publish the data as-is and mark it unverified. That is
+implemented structurally, not in copy alone:
+
+- every row lands `trust_badge = 'under_review'`, `last_verified_at = null`;
+- `clinics_trust_requires_verified_at` (same rule as places, 058) makes it
+  impossible to save a trusted clinic without its check date;
+- every row keeps a `source` string, and the page prints it above the list
+  ("Источник: vietnamspot.ru, 2026-09-15") next to a warning-toned alert
+  ("Цены не проверены нами");
+- `TrustBadge` renders "На проверке" on each card, so no price can be read
+  without its status.
+
+Promotion is the existing admin/review path: someone verifies on site, sets the
+level and date, and the badge changes. Nothing is trusted by default.
+
+### What was and was not taken
+
+Facts only: venue name, specialisation, 24/7 flag, quoted price. The source's
+editorial one-liners ("неоправданно дорого", "долго, грустно, грязно") were
+deliberately **not** reproduced - they are opinion and third-party expression,
+and this repository is public. The vetted path matters here: the same source
+was caught being wrong about 112 earlier today, so its prices are leads.
+
+### Verified
+
+- pgTAP `017_clinics_rls` PASS 8/8: reader sees active-city rows only,
+  localizations of an inactive city do not leak, reader cannot write, admin
+  can, the trust-date gate and the specialisation CHECK both fire.
+- Authenticated read with a real Supabase JWT: 20 clinics, 40 localizations.
+- Rendered on the deployed build at 360px: 20 cards, 9 filter chips,
+  "Стоматология" filters to exactly 2, warning + source line present, first card
+  reads "Hoan My Da Nang Hospital / Круглосуточно / Больница / Приём терапевта
+  418 000 ₫ / На проверке", no horizontal overflow.
+- Gates: lint / typecheck / 56 tests (3 new mapper tests, including one that
+  fails if an imported row ever loses its level or source) / build.
+- Deployed worker `b1c1173a`. Probe account created via the Admin API and
+  deleted; all temporary copies of the service key purged.
+
+### Follow-up
+
+The directory is read-only in the UI: `/admin` has no clinics editor yet, so
+verifying a price currently means SQL. That is the next slice if this data is to
+be maintained rather than merely published.
+
 ## 2026-09-15 (3) - Emergency contacts corrected + completed; competitor research
 
 ### Fixed (verified against official sources)

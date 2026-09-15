@@ -73,6 +73,31 @@ export interface EmergencyContact {
   label: LocalizedText
 }
 
+/** Clinic specialisation, mirrored from the DB CHECK constraint on `clinics`. */
+export type ClinicKind
+  = | 'hospital'
+    | 'dental'
+    | 'ophthalmology'
+    | 'dermatology'
+    | 'diagnostics'
+    | 'oncology'
+    | 'ent'
+    | 'veterinary'
+
+export interface Clinic {
+  id: string
+  slug: string
+  kind: ClinicKind
+  open24_7: boolean
+  name: string
+  /** Quoted price for the reference service; figures are not localized. */
+  priceNote: LocalizedText
+  trustLevel: TrustLevel
+  lastVerifiedAt: string | null
+  /** Where the row came from - always shown next to the price it applies to. */
+  source: string
+}
+
 export interface Review {
   id: string
   placeId: string
@@ -97,6 +122,7 @@ export interface MockDb {
   places: Place[]
   guides: GuideEntry[]
   contacts: EmergencyContact[]
+  clinics: Clinic[]
   reviews: Review[]
   activity: ActivityEvent[]
 }

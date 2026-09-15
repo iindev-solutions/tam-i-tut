@@ -371,6 +371,76 @@ export const mockDb: MockDb = {
     { id: 'da-nang-tourism', citySlug: 'da-nang', number: '0236 355 0111', label: { ru: 'Туристическая поддержка', en: 'Tourism support' } }
   ],
 
+  clinics: [
+    {
+      id: 'clinic-thien-nhan',
+      slug: 'thien-nhan',
+      kind: 'hospital',
+      open24_7: false,
+      name: 'Thiện Nhân Hospital',
+      priceNote: {
+        ru: 'Приём терапевта 165 000 ₫ с переводчиком · 350 000 ₫ без',
+        en: 'GP visit 165,000 ₫ with a translator · 350,000 ₫ without'
+      },
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
+      source: 'vietnamspot.ru, 2026-09-15'
+    },
+    {
+      id: 'clinic-family-hospital',
+      slug: 'family-hospital',
+      kind: 'hospital',
+      open24_7: true,
+      name: 'Family Hospital',
+      priceNote: {
+        ru: 'Регистрационный сбор отсутствует, стоимость зависит от услуги',
+        en: 'No registration fee, cost depends on the service'
+      },
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
+      source: 'vietnamspot.ru, 2026-09-15'
+    },
+    {
+      id: 'clinic-nha-khoa-peace',
+      slug: 'nha-khoa-peace',
+      kind: 'dental',
+      open24_7: false,
+      name: 'Nha Khoa Peace Đà Nẵng',
+      priceNote: { ru: 'Пломба 300 000 – 450 000 ₫', en: 'Filling 300,000 – 450,000 ₫' },
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
+      source: 'vietnamspot.ru, 2026-09-15'
+    },
+    {
+      id: 'clinic-mat-sai-gon',
+      slug: 'mat-sai-gon-song-han',
+      kind: 'ophthalmology',
+      open24_7: false,
+      name: 'Bệnh viện Mắt Sài Gòn Sông Hàn',
+      priceNote: {
+        ru: 'Первичный осмотр офтальмолога + проверка зрения 213 000 ₫',
+        en: 'First ophthalmologist visit + eye test 213,000 ₫'
+      },
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
+      source: 'vietnamspot.ru, 2026-09-15'
+    },
+    {
+      id: 'clinic-paws',
+      slug: 'paws-international',
+      kind: 'veterinary',
+      open24_7: false,
+      name: 'PAWS International Clinic Da Nang',
+      priceNote: {
+        ru: 'Консультация 90 000 – 300 000 ₫ / расширенная 450 000 – 550 000 ₫',
+        en: 'Consultation 90,000 – 300,000 ₫ / extended 450,000 – 550,000 ₫'
+      },
+      trustLevel: 'under_review',
+      lastVerifiedAt: null,
+      source: 'vietnamspot.ru, 2026-09-15'
+    }
+  ],
+
   reviews: [],
 
   activity: []

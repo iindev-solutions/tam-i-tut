@@ -18,30 +18,29 @@
 
 ## Content gaps vs vietnamspot.ru (researched 2026-09-15; needs field verification)
 
-Ranked by value for a newcomer. None of these are imported yet - each needs a
-real verification pass (field check, official site, or phone call), because the
-project's trust rule is evidence-before-publication and a competitor page is a
-lead, not a source of record.
+Ranked by value for a newcomer. The project's trust rule is evidence-before-
+publication, so imported rows land as `under_review` with a visible source
+rather than as trusted content.
 
-1. **Da Nang hospital directory with prices** - the biggest gap and their
-   strongest asset (20 clinics, specialisations, Google ratings, two price
-   columns). We have one `health-hospitals` guide naming three hospitals
-   (Family, 199, Vinmec) and no prices. Their headline claim - a medical
-   translator gets you local-resident pricing (165 000 ₫ vs 350 000 ₫ for a
-   GP visit at Thiện Nhân) - is a business insight worth understanding, not
-   copying. Verification path: the two hospitals already cross-corroborated by
-   an independent source are Family Medical Practice (0236 358 2699) and
-   Vinmec; the rest need a visit or a call.
+1. ~~**Da Nang hospital directory with prices**~~ - SHIPPED 2026-09-15 (4) as
+   migration 061 + `/categories/health`: 20 venues, 8 specialisations, prices,
+   24/7 flags, all `under_review` with the source printed above the list.
+   **Still open:** the rows are read-only in the UI (no `/admin` editor yet) and
+   no price has been verified on site. Verification path: Family Medical
+   Practice (0236 358 2699) and Vinmec are independently corroborated as
+   venues; the rest need a visit or a call. The source's headline claim - a
+   medical translator gets local-resident pricing (165 000 ₫ vs 350 000 ₫ at
+   Thiện Nhân) - is a business insight worth understanding, not copying.
 2. **Crisis algorithms** - numbered steps for road accident, lost/stolen
    passport, calling an ambulance, fraud, visa overstay, food poisoning, lost
    phone, typhoon. We have scam guides (`safety-scam-*`) but no step-by-step
-   incident runbooks. Note our `safety-numbers` guide already covers
-   "numbers in advance"; this extends the same idea into procedures.
+   incident runbooks. Our `safety-numbers` guide already covers "numbers in
+   advance"; this extends the same idea into procedures.
 3. **Show-on-screen phrase mode** - Vietnamese phrases + Cyrillic
    transliteration, full-screen for showing a stranger. Highest UX value per
    unit of work for a phone-only Mini App; fits the existing TMA back-button
    and slide-over patterns.
-4. **Insurance guidance** - coverage floors and the motorbike clause; their
+4. **Insurance guidance** - coverage floors and the motorbike clause; an
    independent source corroborates that the motorbike clause is what catches
    people out. We have a `health-insurance` guide; check it covers the clause.
 5. **Pharmacy chains** - we have `health-pharmacies` (Pharmacity, FPT Long

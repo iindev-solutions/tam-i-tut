@@ -8,12 +8,15 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   mapCategories,
   mapCities,
+  mapClinics,
   mapEmergencyContacts,
   mapGuides,
   mapPlaces,
   mapReviews,
   type CategoryRow,
   type CityRow,
+  type ClinicLocalizationRow,
+  type ClinicRow,
   type EmergencyContactRow,
   type GuideRow,
   type PlaceLocalizationRow,
@@ -36,9 +39,9 @@ type SourceState = 'loading' | 'mock' | 'supabase' | 'unavailable' | 'error'
  *
  * - With a configured Supabase project AND an authenticated session (from the
  *   telegram-bootstrap flow) it queries `cities`, `categories`, `places`,
- *   `place_localizations`, `reviews`, `guide_entries` and `emergency_contacts`
- *   through the anon key; RLS restricts reads to active cities, published
- *   places/localizations, approved reviews and published guides.
+ *   `place_localizations`, `reviews`, `guide_entries`, `emergency_contacts` and
+ *   `clinics` through the anon key; RLS restricts reads to active cities,
+ *   published places/localizations, approved reviews and published guides.
  *   Defense-in-depth filters mirror the policies in the queries.
  * - Without a project or a session (plain browser, function not deployed) it
  *   falls back to the shared mock store, so the prototype and the
@@ -67,6 +70,7 @@ export function useDb() {
     places: [],
     guides: [],
     contacts: [],
+    clinics: [],
     reviews: [],
     activity: []
   })
@@ -87,6 +91,8 @@ export function useDb() {
     reviews: ReviewRow[]
     guides: GuideRow[]
     contacts: EmergencyContactRow[]
+    clinics: ClinicRow[]
+    clinicLocalizations: ClinicLocalizationRow[]
   } | null)
 
   const applyMock = () => {
@@ -123,7 +129,8 @@ export function useDb() {
       places: mapPlaces(raw.value.places, raw.value.localizations, locale.value),
       reviews: mapReviews(raw.value.reviews),
       guides: mapGuides(raw.value.guides),
-      contacts: mapEmergencyContacts(raw.value.contacts)
+      contacts: mapEmergencyContacts(raw.value.contacts),
+      clinics: mapClinics(raw.value.clinics, raw.value.clinicLocalizations)
     }
   }
 
@@ -152,7 +159,7 @@ export function useDb() {
   const read = async (sb: SupabaseClient) => {
     loading.value = true
     try {
-      const [cities, categories, places, localizations, reviews, guides, contacts] = await Promise.all([
+      const [cities, categories, places, localizations, reviews, guides, contacts, clinics, clinicLocalizations] = await Promise.all([
         sb
           .from('cities')
           .select('slug,name_en,name_ru,country_code,flag,is_active,sort_order')
@@ -171,10 +178,18 @@ export function useDb() {
         sb
           .from('emergency_contacts')
           .select('id,city_slug,number,label_ru,label_en,sort_order')
-          .order('sort_order')
+          .order('sort_order'),
+        sb
+          .from('clinics')
+          .select('id,city_slug,slug,kind,open_24_7,trust_badge,last_verified_at,source,sort_order')
+          .order('sort_order'),
+        sb
+          .from('clinic_localizations')
+          .select('clinic_id,language,name,price_note')
+          .in('language', ['ru', 'en'])
       ])
 
-      for (const result of [cities, categories, places, localizations, reviews, guides, contacts]) {
+      for (const result of [cities, categories, places, localizations, reviews, guides, contacts, clinics, clinicLocalizations]) {
         if (result.error) throw result.error
       }
 
@@ -185,7 +200,9 @@ export function useDb() {
         localizations: localizations.data as PlaceLocalizationRow[],
         reviews: reviews.data as ReviewRow[],
         guides: guides.data as GuideRow[],
-        contacts: contacts.data as EmergencyContactRow[]
+        contacts: contacts.data as EmergencyContactRow[],
+        clinics: clinics.data as ClinicRow[],
+        clinicLocalizations: clinicLocalizations.data as ClinicLocalizationRow[]
       }
       remapFromRaw()
       source.value = 'supabase'

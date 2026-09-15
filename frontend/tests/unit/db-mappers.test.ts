@@ -7,12 +7,15 @@ import {
   CITY_UI,
   mapCategories,
   mapCities,
+  mapClinics,
   mapEmergencyContacts,
   mapGuides,
   mapPlaces,
   mapReviews,
   type CategoryRow,
   type CityRow,
+  type ClinicLocalizationRow,
+  type ClinicRow,
   type EmergencyContactRow,
   type GuideRow,
   type PlaceLocalizationRow,
@@ -183,6 +186,42 @@ describe('mapEmergencyContacts', () => {
     expect(mapEmergencyContacts(rows)).toEqual([
       { id: 'c1', citySlug: 'da-nang', number: '113', label: { ru: 'Полиция', en: 'Police' } }
     ])
+  })
+})
+
+describe('mapClinics', () => {
+  const rows: ClinicRow[] = [
+    { id: 'cl1', city_slug: 'da-nang', slug: 'thien-nhan', kind: 'hospital', open_24_7: false, trust_badge: 'under_review', last_verified_at: null, source: 'third-party guide, 2026-09-15', sort_order: 1 }
+  ]
+  const localizations: ClinicLocalizationRow[] = [
+    { clinic_id: 'cl1', language: 'ru', name: 'Thiện Nhân Hospital', price_note: 'Приём 165 000 ₫' },
+    { clinic_id: 'cl1', language: 'en', name: 'Thiện Nhân Hospital', price_note: 'Visit 165,000 ₫' }
+  ]
+
+  it('maps a clinic with both localized price notes', () => {
+    const [clinic] = mapClinics(rows, localizations)
+    expect(clinic).toMatchObject({
+      id: 'cl1',
+      kind: 'hospital',
+      name: 'Thiện Nhân Hospital',
+      priceNote: { ru: 'Приём 165 000 ₫', en: 'Visit 165,000 ₫' },
+      open24_7: false
+    })
+  })
+
+  // The honesty guarantee: an imported row must never lose the level that says
+  // it is unverified, nor the source the price came from.
+  it('never drops the trust level or the source of an imported row', () => {
+    const [clinic] = mapClinics(rows, localizations)
+    expect(clinic?.trustLevel).toBe('under_review')
+    expect(clinic?.lastVerifiedAt).toBeNull()
+    expect(clinic?.source).toBe('third-party guide, 2026-09-15')
+  })
+
+  it('survives a missing localization without inventing a price', () => {
+    const [clinic] = mapClinics(rows, [])
+    expect(clinic?.name).toBe('thien-nhan')
+    expect(clinic?.priceNote).toEqual({ ru: '', en: '' })
   })
 })
 

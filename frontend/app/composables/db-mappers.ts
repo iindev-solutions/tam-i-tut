@@ -10,6 +10,8 @@
 import type {
   CategoryEntry,
   CityEntry,
+  Clinic,
+  ClinicKind,
   ContentStatus,
   EmergencyContact,
   GuideCategory,
@@ -95,6 +97,25 @@ export interface EmergencyContactRow {
   label_ru: string
   label_en: string
   sort_order: number
+}
+
+export interface ClinicRow {
+  id: string
+  city_slug: string
+  slug: string
+  kind: ClinicKind
+  open_24_7: boolean
+  trust_badge: TrustLevel
+  last_verified_at: string | null
+  source: string
+  sort_order: number
+}
+
+export interface ClinicLocalizationRow {
+  clinic_id: string
+  language: LanguageCode
+  name: string
+  price_note: string
 }
 
 /** Static UI chrome for pilot city slugs (i18n keys live in the locale files). */
@@ -311,4 +332,37 @@ export function mapEmergencyContacts(rows: EmergencyContactRow[]): EmergencyCont
     number: row.number,
     label: { ru: row.label_ru, en: row.label_en }
   }))
+}
+
+/**
+ * Maps clinic rows with their ru/en localizations. Trust level and source ride
+ * along untouched: the UI must be able to say both "under review" and where the
+ * price came from, so neither is dropped here.
+ */
+export function mapClinics(rows: ClinicRow[], localizations: ClinicLocalizationRow[]): Clinic[] {
+  const byClinic = new Map<string, Map<LanguageCode, ClinicLocalizationRow>>()
+  for (const loc of localizations) {
+    const langs = byClinic.get(loc.clinic_id) ?? new Map<LanguageCode, ClinicLocalizationRow>()
+    langs.set(loc.language, loc)
+    byClinic.set(loc.clinic_id, langs)
+  }
+
+  return rows.map((row) => {
+    const langs = byClinic.get(row.id) ?? new Map<LanguageCode, ClinicLocalizationRow>()
+    const ru = langs.get('ru')
+    const en = langs.get('en')
+    return {
+      id: row.id,
+      slug: row.slug,
+      kind: row.kind,
+      open24_7: row.open_24_7,
+      // Venue names are proper nouns and identical across languages; the
+      // localization row is the source of truth so an edited name propagates.
+      name: (ru ?? en)?.name ?? row.slug,
+      priceNote: { ru: ru?.price_note ?? '', en: en?.price_note ?? '' },
+      trustLevel: row.trust_badge,
+      lastVerifiedAt: row.last_verified_at,
+      source: row.source
+    }
+  })
 }

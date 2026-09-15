@@ -484,7 +484,23 @@
     "title": "Healthcare in Da Nang",
     "description": "Hospitals, pharmacies, insurance and dentists - verified info for foreigners.",
     "tipsTitle": "Guides",
-    "empty": "Guides are coming soon."
+    "empty": "Guides are coming soon.",
+    "clinicsTitle": "Clinics and hospitals",
+    "clinicsSubtitle": "Visits by specialisation with a price guide. Prices are for a first visit and are as quoted by the clinics.",
+    "clinicsUnverified": "Prices not yet checked by us",
+    "clinicsSource": "Source: {source}. We verify and update as claims are confirmed.",
+    "openAllDay": "Open 24/7",
+    "kinds": {
+      "all": "All",
+      "hospital": "Hospital",
+      "dental": "Dental",
+      "ophthalmology": "Ophthalmology",
+      "dermatology": "Dermatology",
+      "diagnostics": "Tests",
+      "oncology": "Oncology",
+      "ent": "ENT",
+      "veterinary": "Veterinary"
+    }
   },
   "visarun": {
     "kicker": "Border",

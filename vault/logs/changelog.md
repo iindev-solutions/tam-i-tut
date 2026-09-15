@@ -54,23 +54,33 @@ authenticated path is the one that matters and it is now exercised end to end.
 Deployed worker `643244ae`; all 76 JS assets match the built output byte for
 byte.
 
-### Telemetry blind spot found while diagnosing (documentation was wrong)
+### Telemetry scope (checked while diagnosing; earlier note corrected)
 
-`vault/resume-plan.md` claimed "bootstrap failures logged to app_events" since
-the 2026-09-07 audit fixes. That was never implemented: commit `0c9d772` says so
-in its message, but its diff only persists `telegramId` to localStorage. Checked
-the live table - `app_events` holds only 3 rows (`menu_scan` x2, `place_view`,
-`review_submit`), all from 2026-09-06, and the plugin's failure states
-(`no_init_data`, `bad_payload`, `set_session_failed`, `network`, raw HTTP
-status) go into a UI variable and are then discarded.
+Server-side bootstrap observability **exists**: `logEvent()` in
+`supabase/functions/telegram-bootstrap/index.ts:92-108` posts a
+`bootstrap_error` row (reason + client IP) to `app_events` with the service
+role on every validation failure, added by the same 2026-09-07 commit
+`0c9d772` whose message claimed it.
 
-Consequence: **a broken bootstrap or a broken read is invisible in production
-data.** The regression above could not have been found from `app_events` either
-way - the bootstrap succeeded and every read returned 200; only the mapping
-step failed - but an auth failure during the closed pilot would be equally
-invisible. Corrected in `resume-plan.md`; raising telemetry for the session
-path is recorded as a backlog item rather than fixed here, since it is
-operational scope the pilot did not ask for.
+An earlier note in this entry called that claim false - that was my error: I
+read only the plugin portion of that commit's diff and grepped `frontend/app`
+with a `log('` pattern, which cannot match `logEvent(` in an Edge Function.
+
+Two consequences, both worth recording:
+
+- `app_events` holds 3 rows and **zero `bootstrap_error`** - no validation
+  failure has ever occurred on hosted. That independently confirms task 5.5
+  (the session exchange works live), rather than merely inferring it from the
+  missing bot gate.
+- The gap is CLIENT-side only: the plugin's failure states (`no_init_data`,
+  `bad_payload`, `set_session_failed`, `network`, raw HTTP status -
+  `app/plugins/telegram.client.ts:104-138`) go into a UI variable and are
+  discarded. A failure that never reaches the function - or that happens
+  during `setSession` - leaves no trace. Narrower backlog item than first
+  written.
+
+The regression itself was invisible to this telemetry by construction: the
+bootstrap succeeded and every read returned 200; only the mapping step failed.
 
 ### Incident during diagnosis
 

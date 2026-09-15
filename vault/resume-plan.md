@@ -15,8 +15,9 @@
 
 ## Next Step
 
-1. founder: live Telegram walk-through - confirm the session exchange (5.5) and, with a session, that every guide card reads "На проверке" (all 48 published guides are still `under_review`), the safety page shows 113/114/115, and a place page shows its badge + date
-2. founder: pending repo secrets (`CLOUDFLARE_API_TOKEN`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_URL` + R2), Telegram bot token rotation, `iind-vps` host key
-3. Verification decision: promote guides/places out of `under_review` as they get checked (the admin places editor can set the level + date; guides still need the authoring form below)
-4. Closed pilot with metrics: metric set from `app_events` after the first pilot week
-5. Backlog: guide authoring form (incl. a per-guide "mark verified" action), city search, food category page for menu-decoder/drinks guides, freshness SLA in user UI, R2 restore drill, offline phrase pack / venue QR deep link (Phase C)
+1. founder: open the failing CI run (Actions run 34950737645) or hand over a token with repo access - the frontend job dies at `npm --prefix frontend install` and the database job at `supabase start`, neither reproducible from the committed tree, and job logs are unreadable without one. Until then Deploy dies at install too, so **all deploys are manual** (`wrangler deploy` from `frontend/`)
+2. founder: live Telegram walk-through - confirm the session exchange (5.5) and, with a session, that every guide card reads "На проверке" (all 48 published guides are still `under_review`), the safety page shows 113/114/115, and a place page shows its badge + date
+3. founder: pending repo secrets (`CLOUDFLARE_API_TOKEN`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_URL` + R2), Telegram bot token rotation, `iind-vps` host key
+4. Verification decision: promote guides/places out of `under_review` as they get checked (the admin places editor can set the level + date; guides still need the authoring form below)
+5. Closed pilot with metrics: metric set from `app_events` after the first pilot week
+6. Backlog: guide authoring form (incl. a per-guide "mark verified" action), city search, food category page for menu-decoder/drinks guides, freshness SLA in user UI, R2 restore drill, offline phrase pack / venue QR deep link (Phase C)

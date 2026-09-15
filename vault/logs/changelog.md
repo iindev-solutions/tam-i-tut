@@ -2,6 +2,19 @@
 
 ## 2026-09-15 - Trust layer reaches the Mini App; emergency contacts unblocked
 
+### Found, not fixed (needs founder access)
+
+- **CI has been red on runner-side steps since 2026-09-06 06:38, and Deploy never
+  reaches its deploy steps** - so every deploy since then (including this one)
+  was manual. Evidence: the last fully green run is `d68fb8d` (06:17); every
+  push from `746b52c` (06:38) fails the frontend job at
+  `npm --prefix frontend install` (~24s in), and later runs also fail the
+  database job at `supabase start`. Reproduced neither from a clean
+  `git archive` checkout on Node 22 (1296 packages, exit 0) nor in the working
+  tree. Job logs require a token with repo access, so the cause stays
+  unconfirmed - runner image/network or an org Actions limit are the likely
+  candidates. The vault's earlier "CI GREEN" claim is corrected in `sprint.md`.
+
 ### Found + fixed
 
 - **The safety page's emergency block was empty for every live user.** The
